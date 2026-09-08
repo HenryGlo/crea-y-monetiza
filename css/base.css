@@ -44,10 +44,11 @@
   --sec-y:clamp(72px,10vw,150px);
 
   /* Escala fluida: una sola fuente de verdad para los tamaños de titular. */
-  /* Tope bajado de 124px: a 150px el titular ocupa cuatro líneas y empuja el
-     botón de admisión 400px por debajo del pliegue en un portátil normal.
-     El titular sigue siendo el elemento dominante, pero deja ver el CTA. */
-  --t-hero:clamp(40px,6.6vw,96px);
+  /* El titular del hero se mide contra el pliegue, no contra el gusto: a 96px
+     ocupaba 538px de los 936 de un portátil y empujaba fuera CTA, materias y
+     cifras. A 72px sigue siendo con diferencia el elemento dominante de la
+     página y deja entrar el resto del hero. */
+  --t-hero:clamp(34px,4.6vw,62px);
   --t-h2:clamp(30px,5.2vw,68px);
   --t-h3:clamp(19px,2.1vw,26px);
   --t-cuerpo:clamp(16px,1.15vw,18px);

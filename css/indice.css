@@ -36,18 +36,18 @@ body.v-indice{
 .p-card p{ font-size:15.5px }
 
 /* Cada tarjeta anticipa el ambiente de su propuesta: al abrirla no hay sorpresa. */
-.p-1{ background:var(--crema) }
-.p-1 .btn-pri{ background:var(--vino); color:var(--crema); border-color:var(--vino) }
-.p-2{ background:#fff; border-radius:4px; box-shadow:8px 8px 0 var(--rosa) }
-.p-2:hover{ box-shadow:12px 12px 0 var(--rosa) }
-.p-2 .btn{ border-radius:0 }
-.p-3{ background:#2A0207; color:#F6EDE8; border-color:#2A0207 }
-.p-3 h2{ color:#F6EDE8 }
-.p-3 p{ color:rgba(246,237,232,.8) }
-.p-3 .btn-pri{ background:var(--rosa); color:#2A0207; border-color:var(--rosa) }
-.p-4{ background:#FBF7F4; box-shadow:8px 8px 0 var(--azul) }
-.p-4:hover{ box-shadow:12px 12px 0 var(--azul) }
-.p-4 .btn-pri{ background:var(--vino); color:var(--crema); border-color:var(--vino) }
+.p-prospecto{ background:var(--crema) }
+.p-prospecto .btn-pri{ background:var(--vino); color:var(--crema); border-color:var(--vino) }
+.p-expediente{ background:#fff; border-radius:4px; box-shadow:8px 8px 0 var(--rosa) }
+.p-expediente:hover{ box-shadow:12px 12px 0 var(--rosa) }
+.p-expediente .btn{ border-radius:0 }
+.p-nocturno{ background:#2A0207; color:#F6EDE8; border-color:#2A0207 }
+.p-nocturno h2{ color:#F6EDE8 }
+.p-nocturno p{ color:rgba(246,237,232,.8) }
+.p-nocturno .btn-pri{ background:var(--rosa); color:#2A0207; border-color:var(--rosa) }
+.p-perfil{ background:#FBF7F4; box-shadow:8px 8px 0 var(--azul) }
+.p-perfil:hover{ box-shadow:12px 12px 0 var(--azul) }
+.p-perfil .btn-pri{ background:var(--vino); color:var(--crema); border-color:var(--vino) }
 
 .nota-idx{
   margin:48px auto 0; max-width:62ch; font-size:14px; opacity:.65;

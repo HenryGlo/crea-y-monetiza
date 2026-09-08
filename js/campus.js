@@ -318,7 +318,7 @@
 
   function focoCursor() {
     if (quieto || matchMedia("(pointer: coarse)").matches) return;
-    const hero = document.querySelector(".v-3 .hero, .v-4 .hero");
+    const hero = document.querySelector(".v-nocturno .hero, .v-perfil .hero");
     if (!hero) return;
     hero.addEventListener("pointermove", function (ev) {
       const r = hero.getBoundingClientRect();

@@ -627,36 +627,36 @@ PERFIL_ANIMADO = {
     "retrato_alt": "Pierina Alves, directora de Crea y Monetiza Campus",
 }
 
-# Las propuestas comparten contenido; solo cambian nombre, subtítulo y hoja de estilo.
+# Las propuestas comparten contenido; solo cambian nombre, resumen y hoja de
+# estilo. El orden de esta lista es el orden en que se presentan: la primera es
+# la que se enseña primero. El nombre del archivo CSS y la clase del body salen
+# de "clave", no de la posición, para que reordenar aquí no obligue a renombrar
+# nada — que es justo lo que pasaba cuando iban como p1/p2/p3.
 PROPUESTAS = [
     {
-        "slug": "propuesta-1",
-        "nombre": "Prospecto",
-        "resumen": "Continuidad directa con las piezas que ya existen: crema, stickers, Anton "
-                   "y tarjetas redondeadas. La más reconocible para quien ya vio la carpeta o el pensum.",
-        "css": "p1.css",
+        "clave": "perfil",
+        "nombre": "Perfil",
+        "resumen": "El hero monta en directo el perfil de una creadora — avatar, cifras que suben, "
+                   "retícula que se llena — y Pierina entra a presentarlo. Es la promesa del Campus "
+                   "contada en un segundo, sin explicarla.",
+        "hero_extra": True,
     },
     {
-        "slug": "propuesta-2",
+        "clave": "prospecto",
+        "nombre": "Prospecto",
+        "resumen": "Continuidad directa con las piezas que ya existen: crema, stickers, Anton y "
+                   "tarjetas redondeadas. La más reconocible para quien ya vio la carpeta o el pensum.",
+    },
+    {
+        "clave": "expediente",
         "nombre": "Expediente",
         "resumen": "Registro institucional: retícula marcada, secciones numeradas como un catálogo "
                    "universitario, mucho blanco y el rosa reservado para acentuar. Transmite seriedad académica.",
-        "css": "p2.css",
     },
     {
-        "slug": "propuesta-3",
+        "clave": "nocturno",
         "nombre": "Nocturno",
         "resumen": "Vino a sangre completa, tipografía a gran escala y acentos en rosa y azul sobre "
-                   "oscuro. El registro más premium y cinematográfico de los tres.",
-        "css": "p3.css",
-    },
-    {
-        "slug": "propuesta-4",
-        "nombre": "Perfil",
-        "resumen": "El hero monta en directo el perfil de una creadora — avatar, cifras que suben, "
-                   "retícula que se llena — y remata en que eso no pasa solo. Es la promesa del "
-                   "Campus contada en tres segundos, sin explicarla.",
-        "css": "p4.css",
-        "hero_extra": True,
+                   "oscuro. El registro más premium y cinematográfico de los cuatro.",
     },
 ]

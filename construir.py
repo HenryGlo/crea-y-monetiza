@@ -563,9 +563,9 @@ def pagina(prop):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;600;700&display=swap">
 <link rel="stylesheet" href="../css/base.css">
-<link rel="stylesheet" href="../css/{prop["css"]}">
+<link rel="stylesheet" href="../css/{prop["clave"]}.css">
 </head>
-<body class="v-{prop["slug"].split("-")[-1]}">
+<body class="v-{prop["clave"]}">
 {logo_sprite()}
 <a class="saltar" href="#inicio">Saltar al contenido</a>
 {nav()}
@@ -574,7 +574,7 @@ def pagina(prop):
 </main>
 <a class="cta-fijo" href="#admisiones">{e(C.CTA_FIJO)} <span aria-hidden="true">→</span></a>
 <div class="cambiar">
-  <span>Propuesta {prop["slug"].split("-")[-1]} · {e(prop["nombre"])}</span>
+  <span>Propuesta {prop["n"]} · {e(prop["nombre"])}</span>
   <a href="../">Ver las {NUM_TXT}</a>
 </div>
 <script src="../js/campus.js"></script>
@@ -585,7 +585,7 @@ def pagina(prop):
 def indice():
     tarjetas = ""
     for i, p in enumerate(C.PROPUESTAS, 1):
-        tarjetas += f"""<article class="p-card p-{i}">
+        tarjetas += f"""<article class="p-card p-{p["clave"]}">
       <p class="p-n">Propuesta {i}</p>
       <h2>{e(p["nombre"])}</h2>
       <p>{e(p["resumen"])}</p>
@@ -623,6 +623,12 @@ def indice():
 
 
 def main():
+    # slug y número salen de la posición en la lista: el orden se cambia ahí y
+    # solo ahí.
+    for i, prop in enumerate(C.PROPUESTAS, 1):
+        prop["slug"] = f"propuesta-{i}"
+        prop["n"] = i
+
     for prop in C.PROPUESTAS:
         d = os.path.join(RAIZ, prop["slug"])
         os.makedirs(d, exist_ok=True)

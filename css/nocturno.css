@@ -6,7 +6,7 @@
    baja de contraste puro (crema al 82% en vez de blanco) para que leer 22
    secciones seguidas no canse. */
 
-body.v-3{
+body.v-nocturno{
   --fondo:#2A0207;
   --fondo-2:#3d060f;
   --texto:#F6EDE8;
@@ -16,20 +16,20 @@ body.v-3{
   --r:20px;
 }
 
-.v-3{ font-weight:400 }
-.v-3 p{ color:color-mix(in srgb,var(--texto) 82%,transparent) }
-.v-3 h1,.v-3 h2,.v-3 h3{ color:var(--texto) }
+.v-nocturno{ font-weight:400 }
+.v-nocturno p{ color:color-mix(in srgb,var(--texto) 82%,transparent) }
+.v-nocturno h1,.v-nocturno h2,.v-nocturno h3{ color:var(--texto) }
 
-.v-3 .nav{
+.v-nocturno .nav{
   background:rgba(42,2,7,.72);
   border-bottom:1px solid var(--linea);
 }
-.v-3 .nav-cta{ background:var(--rosa); color:#2A0207 }
-.v-3 .nav-links a.en-vista{ background:var(--rosa); color:#2A0207 }
+.v-nocturno .nav-cta{ background:var(--rosa); color:#2A0207 }
+.v-nocturno .nav-links a.en-vista{ background:var(--rosa); color:#2A0207 }
 
 /* --------------------------------------------------------------------- hero */
 
-.v-3 .hero{
+.v-nocturno .hero{
   position:relative; overflow:hidden; isolation:isolate; text-align:center;
   padding:clamp(44px,6vw,78px) 0 clamp(52px,7vw,92px);
   display:grid; align-items:center;
@@ -37,7 +37,7 @@ body.v-3{
 
 /* Dos focos de luz respirando detrás del titular. Es todo el "arte" del hero:
    sin imágenes, así que no hay nada que cargar ni que se vea pixelado. */
-.v-3 .hero::before{
+.v-nocturno .hero::before{
   content:""; position:absolute; inset:-20%; z-index:-2;
   background:
     radial-gradient(38% 34% at 26% 28%,rgba(241,139,196,.42),transparent 66%),
@@ -52,7 +52,7 @@ body.v-3{
 }
 
 /* Retícula tenue: da profundidad y escala sin competir con el texto. */
-.v-3 .hero::after{
+.v-nocturno .hero::after{
   content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
   background-image:
     linear-gradient(rgba(246,237,232,.055) 1px,transparent 1px),
@@ -61,8 +61,8 @@ body.v-3{
   mask-image:radial-gradient(72% 62% at 50% 45%,#000 20%,transparent 78%);
 }
 
-.v-3 .hero .logo{ width:min(390px,66%); height:auto; color:var(--texto); margin:0 auto 22px }
-.v-3 .hero .pill{
+.v-nocturno .hero .logo{ width:min(390px,66%); height:auto; color:var(--texto); margin:0 auto 22px }
+.v-nocturno .hero .pill{
   display:inline-flex; align-items:center; gap:9px; margin:0 0 28px;
   padding:10px 22px; border-radius:999px;
   border:1px solid var(--linea); background:rgba(246,237,232,.05);
@@ -70,117 +70,117 @@ body.v-3{
   font-weight:700; font-size:12px; letter-spacing:.22em; text-transform:uppercase;
 }
 
-.v-3 .hero h1{
+.v-nocturno .hero h1{
   max-width:14ch; margin:0 auto .42em; letter-spacing:-.03em; line-height:var(--lh-display);
   background:linear-gradient(178deg,#fff 30%,#f3c9dd 78%,#c98fae 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-.v-3 .hero .entrada{ margin:0 auto 32px; max-width:56ch }
+.v-nocturno .hero .entrada{ margin:0 auto 32px; max-width:56ch }
 
-.v-3 .materias-hero{
+.v-nocturno .materias-hero{
   list-style:none; padding:0; margin:0 auto 22px;
   display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:860px;
 }
-.v-3 .materias-hero li{
+.v-nocturno .materias-hero li{
   font-family:var(--display); text-transform:uppercase; font-size:clamp(14px,1.5vw,20px);
   padding:9px 20px; border-radius:999px;
   border:1px solid var(--linea); background:rgba(246,237,232,.05);
   backdrop-filter:blur(6px);
   transition:border-color .3s,box-shadow .3s,transform .3s cubic-bezier(.2,.7,.3,1);
 }
-.v-3 .materias-hero li:hover{
+.v-nocturno .materias-hero li:hover{
   transform:translateY(-3px); border-color:var(--rosa);
   box-shadow:0 0 26px -6px rgba(241,139,196,.6);
 }
 
-.v-3 .hero .ctas{ justify-content:center }
-.v-3 .btn-pri{ background:var(--rosa); color:#2A0207; border-color:var(--rosa) }
-.v-3 .btn-pri:hover{ box-shadow:0 0 40px -8px rgba(241,139,196,.8) }
-.v-3 .btn-sec{ border-color:var(--linea); color:var(--texto) }
-.v-3 .btn-sec:hover{ background:var(--texto); color:#2A0207; border-color:var(--texto) }
+.v-nocturno .hero .ctas{ justify-content:center }
+.v-nocturno .btn-pri{ background:var(--rosa); color:#2A0207; border-color:var(--rosa) }
+.v-nocturno .btn-pri:hover{ box-shadow:0 0 40px -8px rgba(241,139,196,.8) }
+.v-nocturno .btn-sec{ border-color:var(--linea); color:var(--texto) }
+.v-nocturno .btn-sec:hover{ background:var(--texto); color:#2A0207; border-color:var(--texto) }
 
-.v-3 .cifras{
+.v-nocturno .cifras{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
   gap:1px; max-width:860px; margin:20px auto 0;
   background:var(--linea); border:1px solid var(--linea); border-radius:var(--r); overflow:hidden;
 }
-.v-3 .cifra{ background:#2A0207; padding:24px 16px; transition:background .3s }
-.v-3 .cifra:hover{ background:var(--fondo-2) }
-.v-3 .cifra b{
+.v-nocturno .cifra{ background:#2A0207; padding:24px 16px; transition:background .3s }
+.v-nocturno .cifra:hover{ background:var(--fondo-2) }
+.v-nocturno .cifra b{
   display:block; font-family:var(--display); font-size:clamp(32px,4.4vw,54px); line-height:1;
   background:linear-gradient(180deg,var(--rosa),var(--azul));
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-.v-3 .cifra span{ font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; opacity:.6 }
+.v-nocturno .cifra span{ font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; opacity:.6 }
 
-.v-3 .sticker{ position:absolute; z-index:1 }
-.v-3 .sticker svg{ width:100%; height:100%; display:block }
-.v-3 .s1{ width:clamp(40px,5vw,70px); left:7%; top:20% }
-.v-3 .s1 path{ fill:var(--azul); filter:drop-shadow(0 0 18px rgba(152,183,253,.75)) }
-.v-3 .s2{ width:clamp(28px,3.4vw,48px); right:9%; top:30% }
-.v-3 .s2 path{ fill:var(--amar); filter:drop-shadow(0 0 18px rgba(249,255,128,.6)) }
-@media (max-width:900px){ .v-3 .sticker{ display:none } }
+.v-nocturno .sticker{ position:absolute; z-index:1 }
+.v-nocturno .sticker svg{ width:100%; height:100%; display:block }
+.v-nocturno .s1{ width:clamp(40px,5vw,70px); left:7%; top:20% }
+.v-nocturno .s1 path{ fill:var(--azul); filter:drop-shadow(0 0 18px rgba(152,183,253,.75)) }
+.v-nocturno .s2{ width:clamp(28px,3.4vw,48px); right:9%; top:30% }
+.v-nocturno .s2 path{ fill:var(--amar); filter:drop-shadow(0 0 18px rgba(249,255,128,.6)) }
+@media (max-width:900px){ .v-nocturno .sticker{ display:none } }
 
 /* ----------------------------------------------------------------- secciones */
 
-.v-3 .sec{ border-top:1px solid var(--linea) }
-.v-3 .sec:nth-of-type(3n+2){
+.v-nocturno .sec{ border-top:1px solid var(--linea) }
+.v-nocturno .sec:nth-of-type(3n+2){
   background:radial-gradient(80% 60% at 50% 0%,rgba(110,15,29,.5),transparent 70%);
 }
 
-.v-3 .eyebrow{ opacity:.85 }
-.v-3 .eyebrow .dot{ box-shadow:0 0 12px var(--acento) }
+.v-nocturno .eyebrow{ opacity:.85 }
+.v-nocturno .eyebrow .dot{ box-shadow:0 0 12px var(--acento) }
 
 /* Tarjetas de vidrio con un filo de luz arriba. El borde degradado se pinta con
    una máscara para que quede solo el contorno, sin fondo de color. */
-.v-3 .card{
+.v-nocturno .card{
   background:var(--superficie);
   border:1px solid var(--linea);
   backdrop-filter:blur(10px);
   position:relative; overflow:hidden;
 }
-.v-3 .card::after{
+.v-nocturno .card::after{
   content:""; position:absolute; left:0; right:0; top:0; height:1px;
   background:linear-gradient(90deg,transparent,var(--acento),transparent);
   opacity:0; transition:opacity .4s;
 }
-.v-3 .card:hover{
+.v-nocturno .card:hover{
   transform:translateY(-5px);
   border-color:color-mix(in srgb,var(--acento) 55%,transparent);
   box-shadow:0 30px 70px -40px rgba(241,139,196,.55);
 }
-.v-3 .card:hover::after{ opacity:1 }
+.v-nocturno .card:hover::after{ opacity:1 }
 
-.v-3 .grid > .card:nth-child(3n+1){ --acento:var(--rosa) }
-.v-3 .grid > .card:nth-child(3n+2){ --acento:var(--azul) }
-.v-3 .grid > .card:nth-child(3n+3){ --acento:var(--amar) }
+.v-nocturno .grid > .card:nth-child(3n+1){ --acento:var(--rosa) }
+.v-nocturno .grid > .card:nth-child(3n+2){ --acento:var(--azul) }
+.v-nocturno .grid > .card:nth-child(3n+3){ --acento:var(--amar) }
 
-.v-3 .eje-n,.v-3 .materia-n,.v-3 .caso-n{
+.v-nocturno .eje-n,.v-nocturno .materia-n,.v-nocturno .caso-n{
   display:block; font-family:var(--display); font-size:12px;
   letter-spacing:.2em; text-transform:uppercase; color:var(--acento); margin-bottom:8px;
 }
 
-.v-3 .chips li{ border-color:var(--linea); background:rgba(246,237,232,.05); backdrop-filter:blur(6px) }
-.v-3 .temas li{ background:rgba(246,237,232,.07) }
+.v-nocturno .chips li{ border-color:var(--linea); background:rgba(246,237,232,.05); backdrop-filter:blur(6px) }
+.v-nocturno .temas li{ background:rgba(246,237,232,.07) }
 
 /* -------------------------------------------------------------- el recorrido */
 
-.v-3 .etapa-n{
+.v-nocturno .etapa-n{
   display:inline-block; font-family:var(--display); text-transform:uppercase;
   font-size:13px; letter-spacing:.18em; padding:7px 16px; border-radius:999px;
   border:1px solid var(--acento); color:var(--acento); margin-bottom:12px;
 }
-.v-3 .etapa-meses{ font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; opacity:.55 }
+.v-nocturno .etapa-meses{ font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; opacity:.55 }
 
 /* ------------------------------------------------------------------- tesis */
 
-.v-3 .tesis{ text-align:center }
-.v-3 .tesis .eyebrow{ justify-content:center }
-.v-3 .tesis h2,.v-3 .tesis .lista{ margin-inline:auto }
-.v-3 .tesis .lista{ justify-items:center; max-width:760px }
-.v-3 .tesis .lista li{ padding-left:0 }
-.v-3 .tesis .lista li::before{ display:none }
-.v-3 .tesis-nombre{
+.v-nocturno .tesis{ text-align:center }
+.v-nocturno .tesis .eyebrow{ justify-content:center }
+.v-nocturno .tesis h2,.v-nocturno .tesis .lista{ margin-inline:auto }
+.v-nocturno .tesis .lista{ justify-items:center; max-width:760px }
+.v-nocturno .tesis .lista li{ padding-left:0 }
+.v-nocturno .tesis .lista li::before{ display:none }
+.v-nocturno .tesis-nombre{
   font-family:var(--display); text-transform:uppercase;
   font-size:clamp(42px,10vw,150px); line-height:var(--lh-display); letter-spacing:-.035em; margin:0 0 .35em;
   background:linear-gradient(100deg,var(--azul),var(--rosa) 55%,var(--amar));
@@ -190,83 +190,83 @@ body.v-3{
 
 /* ------------------------------------------------------------------- video */
 
-.v-3 .video{ border:1px solid var(--linea); box-shadow:0 50px 110px -50px rgba(241,139,196,.55) }
-.v-3 .cita{ border-left-color:var(--acento) }
-.v-3 .cita cite{ opacity:.5 }
+.v-nocturno .video{ border:1px solid var(--linea); box-shadow:0 50px 110px -50px rgba(241,139,196,.55) }
+.v-nocturno .cita{ border-left-color:var(--acento) }
+.v-nocturno .cita cite{ opacity:.5 }
 
 /* --------------------------------------------------------------- admisiones */
 
-.v-3 .pasos-grid{
+.v-nocturno .pasos-grid{
   list-style:none; padding:0; margin:40px 0 0;
   display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px;
 }
-.v-3 .paso{
+.v-nocturno .paso{
   padding:26px 22px; border:1px solid var(--linea); border-radius:var(--r);
   background:var(--superficie); backdrop-filter:blur(10px);
   transition:border-color .3s,transform .3s cubic-bezier(.2,.7,.3,1);
 }
-.v-3 .paso:hover{ border-color:var(--rosa); transform:translateY(-4px) }
-.v-3 .paso-n{
+.v-nocturno .paso:hover{ border-color:var(--rosa); transform:translateY(-4px) }
+.v-nocturno .paso-n{
   display:block; font-family:var(--display); font-size:clamp(30px,3.8vw,46px);
   line-height:1; margin-bottom:10px;
   background:linear-gradient(180deg,var(--rosa),var(--azul));
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-.v-3 .pregunta{
+.v-nocturno .pregunta{
   font-family:var(--display); text-transform:uppercase; letter-spacing:-.025em;
   font-size:clamp(24px,4vw,54px); line-height:var(--lh-display); margin:54px 0 0; max-width:18ch;
 }
-.v-3 .nota{ font-size:13px; opacity:.5 }
+.v-nocturno .nota{ font-size:13px; opacity:.5 }
 
-.v-3 .datos{
+.v-nocturno .datos{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1px;
   background:var(--linea); border:1px solid var(--linea); border-radius:var(--r);
   overflow:hidden; margin:32px 0;
 }
-.v-3 .dato{ background:#2A0207; padding:24px 20px }
-.v-3 .dato span{ display:block; font-size:11px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:var(--acento); margin-bottom:8px }
-.v-3 .dato b{ font-family:var(--display); font-size:clamp(19px,2.2vw,26px); text-transform:uppercase }
+.v-nocturno .dato{ background:#2A0207; padding:24px 20px }
+.v-nocturno .dato span{ display:block; font-size:11px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:var(--acento); margin-bottom:8px }
+.v-nocturno .dato b{ font-family:var(--display); font-size:clamp(19px,2.2vw,26px); text-transform:uppercase }
 
 /* -------------------------------------------------------------- para ti / faq */
 
-.v-3 .si{ --acento:var(--rosa); border-color:color-mix(in srgb,var(--rosa) 45%,transparent) }
-.v-3 .no{ --acento:var(--azul); opacity:.75 }
+.v-nocturno .si{ --acento:var(--rosa); border-color:color-mix(in srgb,var(--rosa) 45%,transparent) }
+.v-nocturno .no{ --acento:var(--azul); opacity:.75 }
 
-.v-3 .faq,.v-3 .faq-item{ border-color:var(--linea) }
-.v-3 .faq-item summary:hover{ color:var(--rosa) }
+.v-nocturno .faq,.v-nocturno .faq-item{ border-color:var(--linea) }
+.v-nocturno .faq-item summary:hover{ color:var(--rosa) }
 
-.v-3 .ph{ background:rgba(246,237,232,.04); border-color:var(--linea) }
-.v-3 .pendiente::after{ background:var(--amar); color:#2A0207 }
-.v-3 .retrato{ background:linear-gradient(140deg,rgba(241,139,196,.35),rgba(152,183,253,.3)); color:var(--texto) }
+.v-nocturno .ph{ background:rgba(246,237,232,.04); border-color:var(--linea) }
+.v-nocturno .pendiente::after{ background:var(--amar); color:#2A0207 }
+.v-nocturno .retrato{ background:linear-gradient(140deg,rgba(241,139,196,.35),rgba(152,183,253,.3)); color:var(--texto) }
 
-.v-3 .campo-f input,.v-3 .campo-f select,.v-3 .campo-f textarea{
+.v-nocturno .campo-f input,.v-nocturno .campo-f select,.v-nocturno .campo-f textarea{
   background:rgba(246,237,232,.06); border-color:var(--linea); color:var(--texto);
 }
-.v-3 .campo-f select option{ background:#2A0207; color:var(--texto) }
-.v-3 .campo-f input::placeholder,.v-3 .campo-f textarea::placeholder{ color:rgba(246,237,232,.4) }
+.v-nocturno .campo-f select option{ background:#2A0207; color:var(--texto) }
+.v-nocturno .campo-f input::placeholder,.v-nocturno .campo-f textarea::placeholder{ color:rgba(246,237,232,.4) }
 
 /* ------------------------------------------------------------------- cierre */
 
-.v-3 .cierre-final{
+.v-nocturno .cierre-final{
   background:
     radial-gradient(70% 60% at 50% 100%,rgba(241,139,196,.3),transparent 70%),
     radial-gradient(60% 50% at 20% 0%,rgba(152,183,253,.18),transparent 70%);
   border-top:1px solid var(--linea);
 }
-.v-3 .cierre-final h2{
+.v-nocturno .cierre-final h2{
   max-width:20ch; margin-inline:auto;
   background:linear-gradient(178deg,#fff 35%,#f3c9dd 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-.v-3 .cierre-final .con li{ font-family:var(--display); text-transform:uppercase; font-size:clamp(17px,2.2vw,26px) }
-.v-3 .logo-foot{ color:var(--texto); filter:drop-shadow(0 0 34px rgba(241,139,196,.4)) }
-.v-3 .firma{ color:var(--rosa) }
-.v-3 .destacado{
+.v-nocturno .cierre-final .con li{ font-family:var(--display); text-transform:uppercase; font-size:clamp(17px,2.2vw,26px) }
+.v-nocturno .logo-foot{ color:var(--texto); filter:drop-shadow(0 0 34px rgba(241,139,196,.4)) }
+.v-nocturno .firma{ color:var(--rosa) }
+.v-nocturno .destacado{
   font-family:var(--display); text-transform:uppercase; line-height:1.02;
   font-size:clamp(20px,2.8vw,38px); max-width:26ch;
 }
 
-.v-3 .cambiar{ background:rgba(246,237,232,.1); border:1px solid var(--linea) }
+.v-nocturno .cambiar{ background:rgba(246,237,232,.1); border:1px solid var(--linea) }
 
 /* Tarjetas de vidrio: el pico sólido rompería la transparencia. */
-.v-3 .ruta-paso > .materia::after{ display:none }
+.v-nocturno .ruta-paso > .materia::after{ display:none }
