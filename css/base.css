@@ -1,0 +1,395 @@
+/* Base común a las tres propuestas.
+   Aquí vive solo el esqueleto: tokens de marca, retícula, escala tipográfica y
+   el motor de las animaciones. La dirección visual de cada propuesta va entera
+   en p1/p2/p3.css, que pueden repintar cualquiera de estos tokens.
+
+   Los colores salen de las piezas que ya existen (carpeta y pensum), no de una
+   interpretación: son los mismos valores exactos. */
+
+:root{
+  --vino:#500711;
+  --vino-2:#6e0f1d;
+  --rosa:#F18BC4;
+  --rosa-soft:#f7b6d8;
+  --azul:#98B7FD;
+  --azul-soft:#c2d4fe;
+  --amar:#F9FF80;
+  --amar-soft:#fdffc4;
+  --crema:#F8F3EF;
+  --ink:#3a0810;
+
+  --fondo:var(--crema);
+  --texto:var(--vino);
+  --superficie:#fff;
+  --linea:rgba(80,7,17,.10);
+  --acento:var(--rosa);
+
+  --r:26px;
+  --r-s:16px;
+  --shadow:0 18px 45px -18px rgba(80,7,17,.45);
+  --shadow-alta:0 40px 90px -40px rgba(80,7,17,.55);
+
+  --display:'Anton',Impact,sans-serif;
+  --texto-f:'Outfit',system-ui,-apple-system,sans-serif;
+  --mano:'Caveat',cursive;
+
+  --wrap:1180px;
+  --sec-y:clamp(72px,10vw,150px);
+
+  /* Escala fluida: una sola fuente de verdad para los tamaños de titular. */
+  /* Tope bajado de 124px: a 150px el titular ocupa cuatro líneas y empuja el
+     botón de admisión 400px por debajo del pliegue en un portátil normal.
+     El titular sigue siendo el elemento dominante, pero deja ver el CTA. */
+  --t-hero:clamp(40px,6.6vw,96px);
+  --t-h2:clamp(30px,5.2vw,68px);
+  --t-h3:clamp(19px,2.1vw,26px);
+  --t-cuerpo:clamp(16px,1.15vw,18px);
+}
+
+*,*::before,*::after{ box-sizing:border-box }
+
+html{ scroll-behavior:smooth; scroll-padding-top:84px; -webkit-text-size-adjust:100% }
+
+body{
+  margin:0;
+  font-family:var(--texto-f);
+  font-size:var(--t-cuerpo);
+  line-height:1.65;
+  color:var(--texto);
+  background:var(--fondo);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+img,svg{ max-width:100% }
+/* Los SVG son inline por defecto y se colocan en la línea de texto: sin esto el
+   logo del hero arrastra a la píldora que va debajo. */
+.logo,.logo-foot{ display:block }
+
+/* --------------------------------------------------------------- tipografía */
+
+h1,h2,h3{
+  font-family:var(--display);
+  font-weight:400;
+  text-transform:uppercase;
+  line-height:.94;
+  letter-spacing:-.015em;
+  margin:0 0 .5em;
+  /* Anton no trae versalitas reales; el balance evita viudas en los titulares
+     largos de esta landing, que son casi todos. */
+  text-wrap:balance;
+}
+h1{ font-size:var(--t-hero) }
+h2{ font-size:var(--t-h2) }
+h3{ font-size:var(--t-h3); line-height:1.05 }
+
+p{ margin:0 0 1.1em; text-wrap:pretty }
+/* Medida de lectura. El contenedor llega a 1180px y a ese ancho una línea de
+   texto pasa de 110 caracteres: el ojo pierde el renglón al volver. */
+.carta-cuerpo,.sec > .wrap > p{ max-width:68ch }
+h2{ max-width:22ch }
+p:last-child{ margin-bottom:0 }
+
+a{ color:inherit }
+
+.wrap{ max-width:var(--wrap); margin:0 auto; padding:0 clamp(20px,4vw,32px) }
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:10px;
+  font-weight:700; font-size:12.5px; letter-spacing:.18em; text-transform:uppercase;
+  opacity:.72; margin:0 0 22px;
+}
+.eyebrow .dot{ width:8px; height:8px; border-radius:50%; background:var(--acento); flex:none }
+
+.lead{ font-size:clamp(18px,1.6vw,22px); font-weight:500; max-width:60ch }
+.lead-min{ font-weight:700; letter-spacing:.02em; margin-bottom:.6em }
+.cierre{ font-size:clamp(17px,1.4vw,20px); font-weight:500; max-width:62ch; margin-top:1.6em }
+.remate{ font-family:var(--mano); font-size:clamp(22px,2.4vw,30px); color:var(--acento); line-height:1.2 }
+.entrada{ font-size:clamp(17px,1.35vw,20px); max-width:62ch }
+
+/* ------------------------------------------------------------------ listas */
+
+.lista{ list-style:none; padding:0; margin:0 0 1.4em; display:grid; gap:9px }
+.lista li{ position:relative; padding-left:22px }
+.lista li::before{
+  content:""; position:absolute; left:0; top:.62em;
+  width:8px; height:8px; border-radius:50%; background:var(--acento);
+}
+.dos-col{ grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); column-gap:32px }
+
+.chips{ display:flex; flex-wrap:wrap; gap:10px }
+.chips li{ padding:9px 17px; border:1.5px solid var(--linea); border-radius:999px; font-weight:600; font-size:14.5px }
+.chips li::before{ display:none }
+
+.check li::before,.cruz li::before{
+  content:"✓"; background:none; width:auto; height:auto; top:0;
+  font-weight:800; color:var(--acento);
+}
+.cruz li::before{ content:"✕"; opacity:.5 }
+
+.temas{ list-style:none; padding:0; margin:14px 0 0; display:flex; flex-wrap:wrap; gap:7px }
+.temas li{ font-size:13px; font-weight:600; padding:5px 12px; border-radius:999px; background:rgba(80,7,17,.06) }
+
+.pasos{ margin:0 0 1.2em; padding-left:0; list-style:none; counter-reset:p; display:grid; gap:10px }
+.pasos li{ counter-increment:p; position:relative; padding-left:38px }
+.pasos li::before{
+  content:counter(p,decimal-leading-zero);
+  position:absolute; left:0; top:.05em;
+  font-family:var(--display); font-size:15px; color:var(--acento);
+}
+
+/* ------------------------------------------------------------------ retícula */
+
+.grid{ display:grid; gap:clamp(14px,1.6vw,22px) }
+.grid-2{ grid-template-columns:repeat(auto-fit,minmax(320px,1fr)) }
+.grid-3{ grid-template-columns:repeat(auto-fit,minmax(270px,1fr)) }
+.grid-4{ grid-template-columns:repeat(auto-fit,minmax(230px,1fr)) }
+.grid-materias{ grid-template-columns:repeat(auto-fit,minmax(290px,1fr)) }
+
+.card{
+  background:var(--superficie);
+  border:1.5px solid var(--linea);
+  border-radius:var(--r);
+  padding:clamp(22px,2.4vw,32px);
+  transition:transform .35s cubic-bezier(.2,.7,.3,1),border-color .3s,box-shadow .35s;
+}
+
+.sec{ padding:var(--sec-y) 0; position:relative }
+
+/* ------------------------------------------------------------------ botones */
+
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--texto-f); font-weight:800;
+  font-size:13.5px; letter-spacing:.12em; text-transform:uppercase;
+  padding:17px 30px; border-radius:999px; border:2px solid var(--texto);
+  text-decoration:none; cursor:pointer;
+  transition:transform .25s cubic-bezier(.2,.7,.3,1),background .25s,color .25s,box-shadow .25s;
+}
+.btn span{ transition:transform .25s }
+.btn:hover span{ transform:translateX(4px) }
+.btn-pri{ background:var(--texto); color:var(--fondo) }
+.btn-pri:hover{ box-shadow:var(--shadow); transform:translateY(-2px) }
+.btn-sec{ background:transparent; color:var(--texto) }
+.btn-sec:hover{ background:var(--texto); color:var(--fondo) }
+.btn-sec:hover span{ transform:translateY(3px) }
+
+.ctas{ display:flex; flex-wrap:wrap; gap:13px; margin:32px 0 }
+
+/* ---------------------------------------------------------------- navegación */
+
+.saltar{
+  position:absolute; left:-9999px; top:0; z-index:200;
+  background:var(--texto); color:var(--fondo); padding:12px 20px; border-radius:0 0 12px 0;
+  font-weight:700; text-decoration:none;
+}
+.saltar:focus{ left:0 }
+
+.nav{
+  position:sticky; top:0; z-index:80;
+  background:color-mix(in srgb,var(--fondo) 86%,transparent);
+  backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid var(--linea);
+}
+.nav-in{ display:flex; align-items:center; gap:16px; padding:11px clamp(18px,4vw,26px); max-width:var(--wrap); margin:0 auto }
+.nav .iso{ width:28px; height:28px; flex:none; color:var(--texto) }
+.nav .brand{ font-family:var(--display); font-size:15px; letter-spacing:.04em; text-transform:uppercase }
+.nav-links{ display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; flex:1; justify-content:flex-end }
+.nav-links::-webkit-scrollbar{ display:none }
+.nav-links a{
+  font-size:12.5px; font-weight:600; text-decoration:none; white-space:nowrap;
+  padding:8px 13px; border-radius:999px; opacity:.6; transition:.2s;
+}
+.nav-links a:hover{ opacity:1; background:color-mix(in srgb,var(--acento) 22%,transparent) }
+.nav-links a.en-vista{ opacity:1; background:var(--texto); color:var(--fondo) }
+.nav-cta{
+  flex:none; font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  padding:11px 19px; border-radius:999px; background:var(--acento); color:var(--vino);
+  text-decoration:none; transition:transform .2s;
+}
+.nav-cta:hover{ transform:translateY(-2px) }
+
+/* Barra de progreso de lectura: en una página de 22 secciones da una noción de
+   cuánto queda, que si no se pierde por completo. */
+.progreso{
+  position:absolute; left:0; bottom:-1px; height:2px; width:0;
+  background:var(--acento); transition:width .1s linear;
+}
+
+.cta-fijo{
+  position:fixed; right:clamp(14px,3vw,26px); bottom:clamp(14px,3vw,26px); z-index:70;
+  display:inline-flex; align-items:center; gap:9px;
+  padding:16px 26px; border-radius:999px;
+  background:var(--texto); color:var(--fondo);
+  font-weight:800; font-size:13px; letter-spacing:.11em; text-transform:uppercase;
+  text-decoration:none; box-shadow:var(--shadow-alta);
+  opacity:0; transform:translateY(18px) scale(.96); pointer-events:none;
+  transition:opacity .35s,transform .35s cubic-bezier(.2,.7,.3,1);
+}
+.cta-fijo.visible{ opacity:1; transform:none; pointer-events:auto }
+.cta-fijo:hover{ transform:translateY(-3px) }
+
+/* Cinta para saltar entre propuestas mientras se decide. No forma parte de la
+   landing: se quita al elegir dirección. */
+.cambiar{
+  position:fixed; left:clamp(14px,3vw,26px); bottom:clamp(14px,3vw,26px); z-index:70;
+  display:flex; align-items:center; gap:12px;
+  padding:10px 16px; border-radius:999px;
+  background:rgba(58,8,16,.9); color:#F8F3EF; backdrop-filter:blur(8px);
+  font-size:12px; font-weight:600;
+}
+.cambiar a{ color:var(--rosa); font-weight:800; text-decoration:none; white-space:nowrap }
+.cambiar a:hover{ text-decoration:underline }
+
+/* ------------------------------------------------------------------- video */
+
+.video{
+  position:relative; aspect-ratio:16/9; border-radius:var(--r); overflow:hidden;
+  margin:34px 0; background:var(--vino); box-shadow:var(--shadow-alta);
+}
+.video iframe{ position:absolute; inset:0; width:100%; height:100%; border:0 }
+.video-btn{
+  position:absolute; inset:0; width:100%; height:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
+  border:0; cursor:pointer; color:#F8F3EF; font-family:inherit;
+  background:
+    radial-gradient(120% 100% at 50% 0%,rgba(241,139,196,.35),transparent 60%),
+    linear-gradient(180deg,var(--vino-2),var(--vino));
+}
+.video-btn .play{
+  width:82px; height:82px; border-radius:50%;
+  display:grid; place-items:center; font-size:24px; padding-left:6px;
+  background:var(--rosa); color:var(--vino);
+  transition:transform .3s cubic-bezier(.2,.7,.3,1);
+  box-shadow:0 0 0 0 rgba(241,139,196,.5);
+  animation:pulso 2.8s infinite;
+}
+.video-btn:hover .play{ transform:scale(1.09) }
+@keyframes pulso{
+  0%{ box-shadow:0 0 0 0 rgba(241,139,196,.45) }
+  70%{ box-shadow:0 0 0 26px rgba(241,139,196,0) }
+  100%{ box-shadow:0 0 0 0 rgba(241,139,196,0) }
+}
+.video-t{
+  font-family:var(--display); text-transform:uppercase; font-size:clamp(17px,2.4vw,30px);
+  max-width:16ch; text-align:center; line-height:1.02;
+}
+
+.cita{
+  margin:0; padding:26px 0 26px 28px; border-left:3px solid var(--acento);
+  font-family:var(--mano); font-size:clamp(23px,3vw,38px); line-height:1.25;
+}
+.cita cite{ display:block; margin-top:12px; font-family:var(--texto-f); font-style:normal; font-size:14px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; opacity:.6 }
+
+/* --------------------------------------------------------------- marcadores */
+
+/* Todo lo que espera material real del cliente se marca en pantalla, para que
+   nadie confunda un hueco con una decisión de diseño. */
+.ph{
+  margin-top:20px; border:2px dashed color-mix(in srgb,var(--texto) 28%,transparent);
+  border-radius:var(--r-s); min-height:150px;
+  display:grid; place-items:center; text-align:center; padding:20px;
+  background:color-mix(in srgb,var(--texto) 4%,transparent);
+}
+.ph span{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; opacity:.5 }
+.pendiente{ position:relative }
+.pendiente::after{
+  content:"Pendiente de contenido real";
+  position:absolute; top:14px; right:14px;
+  font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  padding:5px 10px; border-radius:999px; background:var(--amar); color:var(--vino);
+}
+
+.retrato{
+  aspect-ratio:1; border-radius:var(--r-s); margin-bottom:20px;
+  display:grid; place-items:center;
+  background:linear-gradient(140deg,var(--rosa-soft),var(--azul-soft));
+  color:var(--vino); font-family:var(--display); font-size:clamp(26px,3vw,40px);
+  text-transform:uppercase;
+}
+.rol{ font-size:13.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; opacity:.62; margin-bottom:1em }
+
+/* ------------------------------------------------------------------ formulario */
+
+.form{ margin-top:36px; max-width:760px }
+.form-t{ font-family:var(--display); text-transform:uppercase; font-size:clamp(20px,2.4vw,30px); margin-bottom:22px }
+.campos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:16px }
+.campo-f{ display:block; margin-bottom:16px }
+.campo-f>span{ display:block; font-size:13px; font-weight:700; letter-spacing:.04em; margin-bottom:8px }
+.campo-f input,.campo-f select,.campo-f textarea{
+  width:100%; font-family:inherit; font-size:16px; color:var(--texto);
+  background:var(--superficie); border:1.5px solid var(--linea); border-radius:14px;
+  padding:14px 16px; transition:border-color .2s,box-shadow .2s;
+}
+.campo-f textarea{ resize:vertical; min-height:110px }
+.campo-f :focus-visible{ outline:none }
+.campo-f input:focus,.campo-f select:focus,.campo-f textarea:focus{
+  border-color:var(--acento); box-shadow:0 0 0 4px color-mix(in srgb,var(--acento) 25%,transparent);
+}
+.campo-f input:user-invalid,.campo-f select:user-invalid{ border-color:#c0392b }
+.form-msg{ margin-top:18px; font-weight:700; min-height:1.5em }
+.form-msg.ok{ color:var(--acento) }
+.form-msg.err{ color:#c0392b }
+
+/* ---------------------------------------------------------------------- faq */
+
+.faq{ max-width:900px; border-top:1px solid var(--linea) }
+.faq-item{ border-bottom:1px solid var(--linea) }
+.faq-item summary{
+  cursor:pointer; list-style:none; padding:24px 44px 24px 0; position:relative;
+  font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(16px,1.7vw,22px); line-height:1.15;
+}
+.faq-item summary::-webkit-details-marker{ display:none }
+.faq-item summary::after{
+  content:"+"; position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  font-family:var(--texto-f); font-size:26px; font-weight:300; color:var(--acento);
+  transition:transform .3s;
+}
+.faq-item[open] summary::after{ transform:translateY(-50%) rotate(45deg) }
+.faq-item summary:hover{ color:var(--acento) }
+.faq-cuerpo{ padding:0 44px 26px 0; max-width:70ch }
+
+/* ------------------------------------------------------------------- cierre */
+
+.cierre-final{ padding:var(--sec-y) 0; text-align:center; position:relative }
+.cierre-final .eyebrow{ justify-content:center }
+.cierre-final .lista{ justify-items:center }
+.cierre-final .lista li{ padding-left:0 }
+.cierre-final .lista li::before{ display:none }
+.cierre-final .ctas{ justify-content:center }
+.logo-foot{ width:min(420px,74%); height:auto; margin:40px auto 18px; display:block; color:currentColor }
+.claim{ font-weight:600; opacity:.75 }
+.firma{ font-family:var(--mano); font-size:clamp(20px,2.4vw,30px); color:var(--acento); margin-top:34px }
+
+/* ------------------------------------------------------- motor de animación */
+
+/* Cada bloque entra una sola vez al aparecer en pantalla. Sin JS (o con el
+   movimiento reducido) todo queda visible: la animación nunca es la que decide
+   si el contenido se puede leer. */
+.rv{ opacity:0; transform:translateY(26px); transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1) }
+.rv.dentro{ opacity:1; transform:none }
+.rv-d1{ transition-delay:.08s } .rv-d2{ transition-delay:.16s } .rv-d3{ transition-delay:.24s }
+.rv-d4{ transition-delay:.32s } .rv-d5{ transition-delay:.4s }
+
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto }
+  *,*::before,*::after{ animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important }
+  .rv{ opacity:1; transform:none }
+}
+
+:focus-visible{ outline:3px solid var(--acento); outline-offset:3px; border-radius:6px }
+
+@media (max-width:720px){
+  .nav .brand{ display:none }
+  .nav-cta{ display:none }
+  .cambiar{ font-size:11px; padding:8px 12px }
+  .cta-fijo{ left:clamp(14px,3vw,26px); right:clamp(14px,3vw,26px); justify-content:center }
+  .cambiar{ display:none }
+}
+
+@media print{
+  .nav,.cta-fijo,.cambiar,.saltar{ display:none }
+  .rv{ opacity:1; transform:none }
+}

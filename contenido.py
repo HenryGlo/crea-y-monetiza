@@ -1,0 +1,632 @@
+# -*- coding: utf-8 -*-
+"""Fuente única de la copy de la landing.
+
+Las tres propuestas rinden este mismo contenido: lo que cambia entre ellas es
+el diseño, nunca el texto. Editar aquí y volver a ejecutar construir.py.
+
+REGLA INNEGOCIABLE DEL CLIENTE: en esta landing no puede aparecer ninguna cifra
+económica — ni precio, ni matrícula, ni cuotas, ni planes de pago, ni rangos.
+Todo eso se comunica en privado durante la entrevista de admisión.
+construir.py verifica esto antes de escribir los archivos.
+"""
+
+MARCA = {
+    "nombre": "Crea y Monetiza Campus",
+    "dominio": "web-crea-y-monetiza.perfectflow.cloud",
+    "descripcion": (
+        "Formación integral de 6 meses para creadoras de contenido: marca personal, "
+        "UGC profesional, negocio, inteligencia artificial y monetización."
+    ),
+}
+
+# El ancla de cada entrada es también el id de la sección correspondiente.
+NAV = [
+    ("Inicio", "inicio"),
+    ("El Campus", "campus"),
+    ("Tu recorrido", "recorrido"),
+    ("Plan de estudios", "plan"),
+    ("Experiencia", "experiencia"),
+    ("Mentoras", "mentoras"),
+    ("Graduación", "graduacion"),
+    ("Admisiones", "admisiones"),
+]
+
+CTA_FIJO = "Iniciar admisión"
+
+# 01
+HERO = {
+    "eyebrow": "Admisiones · Crea y Monetiza Campus",
+    "titulo": "Tu talento puede convertirse en una carrera profesional.",
+    "entrada": (
+        "Bienvenida a Crea y Monetiza Campus, una formación integral para creadoras "
+        "de contenido que quieren profesionalizar su talento, construir una marca con "
+        "dirección y aprender a generar oportunidades reales dentro del mundo digital."
+    ),
+    "materias": [
+        "Marca personal.",
+        "Creación de contenido.",
+        "UGC profesional.",
+        "Negocio.",
+        "Inteligencia artificial.",
+        "Monetización.",
+    ],
+    "remate": "Todo dentro de una misma ruta formativa.",
+    "cta_1": "Iniciar mi proceso de admisión",
+    "cta_2": "Conocer el Campus",
+    "cifras": [
+        ("+270", "creadoras formadas"),
+        ("6", "meses de recorrido"),
+        ("10", "materias"),
+        ("1:1", "acompañamiento cercano"),
+    ],
+}
+
+# 02
+CARTA = {
+    "eyebrow": "Carta de bienvenida · Pierina Alves",
+    "titulo": "Antes de entrar, quiero contarte por qué existe este Campus.",
+    "parrafos": [
+        "Durante años he creado contenido, trabajado con marcas, probado estrategias, "
+        "cometido errores y acompañado a cientos de creadoras en su proceso.",
+        "Y había algo que seguía viendo una y otra vez: mujeres con muchísimo talento "
+        "intentando construir una carrera con información suelta.",
+        "Un curso para aprender edición. Otro para entender redes. Tutoriales sobre UGC. "
+        "Videos sobre cómo contactar marcas. Plantillas, prompts, consejos… pero ninguna "
+        "ruta que conectara todo.",
+        "Por eso nació Crea y Monetiza Campus.",
+        "Quería construir un lugar donde una creadora pudiera formarse de manera integral "
+        "y entender cómo pasar de tener talento y muchas ideas a tener estructura, criterio, "
+        "herramientas y una dirección profesional.",
+        "En este video quiero contarte de dónde viene el Campus, qué significa para mí y "
+        "por qué hemos decidido construirlo de esta manera.",
+    ],
+    "video_id": "P2U3sFLbljE",
+    "video_inicio": 8,
+    "video_titulo": "Por qué nació Crea y Monetiza Campus",
+    "cita": "Quería crear el lugar que yo habría necesitado cuando empecé.",
+    "cita_autora": "Pierina Alves",
+    "cta": "Continuar mi recorrido",
+}
+
+# 03
+CAMPUS = {
+    "eyebrow": "¿Qué es Crea y Monetiza Campus?",
+    "titulo": "Aquí no vienes solo a ver clases. Vienes a formarte.",
+    "intro": [
+        "Crear contenido puede convertirse en una profesión.",
+        "Pero para construir una carrera necesitas mucho más que saber grabar un buen video.",
+    ],
+    "necesidades": [
+        "Entender quién eres como creadora.",
+        "Qué quieres comunicar.",
+        "Cómo desarrollar una marca reconocible.",
+        "Cómo crear contenido con intención.",
+        "Cómo utilizar herramientas que hagan tu trabajo más eficiente.",
+        "Cómo presentar tu talento profesionalmente.",
+        "Cómo trabajar con marcas.",
+        "Cómo negociar.",
+        "Cómo monetizar.",
+        "Y cómo construir oportunidades alrededor de todo eso.",
+    ],
+    "cierre": [
+        "Eso es lo que conecta Crea y Monetiza Campus.",
+        "Una formación integral donde aprendes, implementas, recibes acompañamiento y "
+        "construyes los activos que necesitarás para desarrollar tu carrera como creadora.",
+    ],
+}
+
+# 04
+PERFIL = {
+    "eyebrow": "En qué te estás formando",
+    "titulo": "No estás aquí para convertirte en «una chica que hace videos». Estás aquí para convertirte en una creadora profesional.",
+    "ejes": [
+        ("Identidad", "Construyes una marca personal con una identidad clara, coherente y reconocible."),
+        ("Estrategia", "Aprendes a tomar decisiones detrás de tu contenido y dejar de publicar sin dirección."),
+        ("Creación", "Desarrollas criterio para conceptualizar, grabar, comunicar y producir piezas de contenido profesionales."),
+        ("Posicionamiento", "Trabajas una presencia digital capaz de comunicar quién eres, qué haces y qué valor puedes aportar."),
+        ("Negocio", "Aprendes a presentar tus servicios, estructurar propuestas, negociar y relacionarte profesionalmente con marcas."),
+        ("Monetización", "Exploras diferentes caminos para transformar tus habilidades creativas y digitales en oportunidades."),
+    ],
+    "cierre": "Aquí no trabajamos únicamente tu contenido. Trabajamos la creadora profesional que hay detrás de él.",
+}
+
+# 05
+RECORRIDO = {
+    "eyebrow": "Tu plan académico",
+    "titulo": "6 meses · 2 etapas",
+    "bajada": [
+        "Tres meses para construir tus bases.",
+        "Tres meses para llevarlas al mercado con acompañamiento.",
+    ],
+    "etapas": [
+        {
+            "n": "Etapa 01",
+            "meses": "Meses 1–3 · Formación",
+            "titulo": "Construyes tus bases",
+            "intro": "Comienzas con una ruta clara para entender qué necesitas trabajar, "
+                     "qué debes priorizar y cómo avanzar dentro del Campus.",
+            "lead": "Durante esta etapa:",
+            "pasos": [
+                "Realizas tu onboarding y diagnóstico inicial.",
+                "Defines tus objetivos y tu ruta de trabajo.",
+                "Comienzas tu formación a través del plan de estudios.",
+                "Desarrollas ejercicios y entregables.",
+                "Implementas lo aprendido en tu propio proyecto.",
+                "Recibes acompañamiento y feedback.",
+                "Evalúas tu progreso antes de pasar a la siguiente etapa.",
+            ],
+            "cierre": "Primero construimos una base sólida. Después la ponemos a trabajar.",
+        },
+        {
+            "n": "Etapa 02",
+            "meses": "Meses 4–6 · Implementación profesional",
+            "titulo": "Sales al mercado",
+            "intro": "Aquí empieza una etapa completamente diferente.\n"
+                     "Lo que has aprendido deja de quedarse dentro de las clases y comienza "
+                     "a aplicarse a tu realidad profesional.",
+            "lead": "Trabajarás sobre:",
+            "pasos": [
+                "Tu posicionamiento.", "Tu contenido.", "Tu portafolio.",
+                "Tu propuesta profesional.", "Tu pitch.", "Tus conversaciones con marcas.",
+                "Tus oportunidades.", "Tus negociaciones.",
+                "Tu estrategia de monetización.", "Tu crecimiento.",
+            ],
+            "cierre": "Y durante todo este proceso seguirás contando con acompañamiento para "
+                      "revisar, corregir y optimizar lo que estás implementando.",
+        },
+    ],
+}
+
+# 06
+PLAN = {
+    "eyebrow": "Dentro del Campus",
+    "titulo": "Este es tu plan de estudios.",
+    "bajada": "Cada materia ha sido diseñada para desarrollar una parte concreta de tu carrera como creadora.",
+    "materias": [
+        ("Onboarding", "Entiende cómo funciona el Campus, define tu punto de partida y construye tu ruta de trabajo.", []),
+        ("Marca personal", "Trabaja tu identidad, posicionamiento, diferenciación, mensaje y presencia como creadora.", []),
+        ("Estrategia de contenido", "Aprende a construir contenido con dirección, intención y objetivos claros.", []),
+        ("Creación de contenido", "Desarrolla ideas, storytelling, estructuras, grabación y ejecución para diferentes formatos y plataformas.", []),
+        ("Producción y postproducción", "Profesionaliza tus procesos de grabación, edición, organización y presentación audiovisual.", []),
+        ("UGC profesional", "", [
+            "Perfil UGC", "Portafolio", "Videos demo", "Pitch", "Contacto con marcas",
+            "Propuestas", "Presupuestos", "Tarifas", "Derechos de uso", "Contratos",
+            "Negociación", "Plataformas", "Primeras oportunidades",
+            "Relaciones profesionales con marcas",
+        ]),
+        ("Negocio para creadoras", "Convierte tus habilidades en servicios y ofertas que puedas presentar y monetizar profesionalmente.", []),
+        ("Monetización", "Aprende a identificar oportunidades alrededor de tu contenido, tus conocimientos, tus servicios y tu marca.", []),
+        ("Inteligencia artificial para creadoras", "Utiliza IA para investigar, organizar, crear, optimizar procesos y trabajar de manera más estratégica.", []),
+        ("Profesionalización", "Integra lo aprendido, prepara tus activos profesionales y construye tu siguiente etapa como creadora.", []),
+    ],
+    "cierre": [
+        "Y esto es solo el plan de estudios.",
+        "Dentro de cada materia encontrarás clases, ejercicios, recursos y entregables que "
+        "te ayudarán a pasar de aprender a ejecutar.",
+    ],
+}
+
+# 07
+EVALUACION = {
+    "eyebrow": "Aquí también se evalúa",
+    "titulo": "No queremos que termines el Campus sabiendo más. Queremos que termines sabiendo hacer más.",
+    "intro": [
+        "Por eso tu progreso no se mide únicamente por las clases que has visto.",
+        "Durante tu recorrido tendrás diferentes formas de poner en práctica lo aprendido.",
+    ],
+    "items": [
+        ("Ejercicios", "Actividades diseñadas para aterrizar cada concepto a tu realidad."),
+        ("Entregables", "Piezas concretas que tendrás que desarrollar durante tu formación."),
+        ("Revisiones", "Espacios para recibir feedback y detectar qué necesitas mejorar."),
+        ("Checkpoints", "Momentos específicos para revisar tu progreso y ajustar tu ruta."),
+        ("Implementación", "Lo aprendido se aplica directamente a tu contenido, tu marca y tus activos profesionales."),
+        ("Proyecto final", "El cierre de tu recorrido dentro del Campus."),
+    ],
+    "cierre": "Aquí no vienes a coleccionar clases terminadas. Vienes a construir evidencia de tu evolución.",
+}
+
+# 08
+TESIS = {
+    "eyebrow": "Proyecto final",
+    "titulo": "Toda creadora del Campus termina con un proyecto final.",
+    "lo_llamamos": "Lo llamamos:",
+    "nombre": "La Tesis Creativa",
+    "intro": [
+        "Durante tus meses dentro del Campus irás construyendo diferentes partes de tu carrera profesional.",
+        "Al finalizar tendrás que conectarlas dentro de un proyecto que represente lo que has desarrollado.",
+    ],
+    "lead": "Tu proyecto podrá integrar:",
+    "integra": [
+        "Tu identidad de marca.", "Tu posicionamiento.", "Tu estrategia de contenido.",
+        "Tus piezas creativas.", "Tu portafolio.", "Tu propuesta profesional.",
+        "Tu estrategia de monetización.", "Tu plan de crecimiento.",
+    ],
+    "cierre": [
+        "No puedes completar tu recorrido únicamente viendo clases.",
+        "Queremos que cuando llegues al final puedas mirar todo lo que construiste durante "
+        "estos meses y ver, de forma tangible, tu evolución como creadora.",
+    ],
+}
+
+# 09
+DIGITAL = {
+    "eyebrow": "Dónde vives la experiencia",
+    "titulo": "Tu campus, en un solo lugar.",
+    "piezas": ["Clases.", "Recursos.", "Entregables.", "Comunidad.", "Actualizaciones.", "Sesiones."],
+    "remate": "Todo forma parte de un mismo ecosistema.",
+    "bloques": [
+        {
+            "kicker": "La plataforma",
+            "titulo": "Skool",
+            "texto": ["Aquí encontrarás tus clases, recursos, materiales, entregables y acceso a la comunidad."],
+            "lista": [],
+            "placeholder": "Captura real de la plataforma",
+        },
+        {
+            "kicker": "Seguimiento",
+            "titulo": "Cerca, durante todo el proceso.",
+            "texto": [
+                "No tienes que desaparecer durante semanas y volver cuando tengas una duda.",
+                "El acompañamiento forma parte del recorrido.",
+                "Tendrás espacios para comunicar tus avances, resolver bloqueos y saber cuál "
+                "es el siguiente paso que necesitas ejecutar.",
+            ],
+            "lista": [],
+            "placeholder": "Capturas reales de seguimiento",
+        },
+        {
+            "kicker": "Comunidad",
+            "titulo": "No estás recorriendo esto sola.",
+            "texto": [
+                "Formar parte del Campus también significa compartir el proceso con creadoras "
+                "que están construyendo sus propios proyectos.",
+                "Un espacio para:",
+            ],
+            "lista": [
+                "Compartir avances.", "Resolver dudas.", "Celebrar resultados.", "Conectar.",
+                "Aprender de otros procesos.", "Descubrir oportunidades.",
+                "Y crecer rodeada de personas que entienden lo que estás construyendo.",
+            ],
+            "placeholder": "Captura real de la comunidad",
+        },
+    ],
+}
+
+# 10
+VIVO = {
+    "eyebrow": "El Campus también pasa en directo",
+    "titulo": "Hay cosas que necesitan conversación, no otra clase grabada.",
+    "bajada": "Durante tu recorrido tendrás acceso a diferentes espacios en vivo.",
+    "items": [
+        ("Masterclasses", "Sesiones especiales sobre temas estratégicos, herramientas, tendencias y oportunidades para creadoras."),
+        ("Q&A", "Espacios para llevar preguntas concretas y resolverlas junto al equipo."),
+        ("Revisiones", "Sesiones destinadas a analizar casos, procesos y aplicaciones reales."),
+        ("Encuentros de comunidad", "Momentos para conectar con otras alumnas y vivir el Campus más allá de la plataforma."),
+    ],
+}
+
+# 11
+FACULTAD = {
+    "eyebrow": "Tu equipo",
+    "titulo": "No dependes de una sola persona.",
+    "intro": [
+        "Cada área necesita una mirada diferente.",
+        "Por eso dentro del Campus encontrarás especialistas que acompañan diferentes "
+        "partes de tu formación.",
+    ],
+    "personas": [
+        {
+            "nombre": "Pierina Alves",
+            "rol": "Dirección del Campus · Estrategia y creación",
+            "bio": [
+                "Fundadora de Crea y Monetiza.",
+                "Creadora de contenido y mentora especializada en estrategia, UGC, "
+                "posicionamiento y monetización.",
+                "Pierina dirige la visión del Campus y comparte el conocimiento y los sistemas "
+                "que ha aplicado en su propia carrera y en los procesos de cientos de creadoras.",
+            ],
+        },
+        {
+            "nombre": "Paola",
+            "rol": "Seguimiento e implementación",
+            "bio": [
+                "Acompaña el proceso de ejecución para ayudarte a mantener dirección, detectar "
+                "bloqueos y convertir lo aprendido en acciones concretas.",
+            ],
+        },
+        {
+            "nombre": "Nathaly",
+            "rol": "Inteligencia artificial aplicada, organización y productividad",
+            "bio": [
+                "Te ayuda a entender cómo incorporar inteligencia artificial a tu trabajo como "
+                "creadora para investigar, organizar, producir y optimizar procesos sin sustituir "
+                "tu criterio creativo.",
+            ],
+        },
+    ],
+    "cierre": "Y a lo largo del Campus podrás encontrar nuevas especialistas, invitadas y "
+              "masterclasses en áreas específicas de tu desarrollo profesional.",
+}
+
+# 12
+MERCADO = {
+    "eyebrow": "Experiencia profesional",
+    "titulo": "En algún momento tienes que salir del aula.",
+    "intro": [
+        "Aprender a crear contenido es solo una parte.",
+        "También necesitas aprender qué hacer con esas habilidades cuando llega el momento "
+        "de presentarte profesionalmente.",
+    ],
+    "lead": "Durante tu recorrido trabajarás en:",
+    "items": [
+        "Tu portafolio.", "Tu propuesta.", "Tu pitch.", "Tu comunicación con marcas.",
+        "Tu estructura de precios.", "Tu negociación.", "Tu seguimiento.",
+        "Tu presencia profesional.", "Tu estrategia para encontrar oportunidades.",
+    ],
+}
+
+# 13
+OPORTUNIDADES = {
+    "eyebrow": "Oportunidades",
+    "titulo": "Saber crear es importante. Saber dónde buscar también.",
+    "intro": "Dentro del Campus tendrás acceso a recursos diseñados para acercarte al mercado profesional.",
+    "items": ["Marcas.", "Agencias.", "Plataformas UGC.", "Oportunidades.", "Referencias.", "Recursos de prospección."],
+    "cierre": [
+        "Información que te ayude a entender dónde buscar y cómo presentarte.",
+        "Porque una formación para creadoras no estaría completa si después de aprender no "
+        "supieras cómo empezar a moverte profesionalmente.",
+    ],
+}
+
+# 14
+EXPERIENCIA = {
+    "eyebrow": "Tu experiencia dentro del Campus",
+    "titulo": "Cuando formas parte del Campus, no recibes solo clases.",
+    "items": [
+        ("10 materias", "Una formación integral para desarrollar diferentes áreas de tu carrera."),
+        ("6 meses de recorrido", "Formación, implementación y acompañamiento."),
+        ("Ruta de trabajo", "Una dirección clara para entender qué aprender, qué aplicar y qué priorizar."),
+        ("Equipo de mentoras", "Especialistas en diferentes áreas de tu desarrollo."),
+        ("Masterclasses en vivo", "Nuevas sesiones durante tu recorrido."),
+        ("Clases grupales y Q&A", "Espacios para preguntas, implementación y casos reales."),
+        ("Seguimiento", "Acompañamiento para revisar tu progreso."),
+        ("Recursos y plantillas", "Herramientas listas para ayudarte a ejecutar."),
+        ("Portafolio profesional", "Trabajas uno de tus principales activos para presentarte ante marcas."),
+        ("Pitch para marcas", "Aprendes a comunicar tu valor de una manera más profesional."),
+        ("Banco de oportunidades", "Recursos para ayudarte a encontrar posibles oportunidades."),
+        ("Comunidad privada", "Una red de creadoras viviendo el mismo proceso."),
+        ("Proyecto final", "Cierras tu recorrido integrando lo que has construido."),
+        ("Graduación", "Celebramos oficialmente el final de tu experiencia dentro del Campus."),
+        ("Certificado de finalización", "Recibes el reconocimiento correspondiente por haber completado tu recorrido en Crea y Monetiza Campus."),
+    ],
+}
+
+# 15 — Los casos van con datos reales; hasta entonces quedan marcados como pendientes.
+HISTORIAS = {
+    "eyebrow": "Alumnas · Casos reales",
+    "titulo": "Antes de ser un resultado, todas fueron una creadora intentándolo.",
+    "bajada": "Aquí queremos que conozcas algunos de los procesos que han formado parte de Crea y Monetiza.",
+    "casos": [
+        {"n": "Caso 01", "nombre": "[Nombre de alumna]", "lugar": "[Ciudad · País]",
+         "campos": [("Su punto de partida", "[Texto breve sobre dónde estaba antes.]"),
+                    ("Qué trabajó", "[Texto breve.]"),
+                    ("Su resultado", "[Resultado real y comprobable.]")],
+         "media": "Video / captura / testimonio"},
+        {"n": "Caso 02", "nombre": "[Nombre de alumna]", "lugar": "[Ciudad · País]",
+         "campos": [("Su punto de partida", "[Texto breve sobre dónde estaba antes.]"),
+                    ("Qué trabajó", "[Texto breve.]"),
+                    ("Su resultado", "[Resultado real y comprobable.]")],
+         "media": "Video / captura / testimonio"},
+        {"n": "Caso 03", "nombre": "[Nombre de alumna]", "lugar": "[Ciudad · País]",
+         "campos": [("Su punto de partida", "[Texto breve sobre dónde estaba antes.]"),
+                    ("Qué trabajó", "[Texto breve.]"),
+                    ("Su resultado", "[Resultado real y comprobable.]")],
+         "media": "Video / captura / testimonio"},
+    ],
+}
+
+# 16
+GRADUACION = {
+    "eyebrow": "El final de tu recorrido",
+    "titulo": "Y sí. También te gradúas.",
+    "intro": [
+        "Completar tu recorrido significa haber avanzado por tu plan de estudios, "
+        "desarrollado tus entregables y presentado tu Proyecto Final.",
+        "Y queremos celebrar ese momento como corresponde.",
+    ],
+    "bloques": [
+        ("Graduación presencial",
+         ["Encuentros especiales en España para celebrar juntas el cierre del recorrido."],
+         "[Fechas según calendario de cada cohorte]"),
+        ("Graduación online",
+         ["Si formas parte del Campus desde otro país y no puedes asistir presencialmente, "
+          "podrás vivir también tu cierre de manera online."], ""),
+        ("Certificado de finalización",
+         ["Al completar los requisitos del Campus recibirás tu certificado de finalización "
+          "de Crea y Monetiza Campus."], ""),
+    ],
+    "cierre": "No celebramos que terminaste unas clases. Celebramos todo lo que fuiste capaz "
+              "de construir mientras las aplicabas.",
+}
+
+# 17
+REGISTRO = {
+    "eyebrow": "Registro de interés",
+    "titulo": "¿Quieres ser de las primeras en enterarte de lo que pasa en el Campus?",
+    "items": ["Nuevas convocatorias.", "Fechas de admisión.", "Masterclasses.", "Novedades.",
+              "Eventos.", "Recursos.", "Actualizaciones del Campus."],
+    "bajada": "Las personas que forman parte de nuestro registro prioritario reciben la información directamente.",
+    "form_titulo": "Quiero entrar al registro prioritario",
+    "campos": [
+        ("nombre", "Nombre", "text", True),
+        ("apellido", "Apellido", "text", True),
+        ("email", "Correo electrónico", "email", True),
+        ("pais", "País", "text", True),
+        ("social", "Instagram o TikTok", "text", True),
+    ],
+    "punto_label": "¿En qué punto estás actualmente?",
+    "punto_opciones": [
+        "Todavía no he empezado a crear contenido.",
+        "Ya estoy creando contenido.",
+        "Quiero empezar como creadora UGC.",
+        "Ya he trabajado con marcas.",
+        "Quiero profesionalizar mi marca personal.",
+        "Ya monetizo, pero quiero crecer.",
+    ],
+    "objetivo_label": "¿Qué te gustaría conseguir profesionalmente con tu contenido durante los próximos 12 meses?",
+    "boton": "Entrar al registro prioritario",
+    "confirmacion": "Registro recibido. Ahora sí: bienvenida al radar del Campus. 💌",
+}
+
+# 18
+ES_PARA_TI = {
+    "eyebrow": "Antes de aplicar",
+    "si_titulo": "El Campus puede ser para ti si…",
+    "si": [
+        "Te encanta crear y quieres empezar a verlo como una carrera.",
+        "Ya creas contenido, pero sientes que necesitas estructura.",
+        "Quieres desarrollar una marca personal profesional.",
+        "Te interesa aprender UGC.",
+        "Quieres trabajar con marcas.",
+        "Necesitas mejorar la forma en la que presentas tu trabajo.",
+        "Quieres aprender a monetizar tus habilidades.",
+        "Buscas acompañamiento durante tu implementación.",
+        "Quieres formar parte de una comunidad que también se toma esto en serio.",
+        "Estás dispuesta a aprender, aplicar y recibir feedback.",
+    ],
+    "no_titulo": "Probablemente no es para ti si…",
+    "no": [
+        "Buscas resultados sin ejecutar.",
+        "Quieres comprar otra formación para dejarla guardada.",
+        "No estás dispuesta a aplicar lo aprendido.",
+        "No quieres recibir feedback.",
+        "Buscas una fórmula rápida que haga el trabajo por ti.",
+    ],
+    "cierre": "Nos importa mucho quién entra al Campus porque queremos construir una comunidad "
+              "de creadoras que realmente quieran profesionalizarse.",
+}
+
+# 19
+ADMISIONES = {
+    "eyebrow": "Proceso de admisión",
+    "titulo": "Tu entrada al Campus empieza aquí.",
+    "intro": ["Antes de incorporarte queremos conocerte."],
+    "queremos": [
+        "Entender dónde estás.",
+        "Qué quieres conseguir.",
+        "Qué has intentado hasta ahora.",
+        "Y confirmar que Crea y Monetiza Campus tiene sentido para el momento profesional "
+        "en el que te encuentras.",
+    ],
+    "pasos": [
+        ("Envía tu solicitud", "Completa tu información y cuéntanos brevemente sobre ti y tus objetivos."),
+        ("Agenda tu entrevista", "Tendrás una conversación con nuestro equipo para conocer tu situación actual y hacia dónde quieres avanzar."),
+        ("Evaluamos tu perfil", "Revisamos si el Campus encaja con tus objetivos y si podemos acompañarte en el punto en el que te encuentras."),
+        ("Recibes los siguientes pasos", "Si tu perfil encaja con la formación y hay disponibilidad para incorporarte, durante la llamada conocerás todos los detalles de acceso."),
+    ],
+    "pregunta": "¿Quieres formar parte de la próxima generación de creadoras del Campus?",
+    "boton": "Iniciar mi proceso de admisión",
+    "nota": "Completar el proceso de admisión no garantiza automáticamente una plaza.",
+}
+
+# 20
+COHORTE = {
+    "eyebrow": "Admisiones",
+    "titulo": "Cada generación empieza su recorrido en conjunto.",
+    "datos": [
+        ("Próxima cohorte", "[Fecha / mes]"),
+        ("Estado de admisiones", "[Abiertas / Próximamente / Lista prioritaria]"),
+        ("Registro prioritario", "Abierto"),
+    ],
+    "bajada": "Si quieres recibir las próximas fechas y novedades antes que el resto, puedes "
+              "entrar al registro prioritario.",
+    "boton": "Quiero recibir las próximas fechas",
+}
+
+# 21
+FAQ = {
+    "eyebrow": "Preguntas frecuentes",
+    "titulo": "Secretaría académica",
+    "preguntas": [
+        ("¿Necesito experiencia previa?",
+         ["No necesitas tener una carrera consolidada como creadora para aplicar.",
+          "Dentro del proceso de admisión evaluaremos tu punto de partida para entender si el Campus encaja contigo."]),
+        ("¿Necesito tener muchos seguidores?",
+         ["No.",
+          "La formación trabaja tus habilidades, posicionamiento, estrategia y profesionalización. "
+          "Tu número de seguidores no determina por sí solo tu capacidad para construir oportunidades."]),
+        ("¿Puedo formar parte si vivo fuera de España?",
+         ["Sí.", "El Campus está diseñado para recibir creadoras desde diferentes países."]),
+        ("¿El Campus es online?",
+         ["La formación y el acompañamiento principal se desarrollan online para que puedas avanzar desde donde estés.",
+          "Además, pueden existir experiencias y encuentros presenciales vinculados al Campus."]),
+        ("¿Cuánto dura?",
+         ["Tu recorrido principal dentro del Campus tiene una duración de 6 meses."]),
+        ("¿Tengo que hacer entregables?",
+         ["Sí.",
+          "Queremos que apliques lo aprendido durante el proceso, por eso diferentes materias "
+          "incluyen ejercicios, implementación y entregables."]),
+        ("¿Tengo que presentar un proyecto final?",
+         ["Sí.",
+          "Al finalizar tu recorrido desarrollarás tu Proyecto de Graduación, donde integrarás "
+          "diferentes elementos que has construido durante tu formación."]),
+        ("¿Hay acompañamiento?",
+         ["Sí.", "El acompañamiento y seguimiento forman parte de la experiencia del Campus."]),
+        ("¿Recibiré un certificado?",
+         ["Al completar los requisitos del recorrido recibirás un certificado de finalización "
+          "de Crea y Monetiza Campus."]),
+        ("¿Qué es el Banco de Oportunidades?",
+         ["Es un espacio de recursos relacionados con marcas, agencias, plataformas y "
+          "oportunidades que pueden ayudarte durante tu etapa de profesionalización."]),
+        ("¿Cómo puedo entrar?",
+         ["El primer paso es completar tu proceso de admisión y agendar una entrevista con nuestro equipo."]),
+        ("¿Dónde puedo conocer las condiciones de acceso?",
+         ["Todas las condiciones de incorporación se explican durante la entrevista de admisión "
+          "una vez que conocemos tu situación y confirmamos que el Campus puede encajar contigo."]),
+        ("¿Qué pasa si las admisiones están cerradas?",
+         ["Puedes entrar al registro prioritario para recibir directamente las próximas fechas, "
+          "convocatorias y novedades."]),
+    ],
+}
+
+# 22
+CIERRE = {
+    "eyebrow": "Tu próximo capítulo",
+    "titulo": "Tu carrera como creadora no empieza cuando una marca te descubre. Empieza cuando decides tomártela en serio.",
+    "parrafos": [
+        "Puedes seguir aprendiendo cada parte por separado.",
+        "O puedes construirlas dentro de una ruta.",
+    ],
+    "con": ["Con estructura.", "Con formación.", "Con implementación.", "Con acompañamiento.",
+            "Y con otras creadoras recorriendo el mismo camino."],
+    "marca": "Crea y Monetiza Campus",
+    "claim": "Formación integral para la nueva generación de creadoras.",
+    "cta_1": "Iniciar mi proceso de admisión",
+    "cta_2": "Entrar al registro prioritario",
+    "firma": "Tu contenido puede ser el comienzo de algo mucho más grande.",
+}
+
+# Las tres propuestas comparten contenido; solo cambian nombre, subtítulo y hoja de estilo.
+PROPUESTAS = [
+    {
+        "slug": "propuesta-1",
+        "nombre": "Prospecto",
+        "resumen": "Continuidad directa con las piezas que ya existen: crema, stickers, Anton "
+                   "y tarjetas redondeadas. La más reconocible para quien ya vio la carpeta o el pensum.",
+        "css": "p1.css",
+    },
+    {
+        "slug": "propuesta-2",
+        "nombre": "Expediente",
+        "resumen": "Registro institucional: retícula marcada, secciones numeradas como un catálogo "
+                   "universitario, mucho blanco y el rosa reservado para acentuar. Transmite seriedad académica.",
+        "css": "p2.css",
+    },
+    {
+        "slug": "propuesta-3",
+        "nombre": "Nocturno",
+        "resumen": "Vino a sangre completa, tipografía a gran escala y acentos en rosa y azul sobre "
+                   "oscuro. El registro más premium y cinematográfico de los tres.",
+        "css": "p3.css",
+    },
+]
