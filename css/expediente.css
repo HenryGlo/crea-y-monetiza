@@ -230,3 +230,36 @@ body.v-expediente{
    blanco. La conexión ya la dan el nodo y la flecha. */
 .v-expediente .ruta-paso > .materia::after{ display:none }
 .v-expediente .ruta-nodo{ border-radius:0 }
+
+/* --------------------------------------------------------------- teléfonos */
+
+@media (max-width:600px){
+  /* Mismo caso que en las demás: el índice de materias es alto y dejaba el
+     botón en 1143 sobre 667 de pantalla. Se adelanta con `order`, sin tocar el
+     marcado — en escritorio el orden del guion sí cabe entero. */
+  .v-expediente .hero .wrap{ display:flex; flex-direction:column }
+  .v-expediente .hero .logo{ order:1 }
+  .v-expediente .hero .pill{ order:2 }
+  .v-expediente .hero h1{ order:3 }
+  .v-expediente .hero .entrada{ order:4 }
+  .v-expediente .hero .ctas{ order:5 }
+  .v-expediente .materias-hero{ order:6 }
+  .v-expediente .hero .remate{ order:7 }
+  .v-expediente .cifras{ order:8 }
+
+  .v-expediente .hero{ padding:22px 0 34px }
+  .v-expediente .hero .logo{ width:min(190px,56%)!important; margin-bottom:20px }
+  .v-expediente .materias-hero li{ padding:11px 0 11px 36px; font-size:15px }
+  /* El filete vertical entre columnas no tiene sentido en una sola columna. */
+  .v-expediente .cifra,.v-expediente .paso,.v-expediente .dato{
+    border-right:0; border-bottom:1px solid var(--linea); padding-right:0;
+  }
+  .v-expediente .sec::before{ display:none }
+}
+
+@media (max-width:600px) and (max-height:700px){
+  .v-expediente .hero{ padding:12px 0 28px }
+  .v-expediente .hero .logo{ width:min(150px,44%)!important; margin-bottom:14px }
+  .v-expediente .hero .pill{ margin-bottom:18px }
+  .v-expediente .hero .entrada{ padding-top:16px; font-size:15px }
+}

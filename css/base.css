@@ -627,3 +627,76 @@ a{ color:inherit }
 @media (prefers-reduced-motion:reduce){
   .ruta::after{ height:100% }
 }
+
+/* ================================================================== teléfonos
+   Medido en iPhone SE, 15, 15 Pro Max e iPad mini: el botón de admisión caía
+   entre 300 y 630px por debajo del pliegue. En una landing cuyo único trabajo
+   es abrir una admisión, eso es el fallo más caro que puede tener.
+
+   Se corrige por estructura, no encogiendo tipografía hasta que entre: el
+   titular sigue teniendo escala de titular. */
+
+@media (max-width:600px){
+  :root{
+    /* El titular manda igual en un móvil, pero a 34px de mínimo ocupaba cinco
+       líneas de las pocas que hay. */
+    --t-hero:clamp(30px,8.4vw,42px);
+    --sec-y:clamp(52px,13vw,78px);
+  }
+
+  /* El logo del hero es la única marca completa que se ve —en el nav estrecho
+     solo queda el isotipo— así que se conserva, pero al tamaño justo. */
+  .hero .logo{ width:min(190px,56%)!important }
+
+  /* Botones a ancho completo: mejor zona de toque y una decisión por fila, que
+     es como se leen en un móvil. */
+  .hero .ctas{ display:grid; gap:10px; width:100%; margin:18px 0 }
+  .hero .ctas .btn{ width:100%; justify-content:center; padding:16px 20px }
+
+  .cifras{ grid-template-columns:repeat(2,1fr)!important }
+
+  /* La cinta rueda más rápido: en pantalla estrecha caben pocas palabras y a la
+     velocidad de escritorio parece detenida. */
+  .cinta-pista{ animation-duration:18s }
+  .cinta{ padding:12px 0 }
+
+  /* Con una sola columna, el escalonado de entrada retrasa demasiado lo último
+     en aparecer. */
+  .rv-d3,.rv-d4,.rv-d5{ transition-delay:.16s }
+
+  .video{ margin:24px 0 }
+  .form{ margin-top:26px }
+  .campos{ grid-template-columns:1fr }
+
+  /* El botón flotante y el nav pesan sobre una pantalla corta: el flotante solo
+     aparece cuando de verdad se está leyendo, no al primer desplazamiento. */
+  .cta-fijo{ bottom:14px; padding:15px 20px; font-size:12px }
+
+  /* El menú se alineaba a la derecha, y como en móvil desborda y es
+     desplazable, arrancaba mostrando el final: la primera entrada visible era
+     "…encia" en vez de "Inicio". */
+  .nav-links{ justify-content:flex-start; gap:0 }
+  .nav-links a{ padding:8px 11px; font-size:12px }
+  .nav-in{ gap:10px }
+
+  /* La píldora del hero parte en dos líneas y queda como un bloque pesado justo
+     encima del titular. */
+  .hero .pill{ font-size:10.5px!important; letter-spacing:.1em!important; padding:8px 14px!important }
+}
+
+/* Tablets: el punto donde una retícula de tres columnas deja cada tarjeta
+   demasiado estrecha para su texto, pero una sola desperdicia el ancho. */
+@media (min-width:601px) and (max-width:1024px){
+  .grid-3,.grid-4,.grid-materias{ grid-template-columns:repeat(2,1fr) }
+  .cifras{ grid-template-columns:repeat(4,1fr) }
+  :root{ --t-hero:clamp(38px,6vw,58px) }
+}
+
+/* Titulares con degradado recortado: entran enteros en vez de palabra a
+   palabra (ver titularesPorPalabra en campus.js). En el hero arrancan solos. */
+.entra-entero{
+  animation:pal-entra .7s cubic-bezier(.2,.8,.3,1) both;
+}
+.sec .entra-entero,.cierre-final .entra-entero{ animation:none }
+.sec .entra-entero{ opacity:1 }
+@media (prefers-reduced-motion:reduce){ .entra-entero{ animation:none } }

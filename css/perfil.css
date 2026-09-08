@@ -89,7 +89,7 @@ body.v-perfil{
 @media (max-width:900px){
   .v-perfil .hero .wrap{
     grid-template-columns:1fr;
-    grid-template-areas:"logo" "pill" "titulo" "perfil" "entrada" "ctas" "materias" "remate" "cifras";
+    grid-template-areas:"logo" "pill" "titulo" "entrada" "ctas" "perfil" "materias" "remate" "cifras";
     text-align:center; justify-items:center;
   }
   .v-perfil .hero h1,.v-perfil .hero .entrada{ margin-inline:auto }
@@ -351,3 +351,39 @@ body.v-perfil{
 .v-perfil .sticker path{ stroke:var(--vino); stroke-width:5; stroke-linejoin:round; paint-order:stroke }
 .v-perfil .s1 path{ fill:var(--azul) }
 .v-perfil .s2 path{ fill:var(--amar) }
+
+
+/* --------------------------------------------------------------- teléfonos */
+
+@media (max-width:600px){
+  /* La tarjeta del perfil mide 637px: puesta antes del botón, en un iPhone SE
+     lo empujaba a 1293 sobre 667 de pantalla. Va después — sigue siendo el
+     gancho de esta propuesta, y ahora se descubre al bajar dos dedos en vez de
+     costar la conversión. */
+  .v-perfil .pf-marco{ width:min(320px,92%); padding:18px 16px 16px; border-radius:24px }
+  .v-perfil .pf-avatar{ width:54px; height:54px }
+  .v-perfil .pf-stat b{ font-size:18px }
+  .v-perfil .pf-grid{ gap:5px }
+  .v-perfil .pf-pie{ font-size:16px }
+
+  /* El recorte de Pierina ocuparía media pantalla y taparía la tarjeta, que es
+     lo que cuenta la escena. */
+  .v-perfil .pf-persona{ display:none }
+
+  .v-perfil .hero .pill{ font-size:11px; letter-spacing:.14em; padding:8px 15px }
+  .v-perfil .materias-hero{ justify-content:center }
+  .v-perfil .hero .wrap{ row-gap:12px }
+}
+
+/* --------------------------------------------------------------- tablets */
+
+@media (min-width:601px) and (max-width:900px){
+  /* A este ancho las dos columnas dejan la tarjeta demasiado estrecha para su
+     retícula de tres, así que el hero baja a una sola — pero aquí sí hay altura
+     para que el perfil vaya antes del botón, que es el orden que cuenta mejor
+     la idea. */
+  .v-perfil .pf-persona{
+    display:block; right:-10%; width:min(230px,40%);
+  }
+  .v-perfil .pf-marco{ width:min(340px,88%) }
+}

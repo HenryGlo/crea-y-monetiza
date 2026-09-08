@@ -270,3 +270,31 @@ body.v-nocturno{
 
 /* Tarjetas de vidrio: el pico sólido rompería la transparencia. */
 .v-nocturno .ruta-paso > .materia::after{ display:none }
+
+/* --------------------------------------------------------------- teléfonos */
+
+@media (max-width:600px){
+  /* El botón caía en 945 sobre 667. Se adelanta a la lista de materias. */
+  .v-nocturno .hero .wrap{ display:flex; flex-direction:column; align-items:center }
+  .v-nocturno .hero .logo{ order:1 }
+  .v-nocturno .hero .pill{ order:2 }
+  .v-nocturno .hero h1{ order:3 }
+  .v-nocturno .hero .entrada{ order:4 }
+  .v-nocturno .hero .ctas{ order:5 }
+  .v-nocturno .materias-hero{ order:6 }
+  .v-nocturno .hero .remate{ order:7 }
+  .v-nocturno .cifras{ order:8; width:100% }
+
+  .v-nocturno .hero{ padding:24px 0 40px; min-height:0 }
+  .v-nocturno .materias-hero li{ font-size:13px; padding:7px 15px }
+  /* La retícula de fondo a 74px se ve como una malla apretada en pantalla
+     estrecha; a 46 mantiene la sensación de profundidad. */
+  .v-nocturno .hero::after{ background-size:46px 46px }
+}
+
+@media (max-width:600px) and (max-height:700px){
+  .v-nocturno .hero{ padding:12px 0 30px }
+  .v-nocturno .hero .logo{ width:min(150px,44%)!important; margin-bottom:14px }
+  .v-nocturno .hero .pill{ margin-bottom:16px; padding:8px 16px }
+  .v-nocturno .hero .entrada{ margin-bottom:18px; font-size:15px }
+}

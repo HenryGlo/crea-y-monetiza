@@ -200,3 +200,43 @@ body.v-prospecto{
   font-family:var(--display); text-transform:uppercase; line-height:1.04;
   font-size:clamp(20px,2.8vw,36px); max-width:26ch;
 }
+
+
+/* --------------------------------------------------------------- teléfonos */
+
+@media (max-width:600px){
+  /* Medido en iPhone SE: el botón caía en 968 sobre 667 de pantalla, con la
+     lista de materias y el remate por delante. Se adelanta.
+
+     Se hace con `order` y no cambiando el marcado porque el orden del guion
+     —materias antes que botones— es el correcto en escritorio, donde sí caben
+     los dos por encima del pliegue. */
+  .v-prospecto .hero .wrap{ display:flex; flex-direction:column; align-items:center }
+  .v-prospecto .hero .logo{ order:1 }
+  .v-prospecto .hero .pill{ order:2 }
+  .v-prospecto .hero h1{ order:3 }
+  .v-prospecto .hero .entrada{ order:4 }
+  .v-prospecto .hero .ctas{ order:5 }
+  .v-prospecto .materias-hero{ order:6 }
+  .v-prospecto .hero .remate{ order:7 }
+  .v-prospecto .cifras{ order:8; width:100% }
+
+  .v-prospecto .hero{ padding:26px 0 44px }
+  .v-prospecto .materias-hero li{ font-size:13px; padding:6px 13px; border-width:1.5px }
+  .v-prospecto .cifra{ box-shadow:4px 4px 0 var(--vino); padding:16px 10px }
+  .v-prospecto .cifra b{ font-size:30px }
+  .v-prospecto .cifra span{ font-size:11px }
+  .v-prospecto .cierre-final{ border-radius:24px 24px 0 0 }
+}
+
+/* Pantallas cortas (iPhone SE y similares). El ancho no es el problema aquí
+   sino la altura: 667px de alto dejaban el botón 37px fuera. Se recorta donde
+   no cuesta jerarquía —logo, aire alrededor del titular— y no del titular. */
+@media (max-width:600px) and (max-height:700px){
+  .v-prospecto .hero{ padding:14px 0 36px }
+  .v-prospecto .hero .logo{ width:min(150px,44%)!important; margin-bottom:14px }
+  .v-prospecto .hero .pill{ margin-bottom:16px; padding:8px 15px; font-size:11px }
+  .v-prospecto .hero h1{ margin-bottom:.35em }
+  .v-prospecto .hero .entrada{ margin-bottom:16px; font-size:15px }
+  .v-prospecto .hero .ctas{ margin:12px 0 }
+}

@@ -244,6 +244,18 @@
        deletrea, y `text-wrap:balance` deja de funcionar al perder los espacios. */
     document.querySelectorAll(".hero h1, .cierre-final h2, .tesis-nombre").forEach(function (h) {
       if (h.querySelector(".pal")) return;
+
+      /* Los titulares con degradado recortado (background-clip:text) no se
+         pueden partir: el color real lo pinta el fondo del propio elemento, y
+         al meter cada palabra en su caja el degradado deja de alcanzarlas — el
+         titular desaparece entero. Se les deja la entrada completa, sin
+         escalonar, que sobre ese tratamiento se ve igual de bien. */
+      var est = getComputedStyle(h);
+      if ((est.webkitBackgroundClip || est.backgroundClip) === "text") {
+        h.classList.add("entra-entero");
+        return;
+      }
+
       const palabras = h.textContent.trim().split(/\s+/);
       h.setAttribute("aria-label", h.textContent.trim());
       h.textContent = "";

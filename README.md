@@ -16,6 +16,22 @@ Publicado en <https://web-crea-y-monetiza.perfectflow.cloud>.
 Las cuatro llevan **exactamente la misma copy** y las mismas 22 secciones. Lo único
 que cambia entre ellas es la hoja de estilo.
 
+## Responsive
+
+Verificado midiendo, no a ojo, en iPhone SE (375×667), iPhone 15 (393×852),
+iPhone 15 Pro Max (430×932), iPad mini (768×1024) e iPad Pro (1024×1366).
+
+El criterio: **el botón de admisión entra en el pliegue en las cuatro propuestas
+y en los cinco tamaños**, y ninguna página produce scroll horizontal. En una
+landing cuyo único trabajo es abrir una admisión, un hero que no enseña su botón
+no cumple.
+
+Se resuelve por estructura y no encogiendo tipografía hasta que quepa: en móvil
+los botones se adelantan a la lista de materias con `order`, sin tocar el
+marcado — en escritorio el orden del guion sí cabe entero. En la propuesta
+Perfil la tarjeta del perfil pasa por detrás del botón en teléfonos (mide 637px
+y por sí sola echaba el CTA fuera de pantalla) y vuelve delante en tablet.
+
 ## Movimiento
 
 Cinta rodante entre secciones, titulares que entran palabra a palabra, tarjetas
