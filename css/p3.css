@@ -267,3 +267,6 @@ body.v-3{
 }
 
 .v-3 .cambiar{ background:rgba(246,237,232,.1); border:1px solid var(--linea) }
+
+/* Tarjetas de vidrio: el pico sólido rompería la transparencia. */
+.v-3 .ruta-paso > .materia::after{ display:none }

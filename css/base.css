@@ -523,3 +523,106 @@ a{ color:inherit }
   .card{ transform:none }
   .remate::after{ transform:scaleX(1) }
 }
+
+/* ============================================================ plan de estudios
+   Las materias dejan de ser una cuadrícula suelta y pasan a leerse como un
+   recorrido: van encadenadas por una vía que se dibuja a medida que se baja, con
+   una flecha entre cada una. Es lo que convierte "diez materias" en "una ruta",
+   que es exactamente lo que el Campus dice vender. */
+
+.ruta{
+  list-style:none; padding:0; margin:44px 0 0; position:relative;
+  display:grid; gap:clamp(20px,3vw,38px);
+}
+
+/* La vía: un carril tenue (::before) con el trazo de avance encima (::after).
+   Van como pseudo-elementos y no como un <span> dentro del <ol>: ahí serían
+   HTML inválido y, peor, desplazarían el nth-child de todas las materias, que
+   es lo que decide de qué lado cae cada tarjeta.
+
+   La altura del trazo la escribe campus.js en --avance, de 0 a 1. Sin JS se
+   queda al 100%: la ruta completa, simplemente sin dibujarse. */
+.ruta::before,.ruta::after{
+  content:""; position:absolute; top:0; left:50%;
+  width:3px; margin-left:-1.5px; border-radius:99px;
+}
+.ruta::before{
+  bottom:0; background:color-mix(in srgb,var(--texto) 14%,transparent);
+}
+.ruta::after{
+  height:calc(var(--avance,1) * 100%);
+  background:linear-gradient(180deg,var(--rosa),var(--azul) 55%,var(--rosa));
+  box-shadow:0 0 16px -2px var(--rosa);
+}
+
+.ruta-paso{
+  display:grid; grid-template-columns:1fr auto 1fr;
+  align-items:center; gap:clamp(14px,2vw,28px);
+  position:relative;
+}
+/* Alternar lados hace que la vcentral se lea como camino y no como lista con
+   una raya al lado. */
+.ruta-paso > .materia{ grid-column:1 }
+.ruta-paso:nth-child(even) > .materia{ grid-column:3 }
+.ruta-paso > .ruta-nodo{ grid-column:2 }
+
+.ruta-nodo{
+  width:52px; height:52px; flex:none; z-index:2;
+  display:grid; place-items:center; border-radius:50%;
+  font-family:var(--display); font-size:16px; letter-spacing:.02em;
+  background:var(--fondo); color:var(--texto);
+  border:3px solid color-mix(in srgb,var(--texto) 22%,transparent);
+  transition:border-color .35s,background .35s,color .35s,transform .35s cubic-bezier(.2,.8,.3,1);
+}
+/* El nodo se enciende cuando su materia ya entró en pantalla. */
+.ruta-paso.dentro > .ruta-nodo,
+.ruta-paso:has(.dentro) > .ruta-nodo{
+  border-color:var(--rosa); background:var(--rosa); color:var(--vino);
+  transform:scale(1.08);
+}
+
+/* Flecha entre materia y materia, sobre la vía. */
+.ruta-paso:not(:last-child)::after{
+  content:""; position:absolute; z-index:2;
+  left:50%; bottom:calc(clamp(20px,3vw,38px) / -2 - 5px);
+  width:11px; height:11px; margin-left:-6px;
+  border-right:3px solid color-mix(in srgb,var(--texto) 30%,transparent);
+  border-bottom:3px solid color-mix(in srgb,var(--texto) 30%,transparent);
+  transform:rotate(45deg);
+  transition:border-color .35s;
+}
+.ruta-paso.dentro:not(:last-child)::after,
+.ruta-paso:has(.dentro):not(:last-child)::after{ border-color:var(--rosa) }
+
+/* Un pico que apunta desde la tarjeta hacia la vía: es lo que hace que se lea
+   conectada y no simplemente apoyada al lado. */
+.ruta-paso > .materia::after{
+  content:""; position:absolute; top:50%; width:0; height:0; margin-top:-8px;
+  border:8px solid transparent;
+}
+.ruta-paso:nth-child(odd) > .materia::after{
+  right:-16px; border-left-color:var(--superficie);
+}
+.ruta-paso:nth-child(even) > .materia::after{
+  left:-16px; border-right-color:var(--superficie);
+}
+
+@media (max-width:900px){
+  /* Sin sitio para alternar, la vía se va al margen izquierdo y todo baja en
+     una sola columna. El pico cambia de lado con ella. */
+  .ruta::before,.ruta::after{ left:26px; margin-left:0 }
+  .ruta-paso{ grid-template-columns:auto 1fr; gap:18px }
+  .ruta-paso > .materia,
+  .ruta-paso:nth-child(even) > .materia{ grid-column:2 }
+  .ruta-paso > .ruta-nodo{ grid-column:1 }
+  .ruta-nodo{ width:44px; height:44px; font-size:14px }
+  .ruta-paso::after{ left:26px!important }
+  .ruta-paso > .materia::after,
+  .ruta-paso:nth-child(even) > .materia::after{
+    left:-16px; right:auto; border-right-color:var(--superficie); border-left-color:transparent;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .ruta::after{ height:100% }
+}

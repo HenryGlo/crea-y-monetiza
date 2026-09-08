@@ -224,3 +224,9 @@ body.v-2{
 @media (max-width:720px){
   .v-2 .cifra,.v-2 .paso,.v-2 .dato{ border-right:0; border-bottom:1px solid var(--linea) }
 }
+
+/* El pico que apunta a la vía se dibuja con el color de fondo de la tarjeta, y
+   aquí las tarjetas son filetes sin fondo: quedaría un triángulo blanco sobre
+   blanco. La conexión ya la dan el nodo y la flecha. */
+.v-2 .ruta-paso > .materia::after{ display:none }
+.v-2 .ruta-nodo{ border-radius:0 }

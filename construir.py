@@ -148,6 +148,8 @@ def perfil_animado():
                   for i, x in enumerate(f["bio"]))
     # La imagen solo se emite si el archivo está de verdad: un <img> a una ruta
     # inexistente deja el icono de imagen rota justo en el hero.
+    # WebP pesa 62 KB contra 642 del PNG con el mismo recorte y transparencia.
+    # Lo soporta todo navegador desde 2020, así que no hace falta alternativa.
     ruta = os.path.join(RAIZ, "assets", f["retrato"])
     if os.path.exists(ruta):
         persona = (f'<img class="pf-persona" src="../assets/{e(f["retrato"])}" '
@@ -276,16 +278,19 @@ def s_plan():
         cuerpo = f"<p>{e(d)}</p>" if d else ""
         if sub:
             cuerpo += '<ul class="temas">' + "".join(f"<li>{e(x)}</li>" for x in sub) + "</ul>"
-        ms += f"""<article class="card materia">
-      <p class="materia-n">Materia {i:02d}</p>
-      <h3>{e(t)}</h3>
-      {cuerpo}
-    </article>"""
+        ms += f"""<li class="ruta-paso">
+      <span class="ruta-nodo" aria-hidden="true">{i:02d}</span>
+      <article class="card materia">
+        <p class="materia-n">Materia {i:02d}</p>
+        <h3>{e(t)}</h3>
+        {cuerpo}
+      </article>
+    </li>"""
     return seccion("plan", "06", f"""
     {eyebrow(p["eyebrow"])}
     <h2>{e(p["titulo"])}</h2>
     <p class="lead">{e(p["bajada"])}</p>
-    <div class="grid grid-materias">{ms}</div>
+    <ol class="ruta">{ms}</ol>
     {parrafos(p["cierre"], "cierre")}""", "plan")
 
 

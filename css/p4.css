@@ -18,8 +18,10 @@ body.v-4{
 }
 
 /* Un solo reloj para todo el montaje. Cada pieza se cuelga de él con su propio
-   retardo, así que cambiar el ritmo de la escena es tocar una línea. */
-.v-4{ --t:.55s; --paso:.13s }
+   retardo, así que cambiar el ritmo de la escena es tocar estas dos líneas.
+   Ritmo ajustado: la escena entera cierra en ~1.6s. Más lenta se hacía esperar
+   justo en el primer pantallazo, que es donde menos paciencia hay. */
+.v-4{ --t:.36s; --paso:.062s }
 
 /* --------------------------------------------------------------------- hero */
 
@@ -109,8 +111,8 @@ body.v-4{
 .v-4 .pf-persona{
   /* Asomando por la derecha y por detrás: si se superpone a la tarjeta tapa
      justo la retícula, que es el gesto que la escena está contando. */
-  position:absolute; right:-24%; bottom:0; z-index:0;
-  width:min(270px,52%); height:auto;
+  position:absolute; right:-40%; bottom:-4%; z-index:0;
+  width:min(340px,66%); height:auto;
   filter:drop-shadow(-14px 18px 30px rgba(80,7,17,.35));
   animation:pf-persona .9s cubic-bezier(.2,.8,.25,1) calc(var(--paso) * 21) both;
   pointer-events:none;

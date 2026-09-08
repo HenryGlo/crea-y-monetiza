@@ -349,8 +349,53 @@
     setTimeout(function () { capa.remove(); }, 2200);
   }
 
+  /* -------------------------------------------------- la vía del plan de estudios */
+
+  function ruta() {
+    const via = document.querySelector(".ruta");
+    if (!via) return;
+    if (quieto) { via.style.setProperty("--avance", 1); return; }
+
+    const pasos = via.querySelectorAll(".ruta-paso");
+
+    /* Cada materia enciende su nodo al entrar en pantalla. Se marca el paso
+       entero y no la tarjeta, porque el nodo y la flecha son hermanos suyos. */
+    const obsPaso = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add("dentro");
+        obsPaso.unobserve(en.target);
+      });
+    }, { rootMargin: "0px 0px -45% 0px" });
+    pasos.forEach(function (p) { obsPaso.observe(p); });
+
+    /* El trazo avanza con el scroll: 0 cuando el primer nodo llega al centro de
+       la pantalla, 1 cuando lo alcanza el último. Referenciarlo a los nodos y no
+       a la caja entera evita que el trazo vaya adelantado respecto a ellos. */
+    let pendiente = false;
+    function pintar() {
+      pendiente = false;
+      if (!pasos.length) return;
+      const centro = scrollY + innerHeight / 2;
+      const primero = pasos[0].getBoundingClientRect();
+      const ultimo = pasos[pasos.length - 1].getBoundingClientRect();
+      const y0 = primero.top + scrollY + primero.height / 2;
+      const y1 = ultimo.top + scrollY + ultimo.height / 2;
+      const k = y1 > y0 ? (centro - y0) / (y1 - y0) : 1;
+      via.style.setProperty("--avance", Math.min(1, Math.max(0, k)).toFixed(3));
+    }
+    addEventListener("scroll", function () {
+      if (pendiente) return;
+      pendiente = true;
+      requestAnimationFrame(pintar);
+    }, { passive: true });
+    addEventListener("resize", pintar, { passive: true });
+    pintar();
+  }
+
   function iniciar() {
     prepararEntradas();
+    ruta();
     titularesPorPalabra();
     imanes();
     relieve();

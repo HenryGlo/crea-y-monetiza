@@ -623,7 +623,7 @@ PERFIL_ANIMADO = {
     # cuando el perfil ya terminó de montarse. El archivo va en assets/ con ese
     # nombre; construir.py comprueba si existe y, si no, deja un hueco marcado
     # en pantalla en vez de una imagen rota.
-    "retrato": "pierina.png",
+    "retrato": "pierina.webp",
     "retrato_alt": "Pierina Alves, directora de Crea y Monetiza Campus",
 }
 
