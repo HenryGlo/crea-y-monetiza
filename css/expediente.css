@@ -263,3 +263,6 @@ body.v-expediente{
   .v-expediente .hero .pill{ margin-bottom:18px }
   .v-expediente .hero .entrada{ padding-top:16px; font-size:15px }
 }
+
+/* Registro sobrio: el reflejo apenas se insinúa. */
+.v-expediente{ --brillo:#c76ca0 }

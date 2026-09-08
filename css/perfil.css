@@ -145,11 +145,6 @@ body.v-perfil{
   text-transform:uppercase; opacity:.55; line-height:1.6;
 }
 
-/* En pantallas estrechas no hay sitio a los lados: el recorte estorbaría la
-   tarjeta, que es la pieza que cuenta la historia. */
-@media (max-width:900px){
-  .v-perfil .pf-persona{ display:none }
-}
 
 .v-perfil .pf-marco{
   width:min(360px,100%);
@@ -360,15 +355,26 @@ body.v-perfil{
      lo empujaba a 1293 sobre 667 de pantalla. Va después — sigue siendo el
      gancho de esta propuesta, y ahora se descubre al bajar dos dedos en vez de
      costar la conversión. */
-  .v-perfil .pf-marco{ width:min(320px,92%); padding:18px 16px 16px; border-radius:24px }
+  .v-perfil .pf-marco{ width:min(330px,96%); padding:18px 15px 16px; border-radius:24px }
   .v-perfil .pf-avatar{ width:54px; height:54px }
   .v-perfil .pf-stat b{ font-size:18px }
   .v-perfil .pf-grid{ gap:5px }
   .v-perfil .pf-pie{ font-size:16px }
 
-  /* El recorte de Pierina ocuparía media pantalla y taparía la tarjeta, que es
-     lo que cuenta la escena. */
-  .v-perfil .pf-persona{ display:none }
+  /* Pierina sí aparece en móvil: es la cara del Campus y quitarla dejaba la
+     escena a medias. Lo que cambia es la composición — en vez de ir al lado, la
+     tarjeta se corre a la izquierda y ella ocupa la esquina derecha, que es el
+     único hueco que hay a 375px sin tapar la retícula. */
+  /* Pierina va posicionada en absoluto, así que no hace falta reservarle sitio:
+     reservarlo estrechaba la tarjeta hasta cortar la tercera columna de cifras
+     ("SIGUIENDO"). Se apoya sobre la esquina inferior derecha, igual que en
+     escritorio, tapando solo la última celda de la retícula. */
+  .v-perfil .pf-persona{
+    /* Anclada por encima del pie: el contenedor incluye esa línea, y colgarla
+       de su borde inferior la dejaba flotando por debajo de la tarjeta. */
+    display:block; right:-6px; bottom:56px; width:150px;
+    filter:drop-shadow(-8px 10px 18px rgba(80,7,17,.35));
+  }
 
   .v-perfil .hero .pill{ font-size:11px; letter-spacing:.14em; padding:8px 15px }
   .v-perfil .materias-hero{ justify-content:center }
@@ -387,3 +393,9 @@ body.v-perfil{
   }
   .v-perfil .pf-marco{ width:min(340px,88%) }
 }
+
+/* Mientras la tarjeta no esté a la vista, la escena espera (ver montajePerfil
+   en campus.js). La clase la pone el JS, así que sin JS nada se pausa. */
+.pf-espera .pf-marco,
+.pf-espera .pf-marco *,
+.pf-espera .pf-persona{ animation-play-state:paused }

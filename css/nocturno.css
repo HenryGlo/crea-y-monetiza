@@ -298,3 +298,7 @@ body.v-nocturno{
   .v-nocturno .hero .pill{ margin-bottom:16px; padding:8px 16px }
   .v-nocturno .hero .entrada{ margin-bottom:18px; font-size:15px }
 }
+
+/* Sobre fondo oscuro el reflejo va casi blanco: el rosa saturado contra un
+   titular crema se lee como un error de color, no como luz. */
+.v-nocturno{ --brillo:#ffe9f4 }

@@ -287,6 +287,44 @@
     });
   }
 
+  /* --------------------------------------------- el perfil espera a estar a la vista */
+
+  function montajePerfil() {
+    const pf = document.querySelector(".pf");
+    if (!pf || quieto) return;
+
+    /* El montaje es CSS y arranca al cargar la página. En escritorio eso está
+       bien porque la tarjeta ya se ve; en móvil quedó por debajo del pliegue y
+       la escena terminaba antes de que nadie llegase a mirarla.
+
+       Se pausa desde JS y se reanuda al entrar en pantalla. La pausa se añade
+       desde aquí y no en el CSS a propósito: si el script no llega a
+       ejecutarse, la animación corre como antes en vez de quedarse congelada e
+       invisible. */
+    /* Si ya se ve al cargar —el caso de escritorio— no se pausa nada: pausar
+       para reanudar en el mismo instante solo añade una forma de fallar. */
+    const caja = pf.getBoundingClientRect();
+    if (caja.top < innerHeight * 0.8) return;
+
+    pf.classList.add("pf-espera");
+
+    function arrancar() {
+      pf.classList.remove("pf-espera");
+      clearTimeout(seguro);
+      obs.disconnect();
+    }
+
+    const obs = new IntersectionObserver(function (ents) {
+      if (ents[0].isIntersecting) arrancar();
+    }, { threshold: 0.2 });
+    obs.observe(pf);
+
+    /* Red de seguridad. Una escena pausada que nunca arranca deja la tarjeta
+       invisible, que es peor que la animación que se pierde: si en 6s el
+       observador no ha avisado, se arranca igual. */
+    const seguro = setTimeout(arrancar, 6000);
+  }
+
   /* ------------------------------------------------------------ botones imantados */
 
   function imanes() {
@@ -409,6 +447,7 @@
     prepararEntradas();
     ruta();
     titularesPorPalabra();
+    montajePerfil();
     imanes();
     relieve();
     focoCursor();

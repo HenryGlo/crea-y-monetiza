@@ -34,7 +34,8 @@ y por sí sola echaba el CTA fuera de pantalla) y vuelve delante en tablet.
 
 ## Movimiento
 
-Cinta rodante entre secciones, titulares que entran palabra a palabra, tarjetas
+Reflejo que cruza los titulares palabra a palabra, cinta rodante entre secciones,
+titulares que entran palabra a palabra, tarjetas
 con relieve que sigue al cursor, botones imantados con barrido de luz, stickers
 flotando, cifras que suben al entrar en pantalla y confeti al confirmar el
 registro. La propuesta 4 añade el montaje del perfil.

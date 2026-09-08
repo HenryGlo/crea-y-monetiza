@@ -700,3 +700,72 @@ a{ color:inherit }
 .sec .entra-entero,.cierre-final .entra-entero{ animation:none }
 .sec .entra-entero{ opacity:1 }
 @media (prefers-reduced-motion:reduce){ .entra-entero{ animation:none } }
+
+/* ================================================================== reflejo
+   Un brillo que cruza los titulares: los saca de la sensación de tinta plana
+   sin recurrir a sombras ni relieves, que en Anton a esta escala ensucian.
+
+   Va sobre cada palabra y no sobre el titular entero a propósito. El brillo se
+   pinta con un degradado recortado al texto (background-clip:text), y ese
+   recorte no alcanza a los hijos que forman su propia caja — que es justo lo
+   que son las palabras de la animación de entrada. Puesto en cada una, el
+   reflejo viaja de palabra en palabra, que además se lee mejor que un barrido
+   uniforme.
+
+   El fondo se repite en horizontal por una razón concreta: sin repetir, al
+   desplazar el degradado se sale de la caja y deja parte del texto sin nada que
+   lo pinte — es decir, invisible. Con repetición la cobertura está garantizada
+   en cualquier posición, y como el patrón mide el doble que la palabra nunca se
+   ven dos brillos a la vez. */
+
+:root{
+  --tinta:var(--texto);
+  /* El reflejo no es blanco: es el acento de marca. Un brillo neutro sobre
+     vino se lee como un defecto de la pantalla, no como un reflejo. */
+  --brillo:var(--rosa);
+}
+
+.por-palabra .pal{
+  /* Banda estrecha: con el reflejo más ancho la palabra entera se teñía y se
+     leía como un degradado fijo en vez de como un destello que pasa. */
+  background-image:linear-gradient(102deg,
+    var(--tinta) 45%, var(--brillo) 50%, var(--tinta) 55%);
+  background-size:200% 100%;
+  background-repeat:repeat-x;
+  background-position:0 0;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+/* Un ciclo completo son 200%: el brillo cruza la palabra exactamente una vez. */
+@keyframes reflejo{
+  from{ background-position:100% 0 }
+  to{ background-position:-100% 0 }
+}
+
+/* Fuera del hero pasa una sola vez, cuando la sección aparece. */
+.por-palabra.entra .pal{
+  animation:reflejo 1.2s ease-out calc(.2s + var(--i) * 55ms) both;
+}
+
+/* En el hero se suma a la entrada —son propiedades distintas, así que
+   conviven— y vuelve cada 7s para que el titular principal no quede muerto
+   mientras se lee el resto de la página. El brillo cruza en el primer 17% del
+   ciclo y el resto es espera: así pasa rápido y no distrae. */
+@keyframes reflejo-hero{
+  0%{ background-position:100% 0 }
+  17%{ background-position:-100% 0 }
+  100%{ background-position:-100% 0 }
+}
+.hero .por-palabra .pal{
+  animation:
+    pal-entra .6s cubic-bezier(.2,.8,.3,1) calc(var(--i) * 50ms) both,
+    reflejo-hero 7s linear calc(.4s + var(--i) * 60ms) infinite;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .por-palabra .pal,.hero .por-palabra .pal{
+    animation:none; background-image:none; color:var(--tinta);
+  }
+}
