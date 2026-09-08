@@ -242,7 +242,11 @@
     if (quieto) return;
     /* Se parte por palabras y no por letras: por letras el lector de pantalla
        deletrea, y `text-wrap:balance` deja de funcionar al perder los espacios. */
-    document.querySelectorAll(".hero h1, .cierre-final h2, .tesis-nombre").forEach(function (h) {
+    /* Todos los titulares de sección, no solo el hero: son los "textos
+       principales" de la página y sin esto quedaban planos frente al primero.
+       Los h3 de tarjeta quedan fuera a propósito — son sesenta y pico, y a ese
+       tamaño el reflejo no se aprecia pero sí se paga. */
+    document.querySelectorAll(".hero h1, .sec h2, .cierre-final h2, .tesis-nombre").forEach(function (h) {
       if (h.querySelector(".pal")) return;
 
       /* Los titulares con degradado recortado (background-clip:text) no se
@@ -273,9 +277,7 @@
 
     const obs = new IntersectionObserver(function (ents) {
       ents.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        en.target.classList.add("entra");
-        obs.unobserve(en.target);
+        if (en.isIntersecting) en.target.classList.add("entra");
       });
     }, { threshold: 0.15 });
 
@@ -284,6 +286,18 @@
          base.css): ya está en pantalla al cargar y no debe depender de que
          una clase llegue a tiempo. */
       if (!h.closest(".hero")) obs.observe(h);
+    });
+
+    /* El reflejo es infinito, así que se para en los titulares que no se están
+       viendo. Sin esto son casi 180 palabras repintándose a la vez en una
+       página de 28.000px, casi toda fuera de pantalla. */
+    const quieto2 = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) {
+        en.target.classList.toggle("reflejo-quieto", !en.isIntersecting);
+      });
+    }, { rootMargin: "150px 0px" });
+    document.querySelectorAll(".por-palabra").forEach(function (h) {
+      quieto2.observe(h);
     });
   }
 

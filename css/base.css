@@ -744,25 +744,36 @@ a{ color:inherit }
   to{ background-position:-100% 0 }
 }
 
-/* Fuera del hero pasa una sola vez, cuando la sección aparece. */
-.por-palabra.entra .pal{
-  animation:reflejo 1.2s ease-out calc(.2s + var(--i) * 55ms) both;
-}
+/* El reflejo no se detiene: vuelve cada 6s en todos los titulares. Cruza en el
+   primer 14% del ciclo y el resto es espera — así el titular se mantiene vivo
+   sin que el movimiento compita con la lectura.
 
-/* En el hero se suma a la entrada —son propiedades distintas, así que
-   conviven— y vuelve cada 7s para que el titular principal no quede muerto
-   mientras se lee el resto de la página. El brillo cruza en el primer 17% del
-   ciclo y el resto es espera: así pasa rápido y no distrae. */
-@keyframes reflejo-hero{
+   El desfase por palabra (--i) es lo que hace que el brillo recorra la frase en
+   vez de encenderse toda a la vez. */
+@keyframes reflejo{
   0%{ background-position:100% 0 }
-  17%{ background-position:-100% 0 }
+  14%{ background-position:-100% 0 }
   100%{ background-position:-100% 0 }
 }
+
+.por-palabra .pal{
+  animation:reflejo 6s linear calc(var(--i) * 70ms) infinite;
+}
+
+/* En el hero se suma a la entrada: son propiedades distintas, así que conviven. */
 .hero .por-palabra .pal{
   animation:
     pal-entra .6s cubic-bezier(.2,.8,.3,1) calc(var(--i) * 50ms) both,
-    reflejo-hero 7s linear calc(.4s + var(--i) * 60ms) infinite;
+    reflejo 6s linear calc(.5s + var(--i) * 70ms) infinite;
 }
+
+/* Un ciclo infinito en los 22 titulares de la página son casi 180 palabras
+   repintándose a la vez, la mayoría fuera de pantalla. La clase la pone
+   campus.js al salir de vista; sin JS nada se pausa y todo sigue animando.
+
+   Pausar es seguro: el degradado se repite, así que en cualquier posición en
+   que se detenga el texto queda pintado. */
+.reflejo-quieto .pal{ animation-play-state:paused }
 
 @media (prefers-reduced-motion:reduce){
   .por-palabra .pal,.hero .por-palabra .pal{
