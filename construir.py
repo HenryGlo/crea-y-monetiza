@@ -105,8 +105,43 @@ def parrafos(ps, cls=""):
     return "".join(f"<p{c}>{e(p)}</p>" for p in ps)
 
 
+# Pegatinas repartidas por la página. Cada sección lleva las suyas, colocadas
+# desde CSS por la clase del hueco (d1 arriba-izquierda, d2 arriba-derecha,
+# d3 abajo-izquierda, d4 abajo-derecha). Entran con un rebote al aparecer la
+# sección y luego flotan, igual que las del hero.
+DECORACION = {
+    "campus":       [("estrella-rosa", "d2")],
+    "perfil":       [("flor-amar", "d1")],
+    "recorrido":    [("rayo-azul", "d2"), ("ovalo-rosa", "d3")],
+    "plan":         [("flor-rosa", "d1")],
+    "evaluacion":   [("estrella-amar", "d2")],
+    "tesis":        [("flor-rosa", "d1"), ("estrella-azul", "d4")],
+    "experiencia":  [("ovalo-amar", "d2")],
+    "vivo":         [("rayo-rosa", "d1")],
+    "mentoras":     [("estrella-rosa", "d4")],
+    "oportunidades":[("ovalo-azul", "d2")],
+    "incluye":      [("flor-amar", "d3")],
+    "graduacion":   [("estrella-amar", "d1"), ("rayo-azul", "d4")],
+    "registro":     [("flor-rosa", "d2")],
+    "admisiones":   [("estrella-azul", "d1")],
+    "faq":          [("ovalo-rosa", "d2")],
+    "historias":    [("flor-azul", "d1")],
+    "para-ti":      [("estrella-amar", "d4")],
+    "cohorte":      [("rayo-amar", "d2")],
+}
+
+
+def decoracion(sid):
+    piezas = DECORACION.get(sid, [])
+    return "".join(
+        f'<img class="deco {cls}" src="../assets/stickers/{n}.webp" alt="" '
+        f'aria-hidden="true" loading="lazy" decoding="async">'
+        for n, cls in piezas)
+
+
 def seccion(sid, num, cuerpo, cls=""):
     return (f'<section id="{sid}" class="sec {cls}" data-num="{num}">'
+            f'{decoracion(sid)}'
             f'<div class="wrap">{cuerpo}</div></section>')
 
 
@@ -178,6 +213,16 @@ def perfil_animado():
 </div>"""
 
 
+def stickers(piezas):
+    """Pegatinas del hero. Son PNG con volumen y no siluetas planas: el brillo y
+    la sombra propios de cada pieza son justo lo que las hace parecer pegadas
+    encima de la página en vez de dibujadas dentro."""
+    return "".join(
+        f'<img class="sticker {cls}" src="../assets/stickers/{n}.webp" alt="" '
+        f'aria-hidden="true" loading="lazy" decoding="async">'
+        for n, cls in piezas)
+
+
 def s_hero(extra=""):
     h = C.HERO
     cifras = "".join(
@@ -185,8 +230,7 @@ def s_hero(extra=""):
         for n, t in h["cifras"])
     materias = "".join(f"<li>{e(m)}</li>" for m in h["materias"])
     return f"""<header id="inicio" class="hero">
-  <span class="sticker s1" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50 3 61 38h37L68 60l11 36-29-22-29 22 11-36L3 38h37z"/></svg></span>
-  <span class="sticker s2" aria-hidden="true"><svg viewBox="0 0 60 100"><path d="M34 2 6 56h20l-8 42 36-58H32z"/></svg></span>
+  {stickers([("estrella-azul","s1"),("rayo-amar","s2"),("flor-rosa","s3"),("ovalo-azul","s4")])}
   <div class="wrap">
     <svg class="logo" viewBox="0 0 863.98 253.56" role="img" aria-label="Crea y Monetiza Campus"><use href="#logo-full"/></svg>
     <p class="pill">{e(h["eyebrow"])}</p>
@@ -215,7 +259,9 @@ def s_carta():
         <span class="video-t">{e(c["video_titulo"])}</span>
       </button>
     </div>"""
-    cita = (f'<blockquote class="cita">{e(c["cita"])}'
+    # La cita sobre un papel amarillo, no como texto suelto: es una nota suya
+    # dentro de la página, y así se lee.
+    cita = (f'<blockquote class="cita nota"><span>{e(c["cita"])}</span>'
             f'<cite>— {e(c["cita_autora"])}</cite></blockquote>')
     return seccion("carta", "02", f"""
     {eyebrow(c["eyebrow"])}
@@ -238,15 +284,26 @@ def s_campus():
 
 def s_perfil():
     p = C.PERFIL
+    # Cada eje sobre una tecla. Los cuatro colores rotan; el icono es un signo
+    # simple porque a este tamaño un pictograma detallado se pierde.
+    teclas = ["vino", "rosa", "azul", "amar"]
+    signos = ["✦", "✎", "◎", "⚡", "◆", "★"]
     ejes = "".join(
-        f'<article class="card eje"><span class="eje-n">{i:02d}</span>'
+        f'<article class="card eje">'
+        f'<span class="tecla" aria-hidden="true">'
+        f'<img src="../assets/stickers/tecla-{teclas[(i-1) % 4]}.webp" alt="" loading="lazy" decoding="async">'
+        f'<i>{signos[(i-1) % len(signos)]}</i></span>'
+        f'<span class="eje-n">{i:02d}</span>'
         f'<h3>{e(t)}</h3><p>{e(d)}</p></article>'
         for i, (t, d) in enumerate(p["ejes"], 1))
     return seccion("perfil", "04", f"""
     {eyebrow(p["eyebrow"])}
     <h2>{e(p["titulo"])}</h2>
-    <div class="grid grid-3">{ejes}</div>
-    <p class="cierre">{e(p["cierre"])}</p>""", "perfil")
+    <div class="grid grid-3">{ejes}</div>""", "perfil") + f"""
+<div class="franja"><div class="wrap">
+  <p>{e(p["cierre"])}</p>
+  <img class="franja-sticker" src="../assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy">
+</div></div>"""
 
 
 def s_recorrido():
@@ -353,8 +410,25 @@ def s_vivo():
 
 def s_facultad():
     f = C.FACULTAD
+    foto = C.PERFIL_ANIMADO.get("foto_pierina")
+    tiene_foto = foto and os.path.exists(os.path.join(RAIZ, "assets", foto))
+
+    def retrato(pers):
+        """El retrato de Pierina va dentro de un cuaderno de espiral con su
+        etiqueta: es lo que convierte una foto de equipo en una pieza de campus.
+        Las demás mantienen el marcador hasta que lleguen sus fotos."""
+        if pers["nombre"].startswith("Pierina") and tiene_foto:
+            return (f'<div class="cuaderno">'
+                    f'<img class="cuaderno-foto" src="../assets/{e(foto)}" '
+                    f'alt="Retrato de {e(pers["nombre"])}" loading="lazy" decoding="async">'
+                    f'<span class="etiqueta"><b>{e(pers["nombre"])}</b>'
+                    f'<i>{e(pers["rol"].split("·")[0].strip())}</i></span></div>')
+        return (f'<div class="retrato pendiente" role="img" '
+                f'aria-label="Falta el retrato de {e(pers["nombre"])}">'
+                f'<span>{e(pers["nombre"].split()[0])}</span></div>')
+
     ps = "".join(f"""<article class="card persona">
-      <div class="retrato" role="img" aria-label="Retrato de {e(p["nombre"])}"><span>{e(p["nombre"].split()[0])}</span></div>
+      {retrato(p)}
       <h3>{e(p["nombre"])}</h3>
       <p class="rol">{e(p["rol"])}</p>
       {parrafos(p["bio"])}

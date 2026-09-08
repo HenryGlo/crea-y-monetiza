@@ -399,3 +399,31 @@ body.v-perfil{
 .pf-espera .pf-marco,
 .pf-espera .pf-marco *,
 .pf-espera .pf-persona{ animation-play-state:paused }
+
+
+/* ---------------------------------------------- ajustes del lenguaje combinado */
+
+/* Botón principal en rosa, como en la propuesta de Nathaly. Sobre crema el
+   vino compite con el titular; el rosa manda sin pelearse con él. */
+.v-perfil .hero .btn-pri,
+.v-perfil .sec .btn-pri{
+  background:var(--rosa); color:var(--vino); border-color:var(--rosa);
+}
+.v-perfil .hero .btn-pri:hover,
+.v-perfil .sec .btn-pri:hover{ box-shadow:0 16px 34px -14px rgba(241,139,196,.9) }
+.v-perfil .nav-cta{ background:var(--vino); color:var(--crema) }
+
+/* La última línea del titular en rosa: dos tonos, como en su hero. Son las tres
+   últimas palabras —"una carrera profesional"—, no seis: con seis el rosa se
+   comía media frase y dejaba de leerse como un remate. */
+.v-perfil .hero h1 .pal:nth-last-child(-n+3){ --tinta:var(--rosa); --brillo:var(--vino) }
+
+/* La pregunta de admisiones sobre trazo rosa: es el momento de decisión de la
+   página y con el mismo tratamiento del remate queda señalada sin subir de
+   tamaño, que ahí ya compite con el titular de la sección. */
+.v-perfil .pregunta{ position:relative; display:inline-block; padding:4px 16px; z-index:1 }
+.v-perfil .pregunta::before{
+  content:""; position:absolute; inset:-4px -8px; z-index:-1;
+  background:url("../assets/stickers/rect-rosa.webp") center/100% 100% no-repeat;
+  opacity:.55;
+}

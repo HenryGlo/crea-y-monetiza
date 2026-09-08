@@ -16,6 +16,25 @@ Publicado en <https://web-crea-y-monetiza.perfectflow.cloud>.
 Las cuatro llevan **exactamente la misma copy** y las mismas 22 secciones. Lo único
 que cambia entre ellas es la hoja de estilo.
 
+## Lenguaje visual
+
+La propuesta Perfil combina nuestra base con los recursos de la propuesta de
+Nathaly, que resuelven mejor la parte de "creatividad":
+
+- **Pegatinas con volumen** (estrellas, rayos, flores, óvalos) repartidas por 15
+  secciones, en vez de siluetas planas. La sombra y el brillo vienen en la propia
+  imagen: es lo que las hace parecer pegadas encima de la página.
+- **Teclas de teclado** para los seis ejes de formación. Es el recurso más táctil
+  del conjunto y convierte una lista de competencias en algo que dan ganas de pulsar.
+- **Cuaderno de espiral** con etiqueta amarilla para el retrato de Pierina.
+- **Nota amarilla** para su cita, en vez de texto suelto.
+- **Franja a sangre en vino** para rematar el bloque de perfil.
+- **Trazo de rotulador** detrás del remate del hero y de la pregunta de admisiones.
+- **Botón principal en rosa** y última línea del titular en rosa.
+
+Los 19 recursos pesan 591 KB en total, desde los ~11 MB de los originales: se
+sirven en WebP al tamaño en que realmente se ven.
+
 ## Responsive
 
 Verificado midiendo, no a ojo, en iPhone SE (375×667), iPhone 15 (393×852),

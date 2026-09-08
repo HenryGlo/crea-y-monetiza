@@ -211,15 +211,6 @@ body.v-prospecto{
      Se hace con `order` y no cambiando el marcado porque el orden del guion
      —materias antes que botones— es el correcto en escritorio, donde sí caben
      los dos por encima del pliegue. */
-  .v-prospecto .hero .wrap{ display:flex; flex-direction:column; align-items:center }
-  .v-prospecto .hero .logo{ order:1 }
-  .v-prospecto .hero .pill{ order:2 }
-  .v-prospecto .hero h1{ order:3 }
-  .v-prospecto .hero .entrada{ order:4 }
-  .v-prospecto .hero .ctas{ order:5 }
-  .v-prospecto .materias-hero{ order:6 }
-  .v-prospecto .hero .remate{ order:7 }
-  .v-prospecto .cifras{ order:8; width:100% }
 
   .v-prospecto .hero{ padding:26px 0 44px }
   .v-prospecto .materias-hero li{ font-size:13px; padding:6px 13px; border-width:1.5px }
@@ -240,3 +231,23 @@ body.v-prospecto{
   .v-prospecto .hero .entrada{ margin-bottom:16px; font-size:15px }
   .v-prospecto .hero .ctas{ margin:12px 0 }
 }
+
+/* ------------------------------------------------------- orden del hero
+
+   Los botones van por delante de la lista de materias en todos los anchos, no
+   solo en móvil: medido en un portátil de 1440x900 el CTA caía 172px por
+   debajo del pliegue con el orden del guion. Un hero de admisiones que no
+   enseña su botón no cumple su único trabajo.
+
+   Se hace con `order` y no cambiando el marcado, para que el orden del
+   documento —el del guion— siga siendo el que leen los buscadores y los
+   lectores de pantalla. */
+.v-prospecto .hero .wrap{ display:flex; flex-direction:column; align-items:center; }
+.v-prospecto .hero .logo{ order:1 }
+.v-prospecto .hero .pill{ order:2 }
+.v-prospecto .hero h1{ order:3 }
+.v-prospecto .hero .entrada{ order:4 }
+.v-prospecto .hero .ctas{ order:5 }
+.v-prospecto .materias-hero{ order:6 }
+.v-prospecto .hero .remate{ order:7 }
+.v-prospecto .cifras{ order:8; width:100% }

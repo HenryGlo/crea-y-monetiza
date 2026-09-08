@@ -624,6 +624,8 @@ PERFIL_ANIMADO = {
     # nombre; construir.py comprueba si existe y, si no, deja un hueco marcado
     # en pantalla en vez de una imagen rota.
     "retrato": "pierina.webp",
+    # Foto de Pierina para el marco de cuaderno de la sección de mentoras.
+    "foto_pierina": "pierina-retrato.webp",
     "retrato_alt": "Pierina Alves, directora de Crea y Monetiza Campus",
 }
 

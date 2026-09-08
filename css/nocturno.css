@@ -275,15 +275,6 @@ body.v-nocturno{
 
 @media (max-width:600px){
   /* El botón caía en 945 sobre 667. Se adelanta a la lista de materias. */
-  .v-nocturno .hero .wrap{ display:flex; flex-direction:column; align-items:center }
-  .v-nocturno .hero .logo{ order:1 }
-  .v-nocturno .hero .pill{ order:2 }
-  .v-nocturno .hero h1{ order:3 }
-  .v-nocturno .hero .entrada{ order:4 }
-  .v-nocturno .hero .ctas{ order:5 }
-  .v-nocturno .materias-hero{ order:6 }
-  .v-nocturno .hero .remate{ order:7 }
-  .v-nocturno .cifras{ order:8; width:100% }
 
   .v-nocturno .hero{ padding:24px 0 40px; min-height:0 }
   .v-nocturno .materias-hero li{ font-size:13px; padding:7px 15px }
@@ -302,3 +293,23 @@ body.v-nocturno{
 /* Sobre fondo oscuro el reflejo va casi blanco: el rosa saturado contra un
    titular crema se lee como un error de color, no como luz. */
 .v-nocturno{ --brillo:#ffe9f4 }
+
+/* ------------------------------------------------------- orden del hero
+
+   Los botones van por delante de la lista de materias en todos los anchos, no
+   solo en móvil: medido en un portátil de 1440x900 el CTA caía 184px por
+   debajo del pliegue con el orden del guion. Un hero de admisiones que no
+   enseña su botón no cumple su único trabajo.
+
+   Se hace con `order` y no cambiando el marcado, para que el orden del
+   documento —el del guion— siga siendo el que leen los buscadores y los
+   lectores de pantalla. */
+.v-nocturno .hero .wrap{ display:flex; flex-direction:column; align-items:center; }
+.v-nocturno .hero .logo{ order:1 }
+.v-nocturno .hero .pill{ order:2 }
+.v-nocturno .hero h1{ order:3 }
+.v-nocturno .hero .entrada{ order:4 }
+.v-nocturno .hero .ctas{ order:5 }
+.v-nocturno .materias-hero{ order:6 }
+.v-nocturno .hero .remate{ order:7 }
+.v-nocturno .cifras{ order:8; width:100% }

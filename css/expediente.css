@@ -237,15 +237,6 @@ body.v-expediente{
   /* Mismo caso que en las demás: el índice de materias es alto y dejaba el
      botón en 1143 sobre 667 de pantalla. Se adelanta con `order`, sin tocar el
      marcado — en escritorio el orden del guion sí cabe entero. */
-  .v-expediente .hero .wrap{ display:flex; flex-direction:column }
-  .v-expediente .hero .logo{ order:1 }
-  .v-expediente .hero .pill{ order:2 }
-  .v-expediente .hero h1{ order:3 }
-  .v-expediente .hero .entrada{ order:4 }
-  .v-expediente .hero .ctas{ order:5 }
-  .v-expediente .materias-hero{ order:6 }
-  .v-expediente .hero .remate{ order:7 }
-  .v-expediente .cifras{ order:8 }
 
   .v-expediente .hero{ padding:22px 0 34px }
   .v-expediente .hero .logo{ width:min(190px,56%)!important; margin-bottom:20px }
@@ -266,3 +257,44 @@ body.v-expediente{
 
 /* Registro sobrio: el reflejo apenas se insinúa. */
 .v-expediente{ --brillo:#c76ca0 }
+
+/* ------------------------------------------------------- orden del hero
+
+   Los botones van por delante de la lista de materias en todos los anchos, no
+   solo en móvil: medido en un portátil de 1440x900 el CTA caía 307px por
+   debajo del pliegue con el orden del guion. Un hero de admisiones que no
+   enseña su botón no cumple su único trabajo.
+
+   Se hace con `order` y no cambiando el marcado, para que el orden del
+   documento —el del guion— siga siendo el que leen los buscadores y los
+   lectores de pantalla. */
+.v-expediente .hero .wrap{ display:flex; flex-direction:column; }
+.v-expediente .hero .logo{ order:1 }
+.v-expediente .hero .pill{ order:2 }
+.v-expediente .hero h1{ order:3 }
+.v-expediente .hero .entrada{ order:4 }
+.v-expediente .hero .ctas{ order:5 }
+.v-expediente .materias-hero{ order:6 }
+.v-expediente .hero .remate{ order:7 }
+.v-expediente .cifras{ order:8; width:100% }
+
+/* Su hero es el más alto de los cuatro: el logo grande, la píldora con filete y
+   la entrada con su propia línea superior suman casi 100px de más sobre un
+   portátil de 900px de alto. Se recorta el aire, no la tipografía. */
+@media (min-width:601px){
+  .v-expediente .hero{ padding:clamp(30px,4vw,52px) 0 clamp(34px,4.5vw,60px) }
+  .v-expediente .hero .logo{ width:min(250px,48%); margin-bottom:22px }
+  .v-expediente .hero .pill{ margin-bottom:20px; padding-bottom:7px }
+  .v-expediente .hero h1{ margin-bottom:.3em }
+  .v-expediente .hero .entrada{ padding-top:18px }
+  .v-expediente .hero .ctas{ margin:22px 0 }
+}
+
+/* Su titular no usa --t-hero sino su propia escala de portada de catálogo, así
+   que la regla de pantalla corta de base.css no lo alcanzaba: en un 1366x768
+   llegaba a 114px y sacaba el botón del pliegue él solo. */
+@media (min-width:601px) and (max-height:820px){
+  .v-expediente .hero h1{ font-size:clamp(38px,4.6vw,64px) }
+  .v-expediente .hero .logo{ margin-bottom:16px }
+  .v-expediente .hero .entrada{ padding-top:14px }
+}
