@@ -606,7 +606,28 @@ CIERRE = {
     "firma": "Tu contenido puede ser el comienzo de algo mucho más grande.",
 }
 
-# Las tres propuestas comparten contenido; solo cambian nombre, subtítulo y hoja de estilo.
+# Datos del perfil que se arma solo en el hero de la propuesta 4.
+# Es un perfil genérico de creadora, no una réplica de una red concreta: sin
+# logos ni marcas de terceros, lo que además lo deja envejecer mejor.
+PERFIL_ANIMADO = {
+    "usuario": "@tu.marca",
+    "nombre": "Creadora profesional",
+    "bio": ["Marca personal · UGC · Contenido", "Formándome en Crea y Monetiza Campus"],
+    "stats": [("128", "publicaciones"), ("24.7K", "seguidores"), ("312", "siguiendo")],
+    "etiquetas": ["Portafolio", "Pitch", "Marcas", "Tarifas"],
+    # nueve celdas de la retícula, cada una con su color de la paleta
+    "celdas": 9,
+    "pie": "Tu perfil no se arma solo. Aquí aprendes a construirlo.",
+
+    # Recorte sin fondo de Pierina, que entra deslizándose desde la derecha
+    # cuando el perfil ya terminó de montarse. El archivo va en assets/ con ese
+    # nombre; construir.py comprueba si existe y, si no, deja un hueco marcado
+    # en pantalla en vez de una imagen rota.
+    "retrato": "pierina.png",
+    "retrato_alt": "Pierina Alves, directora de Crea y Monetiza Campus",
+}
+
+# Las propuestas comparten contenido; solo cambian nombre, subtítulo y hoja de estilo.
 PROPUESTAS = [
     {
         "slug": "propuesta-1",
@@ -628,5 +649,14 @@ PROPUESTAS = [
         "resumen": "Vino a sangre completa, tipografía a gran escala y acentos en rosa y azul sobre "
                    "oscuro. El registro más premium y cinematográfico de los tres.",
         "css": "p3.css",
+    },
+    {
+        "slug": "propuesta-4",
+        "nombre": "Perfil",
+        "resumen": "El hero monta en directo el perfil de una creadora — avatar, cifras que suben, "
+                   "retícula que se llena — y remata en que eso no pasa solo. Es la promesa del "
+                   "Campus contada en tres segundos, sin explicarla.",
+        "css": "p4.css",
+        "hero_extra": True,
     },
 ]

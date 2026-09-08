@@ -1,0 +1,343 @@
+/* PROPUESTA 4 — «Perfil»
+   El hero monta en directo el perfil de una creadora: avatar, verificado,
+   cifras que suben, bio que se escribe, etiquetas y una retícula que se llena
+   pieza a pieza. Al terminar aparece el pie: eso no pasa solo.
+
+   Es la promesa del Campus contada sin explicarla, que es justo lo que a la
+   copy de un hero le cuesta hacer en dos líneas.
+
+   Todo el montaje es CSS con retardos escalonados: no depende de JS, así que
+   ocurre igual si el script tarda o falla, y se detiene entero si el sistema
+   pide movimiento reducido (bloque al final del archivo). */
+
+body.v-4{
+  --fondo:#FBF7F4;
+  --texto:var(--vino);
+  --acento:var(--rosa);
+  --r:22px;
+}
+
+/* Un solo reloj para todo el montaje. Cada pieza se cuelga de él con su propio
+   retardo, así que cambiar el ritmo de la escena es tocar una línea. */
+.v-4{ --t:.55s; --paso:.13s }
+
+/* --------------------------------------------------------------------- hero */
+
+.v-4 .hero{
+  position:relative; overflow:hidden; isolation:isolate;
+  padding:clamp(40px,5vw,64px) 0 clamp(52px,7vw,88px);
+}
+.v-4 .hero::before{
+  content:""; position:absolute; inset:-25% -10% auto -10%; height:150%; z-index:-2;
+  background:
+    radial-gradient(40% 34% at 20% 20%,var(--rosa-soft) 0%,transparent 62%),
+    radial-gradient(38% 32% at 84% 26%,var(--azul-soft) 0%,transparent 60%),
+    radial-gradient(46% 40% at 60% 92%,var(--amar-soft) 0%,transparent 62%);
+  filter:blur(20px);
+  animation:deriva4 28s ease-in-out infinite alternate;
+}
+@keyframes deriva4{
+  0%{ transform:translate3d(0,0,0) scale(1) }
+  100%{ transform:translate3d(3%,-2%,0) scale(1.07) }
+}
+/* Foco que sigue al cursor, alimentado por --fx/--fy desde campus.js. */
+.v-4 .hero::after{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(340px 340px at var(--fx,50%) var(--fy,40%),rgba(241,139,196,.22),transparent 70%);
+  transition:background .2s;
+}
+
+/* El hero pasa a dos columnas: el texto a la izquierda y el perfil a la
+   derecha, que es donde el ojo lo lee como "lo que vas a construir". */
+.v-4 .hero .wrap{
+  display:grid; gap:clamp(26px,4vw,56px); align-items:center;
+  grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);
+  grid-template-areas:
+    "logo    perfil"
+    "pill    perfil"
+    "titulo  perfil"
+    "entrada perfil"
+    "materias materias"
+    "remate  remate"
+    "ctas    ctas"
+    "cifras  cifras";
+  /* Filas al tamaño de su contenido: con filas iguales el titular queda
+     flotando en medio de un hueco tan alto como la tarjeta del perfil. */
+  grid-auto-rows:min-content;
+  row-gap:14px;
+}
+/* La columna del perfil abarca las cuatro primeras filas y se centra en ellas. */
+.v-4 .hero .pf{ align-self:center }
+.v-4 .hero .logo{ grid-area:logo; width:min(330px,80%); height:auto; color:var(--vino); margin:0 0 4px }
+.v-4 .hero .pill{ grid-area:pill; justify-self:start }
+.v-4 .hero h1{ grid-area:titulo; max-width:13ch; margin:0 0 .3em }
+.v-4 .hero .entrada{ grid-area:entrada; max-width:52ch; margin:0 }
+.v-4 .hero .pf{ grid-area:perfil }
+.v-4 .materias-hero{ grid-area:materias }
+.v-4 .hero .remate{ grid-area:remate; justify-self:start }
+.v-4 .hero .ctas{ grid-area:ctas; margin:8px 0 0 }
+.v-4 .cifras{ grid-area:cifras }
+
+@media (max-width:900px){
+  .v-4 .hero .wrap{
+    grid-template-columns:1fr;
+    grid-template-areas:"logo" "pill" "titulo" "perfil" "entrada" "materias" "remate" "ctas" "cifras";
+    text-align:center; justify-items:center;
+  }
+  .v-4 .hero h1,.v-4 .hero .entrada{ margin-inline:auto }
+  .v-4 .hero .pill,.v-4 .hero .remate{ justify-self:center }
+  .v-4 .hero .ctas{ justify-content:center }
+}
+
+.v-4 .hero .pill{
+  display:inline-flex; gap:9px; align-items:center;
+  background:var(--vino); color:var(--crema);
+  font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+  padding:9px 19px; border-radius:999px; margin:0;
+}
+
+/* ------------------------------------------------------ el perfil que se arma */
+
+.v-4 .pf{ display:grid; justify-items:center; gap:16px; position:relative }
+
+/* Pierina entra desde la derecha cuando el perfil ya terminó de montarse: el
+   orden cuenta la idea sola — primero se ve lo que se construye, después quién
+   te enseña a construirlo.
+
+   Va detrás de la tarjeta (z-index) y anclada al borde inferior, que es como
+   se lee un recorte de persona: apoyada, no flotando. */
+.v-4 .pf-persona{
+  /* Asomando por la derecha y por detrás: si se superpone a la tarjeta tapa
+     justo la retícula, que es el gesto que la escena está contando. */
+  position:absolute; right:-24%; bottom:0; z-index:0;
+  width:min(270px,52%); height:auto;
+  filter:drop-shadow(-14px 18px 30px rgba(80,7,17,.35));
+  animation:pf-persona .9s cubic-bezier(.2,.8,.25,1) calc(var(--paso) * 21) both;
+  pointer-events:none;
+}
+/* La tarjeta va por delante del recorte. */
+.v-4 .pf-marco{ position:relative; z-index:1 }
+.v-4 .pf-pie{ position:relative; z-index:2 }
+@keyframes pf-persona{
+  from{ opacity:0; transform:translateX(64px) }
+  to{ opacity:1; transform:none }
+}
+
+/* Hueco mientras no esté el archivo. Se ve, a propósito. */
+.v-4 .pf-persona-hueco{
+  aspect-ratio:3/4;
+  display:grid; place-items:center; text-align:center;
+  border:2px dashed rgba(80,7,17,.4); border-radius:18px;
+  background:rgba(255,255,255,.75); backdrop-filter:blur(4px);
+}
+.v-4 .pf-persona-hueco span{
+  font-size:11px; font-weight:800; letter-spacing:.12em;
+  text-transform:uppercase; opacity:.55; line-height:1.6;
+}
+
+/* En pantallas estrechas no hay sitio a los lados: el recorte estorbaría la
+   tarjeta, que es la pieza que cuenta la historia. */
+@media (max-width:900px){
+  .v-4 .pf-persona{ display:none }
+}
+
+.v-4 .pf-marco{
+  width:min(360px,100%);
+  background:#fff; border:2px solid var(--vino); border-radius:28px;
+  padding:22px 20px 20px;
+  box-shadow:10px 12px 0 var(--vino),0 40px 80px -50px rgba(80,7,17,.6);
+  /* El marco entra primero: es el continente de todo lo demás. */
+  animation:pf-marco var(--t) cubic-bezier(.2,.8,.3,1) both;
+}
+@keyframes pf-marco{
+  from{ opacity:0; transform:translateY(24px) scale(.94) rotate(-2deg) }
+  to{ opacity:1; transform:none }
+}
+
+.v-4 .pf-top{ display:flex; align-items:center; gap:14px; margin-bottom:18px }
+.v-4 .pf-avatar{
+  width:62px; height:62px; border-radius:50%; flex:none;
+  background:conic-gradient(from 210deg,var(--rosa),var(--azul),var(--amar),var(--rosa));
+  box-shadow:0 0 0 3px #fff,0 0 0 5px var(--vino);
+  animation:pf-pop var(--t) cubic-bezier(.2,1.5,.4,1) calc(var(--paso) * 2) both;
+}
+@keyframes pf-pop{
+  from{ opacity:0; transform:scale(.2) }
+  to{ opacity:1; transform:scale(1) }
+}
+
+.v-4 .pf-id{ min-width:0 }
+.v-4 .pf-user{
+  font-family:var(--display); text-transform:uppercase; font-size:19px;
+  margin:0; display:flex; align-items:center; gap:7px;
+  animation:pf-entra var(--t) ease calc(var(--paso) * 3) both;
+}
+.v-4 .pf-check{
+  width:17px; height:17px; border-radius:50%; flex:none;
+  background:var(--azul); color:#fff; font-size:10px;
+  display:grid; place-items:center;
+  /* El verificado llega el último de la cabecera: es el remate del gesto. */
+  animation:pf-sello .5s cubic-bezier(.2,1.7,.4,1) calc(var(--paso) * 9) both;
+}
+@keyframes pf-sello{
+  from{ opacity:0; transform:scale(0) rotate(-60deg) }
+  to{ opacity:1; transform:none }
+}
+.v-4 .pf-nombre{
+  margin:0; font-size:13px; font-weight:600; opacity:.6;
+  animation:pf-entra var(--t) ease calc(var(--paso) * 4) both;
+}
+@keyframes pf-entra{
+  from{ opacity:0; transform:translateY(8px) }
+  to{ opacity:1; transform:none }
+}
+
+.v-4 .pf-stats{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:8px;
+  padding:14px 0; margin-bottom:14px;
+  border-block:1.5px solid rgba(80,7,17,.12);
+}
+.v-4 .pf-stat{
+  text-align:center;
+  animation:pf-entra var(--t) ease calc(var(--paso) * (5 + var(--i))) both;
+}
+.v-4 .pf-stat b{ display:block; font-family:var(--display); font-size:20px; line-height:1 }
+.v-4 .pf-stat span{ font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; opacity:.55 }
+
+.v-4 .pf-bio{
+  margin:0 0 4px; font-size:13px; line-height:1.45;
+  animation:pf-entra var(--t) ease calc(var(--paso) * (8 + var(--i))) both;
+}
+.v-4 .pf-bios{ margin-bottom:14px }
+
+.v-4 .pf-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px }
+.v-4 .pf-tag{
+  font-size:11px; font-weight:700; padding:5px 11px; border-radius:999px;
+  background:rgba(241,139,196,.2); color:var(--vino);
+  animation:pf-pop .45s cubic-bezier(.2,1.5,.4,1) calc(var(--paso) * (10 + var(--i))) both;
+}
+
+/* La retícula es el gesto principal: nueve piezas cayendo una tras otra. */
+.v-4 .pf-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px }
+.v-4 .pf-grid i{
+  aspect-ratio:1; border-radius:9px; display:block;
+  animation:pf-celda .5s cubic-bezier(.2,1.4,.4,1) calc(var(--paso) * (13 + var(--i))) both;
+}
+@keyframes pf-celda{
+  from{ opacity:0; transform:scale(.4) translateY(14px) }
+  to{ opacity:1; transform:none }
+}
+.v-4 .pf-grid i:nth-child(3n+1){ background:linear-gradient(145deg,var(--rosa),var(--rosa-soft)) }
+.v-4 .pf-grid i:nth-child(3n+2){ background:linear-gradient(145deg,var(--azul),var(--azul-soft)) }
+.v-4 .pf-grid i:nth-child(3n+3){ background:linear-gradient(145deg,var(--vino-2),var(--rosa)) }
+.v-4 .pf-grid i:nth-child(5){ background:linear-gradient(145deg,var(--amar),var(--amar-soft)) }
+
+.v-4 .pf-pie{
+  font-family:var(--mano); font-size:clamp(17px,1.8vw,22px); text-align:center;
+  color:var(--vino); max-width:26ch; margin:0;
+  /* Entra cuando la retícula ya se completó: primero se ve el resultado,
+     después se dice que no llega solo. */
+  animation:pf-entra .7s ease calc(var(--paso) * 24) both;
+}
+
+/* -------------------------------------------------------- resto de la página */
+
+.v-4 .sec:nth-of-type(even){ background:#fff }
+.v-4 .card{ box-shadow:var(--shadow) }
+.v-4 .sec:nth-of-type(even) .card{ background:var(--fondo) }
+.v-4 .card:hover{ border-color:var(--acento); box-shadow:var(--shadow-alta) }
+
+.v-4 .grid > .card:nth-child(4n+1){ --acento:var(--rosa) }
+.v-4 .grid > .card:nth-child(4n+2){ --acento:var(--azul) }
+.v-4 .grid > .card:nth-child(4n+3){ --acento:#e8b25f }
+.v-4 .grid > .card:nth-child(4n+4){ --acento:var(--vino-2) }
+.v-4 .grid > .card::before{
+  content:""; display:block; width:40px; height:5px; border-radius:99px;
+  background:var(--acento); margin-bottom:16px;
+  transition:width .3s cubic-bezier(.2,.7,.3,1);
+}
+.v-4 .grid > .card:hover::before{ width:72px }
+
+.v-4 .materias-hero{
+  list-style:none; padding:0; margin:6px 0 0;
+  display:flex; flex-wrap:wrap; gap:8px;
+}
+.v-4 .materias-hero li{
+  font-family:var(--display); text-transform:uppercase; font-size:clamp(13px,1.3vw,17px);
+  padding:7px 16px; border-radius:999px; background:#fff; border:2px solid var(--vino);
+  transition:transform .25s cubic-bezier(.2,.7,.3,1),background .25s;
+}
+.v-4 .materias-hero li:hover{ transform:translateY(-3px) rotate(-1.5deg); background:var(--amar) }
+.v-4 .materias-hero li:nth-child(2n):hover{ background:var(--rosa-soft) }
+.v-4 .materias-hero li:nth-child(3n):hover{ background:var(--azul-soft) }
+
+.v-4 .cifras{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-top:8px }
+.v-4 .cifra{
+  background:#fff; border:2px solid var(--vino); border-radius:var(--r-s);
+  padding:18px 14px; box-shadow:5px 5px 0 var(--vino);
+  transition:transform .25s cubic-bezier(.2,.7,.3,1),box-shadow .25s;
+}
+.v-4 .cifra:hover{ transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--rosa) }
+.v-4 .cifra b{ display:block; font-family:var(--display); font-size:clamp(28px,3.6vw,42px); line-height:1 }
+.v-4 .cifra span{ font-size:12px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; opacity:.6 }
+
+.v-4 .eje-n,.v-4 .materia-n,.v-4 .caso-n{
+  font-family:var(--display); font-size:13px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--acento); display:block; margin-bottom:6px;
+}
+.v-4 .etapa-n{
+  display:inline-block; font-family:var(--display); text-transform:uppercase;
+  font-size:14px; letter-spacing:.16em; padding:7px 15px; border-radius:999px;
+  background:var(--vino); color:var(--crema); margin-bottom:12px;
+}
+.v-4 .etapa-meses{ font-weight:700; font-size:13px; letter-spacing:.1em; text-transform:uppercase; opacity:.6 }
+
+.v-4 .tesis-nombre{
+  font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(38px,7vw,92px); margin:0 0 .35em;
+  background:linear-gradient(100deg,var(--vino) 20%,var(--rosa) 50%,var(--azul) 80%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+
+.v-4 .pasos-grid{
+  list-style:none; padding:0; margin:38px 0 0;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px;
+}
+.v-4 .paso{ padding-top:16px; border-top:3px solid var(--vino) }
+.v-4 .paso-n{ font-family:var(--display); font-size:clamp(32px,4vw,50px); line-height:1; color:var(--rosa); display:block; margin-bottom:8px }
+.v-4 .pregunta{ font-family:var(--display); text-transform:uppercase; font-size:clamp(22px,3.2vw,42px); margin:48px 0 0; max-width:20ch }
+.v-4 .nota{ font-size:13.5px; opacity:.6 }
+
+.v-4 .datos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:30px 0 }
+.v-4 .dato{ background:#fff; border:2px solid var(--vino); border-radius:var(--r-s); padding:20px; box-shadow:5px 5px 0 var(--rosa) }
+.v-4 .dato span{ display:block; font-size:12px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; opacity:.55; margin-bottom:5px }
+.v-4 .dato b{ font-family:var(--display); font-size:clamp(19px,2.2vw,26px); text-transform:uppercase }
+
+.v-4 .si{ --acento:var(--rosa); border-color:var(--rosa) }
+.v-4 .no{ --acento:var(--vino-2); opacity:.86 }
+
+.v-4 .cierre-final{
+  background:var(--vino); color:var(--crema); --texto:var(--crema); --acento:var(--rosa);
+  border-radius:clamp(28px,5vw,56px) clamp(28px,5vw,56px) 0 0; margin-top:40px;
+}
+.v-4 .cierre-final h2{ max-width:20ch; margin-inline:auto }
+.v-4 .cierre-final .btn-pri{ background:var(--rosa); color:var(--vino); border-color:var(--rosa) }
+.v-4 .cierre-final .btn-sec{ border-color:var(--crema); color:var(--crema) }
+.v-4 .cierre-final .btn-sec:hover{ background:var(--crema); color:var(--vino) }
+.v-4 .cierre-final .con li{ font-family:var(--display); text-transform:uppercase; font-size:clamp(17px,2.2vw,26px) }
+.v-4 .destacado{ font-family:var(--display); text-transform:uppercase; font-size:clamp(20px,2.8vw,36px); max-width:26ch }
+
+/* Sin movimiento el perfil sigue existiendo, montado y completo: la escena es
+   un adorno, nunca el único modo de ver el contenido. */
+@media (prefers-reduced-motion:reduce){
+  .v-4 .pf-marco,.v-4 .pf-avatar,.v-4 .pf-user,.v-4 .pf-nombre,.v-4 .pf-check,
+  .v-4 .pf-stat,.v-4 .pf-bio,.v-4 .pf-tag,.v-4 .pf-grid i,.v-4 .pf-pie,.v-4 .pf-persona,
+  .v-4 .hero::before{
+    animation:none; opacity:1; transform:none;
+  }
+}
+
+/* Los stickers heredan geometría de base.css; aquí solo el color. */
+.v-4 .sticker path{ stroke:var(--vino); stroke-width:5; stroke-linejoin:round; paint-order:stroke }
+.v-4 .s1 path{ fill:var(--azul) }
+.v-4 .s2 path{ fill:var(--amar) }

@@ -400,3 +400,126 @@ a{ color:inherit }
   .nav,.cta-fijo,.cambiar,.saltar{ display:none }
   .rv{ opacity:1; transform:none }
 }
+
+/* ================================================================= movimiento
+   Capa de animación. Todo lo de aquí queda anulado por el bloque de
+   prefers-reduced-motion que hay más abajo en este mismo archivo. */
+
+/* ------------------------------------------------------- cinta rodante */
+
+.cinta{
+  overflow:hidden; padding:18px 0; border-block:2px solid currentColor;
+  background:var(--acento); color:var(--vino);
+  display:flex; user-select:none;
+}
+.cinta-pista{
+  display:flex; align-items:center; gap:26px; flex:none;
+  font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(18px,2.4vw,32px); white-space:nowrap;
+  /* La pista lleva la tira duplicada, así que desplazarla un 50% exacto la deja
+     idéntica al punto de partida y el bucle no tiene salto. */
+  animation:rodar 34s linear infinite;
+  will-change:transform;
+}
+.cinta:hover .cinta-pista{ animation-play-state:paused }
+.cinta-sep{ color:var(--vino); opacity:.45; font-size:.7em }
+@keyframes rodar{ to{ transform:translateX(-50%) } }
+
+/* --------------------------------------------------- titular palabra a palabra */
+
+.por-palabra .pal{
+  display:inline-block;
+  opacity:0; transform:translateY(.5em) rotate(2deg);
+  transition:opacity .5s ease,transform .55s cubic-bezier(.2,.8,.3,1);
+  transition-delay:calc(var(--i) * 45ms);
+}
+.por-palabra.entra .pal{ opacity:1; transform:none }
+
+/* El titular del hero no espera a nadie: se anima solo, con una animación CSS
+   que no necesita que ninguna clase llegue a tiempo. Depender de una clase
+   añadida por JS deja el elemento más importante de la página en blanco si el
+   script tarda, falla o el navegador congela los temporizadores. */
+.hero .por-palabra .pal{
+  opacity:1; transform:none; transition:none;
+  animation:pal-entra .6s cubic-bezier(.2,.8,.3,1) calc(var(--i) * 50ms) both;
+}
+@keyframes pal-entra{
+  from{ opacity:0; transform:translateY(.5em) rotate(2deg) }
+  to{ opacity:1; transform:none }
+}
+
+/* ------------------------------------------------------- relieve de tarjeta */
+
+.card{
+  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transform-style:preserve-3d;
+}
+.card:hover{
+  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-5px);
+}
+
+/* --------------------------------------------------------- stickers flotando */
+
+/* Tamaño y posición viven aquí y no en cada propuesta: sin esto el SVG interior
+   no tiene caja que lo limite y crece hasta ocupar la pantalla entera. Cada
+   propuesta cambia el color; ninguna necesita redefinir la geometría. */
+.sticker{
+  position:absolute; z-index:1; pointer-events:none;
+  animation:flotar 6s ease-in-out infinite;
+}
+.sticker svg{ width:100%; height:auto; display:block }
+.sticker path{ fill:var(--acento) }
+.s1{ width:clamp(44px,5.5vw,80px); left:5%; top:22% }
+.s2{ width:clamp(30px,3.8vw,54px); right:7%; top:31% }
+@media (max-width:900px){ .sticker{ display:none } }
+
+.sticker.s2{ animation-duration:7.5s; animation-delay:-2s }
+@keyframes flotar{
+  0%,100%{ rotate:-6deg; translate:0 0 }
+  50%{ rotate:6deg; translate:0 -14px }
+}
+
+/* --------------------------------------------------------------- subrayado */
+
+/* El remate manuscrito se subraya solo al entrar en pantalla. */
+.remate{ position:relative; display:inline-block }
+.remate::after{
+  content:""; position:absolute; left:0; right:0; bottom:.05em; height:.12em;
+  border-radius:99px; background:currentColor; opacity:.35;
+  transform:scaleX(0); transform-origin:left;
+  transition:transform .8s cubic-bezier(.2,.8,.3,1) .3s;
+}
+.rv.dentro .remate::after,.hero .remate::after{ transform:scaleX(1) }
+
+/* --------------------------------------------------------------- botones */
+
+.btn,.nav-cta,.cta-fijo{ will-change:transform }
+
+/* Barrido de luz al pasar por encima del botón principal. */
+.btn-pri{ position:relative; overflow:hidden }
+.btn-pri::after{
+  content:""; position:absolute; top:0; bottom:0; left:-60%; width:40%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.42),transparent);
+  transform:skewX(-18deg); transition:left .6s cubic-bezier(.3,.8,.3,1);
+}
+.btn-pri:hover::after{ left:130% }
+
+/* ---------------------------------------------------------------- confeti */
+
+.confeti{ position:absolute; z-index:90; pointer-events:none }
+.confeti i{
+  position:absolute; width:9px; height:14px; border-radius:2px;
+  background:var(--c); rotate:var(--r);
+  animation:saltar 1.6s cubic-bezier(.15,.7,.4,1) var(--d) forwards;
+}
+@keyframes saltar{
+  0%{ opacity:1; translate:0 0; scale:1 }
+  100%{ opacity:0; translate:calc(var(--x) * 190px) -230px; scale:.6; rotate:calc(var(--r) + 540deg) }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .cinta-pista,.sticker{ animation:none }
+  .por-palabra .pal,.hero .por-palabra .pal{ opacity:1; transform:none; animation:none }
+  .card{ transform:none }
+  .remate::after{ transform:scaleX(1) }
+}

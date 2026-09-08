@@ -11,9 +11,22 @@ Publicado en <https://web-crea-y-monetiza.perfectflow.cloud>.
 | `/propuesta-1/` | **Prospecto** — continuidad con la carpeta y el pensum: crema, stickers, tarjetas. |
 | `/propuesta-2/` | **Expediente** — institucional: retícula marcada, filetes, catálogo universitario. |
 | `/propuesta-3/` | **Nocturno** — premium: vino a sangre, tipografía a gran escala, luz de color. |
+| `/propuesta-4/` | **Perfil** — el hero monta en directo el perfil de una creadora y remata en que eso no pasa solo. |
 
-Las tres llevan **exactamente la misma copy** y las mismas 22 secciones. Lo único
+Las cuatro llevan **exactamente la misma copy** y las mismas 22 secciones. Lo único
 que cambia entre ellas es la hoja de estilo.
+
+## Movimiento
+
+Cinta rodante entre secciones, titulares que entran palabra a palabra, tarjetas
+con relieve que sigue al cursor, botones imantados con barrido de luz, stickers
+flotando, cifras que suben al entrar en pantalla y confeti al confirmar el
+registro. La propuesta 4 añade el montaje del perfil.
+
+Todo se apaga por completo con `prefers-reduced-motion`, y nada de ello decide
+si el contenido se puede leer: si el JS no llega a ejecutarse, la página se lee
+entera igual. El titular del hero se anima desde CSS por ese motivo — no puede
+quedar en blanco esperando a que una clase llegue.
 
 ## Cómo se edita
 
@@ -62,6 +75,11 @@ una decisión de diseño:
   punto de partida, qué trabajó y resultado comprobable, más el video o captura.
 - **Capturas reales** de la plataforma Skool, del seguimiento y de la comunidad.
 - **Retratos** de Pierina, Paola y Nathaly.
+- **Recorte sin fondo de Pierina** para el hero de la propuesta 4: dejar el PNG
+  con transparencia en `assets/pierina.png` y volver a construir. Conviene un
+  plano de medio cuerpo, mirando ligeramente a la izquierda (queda a la derecha
+  de la tarjeta) y de al menos 900px de alto. Mientras el archivo no exista, la
+  build emite un hueco marcado en pantalla en vez de una imagen rota.
 - **Fechas** de la próxima cohorte y estado de admisiones (sección 20).
 - **Destino del formulario** de registro prioritario: la constante
   `ENDPOINT_REGISTRO` en `js/campus.js` está vacía. Mientras lo esté, el

@@ -18,6 +18,11 @@ import contenido as C
 
 RAIZ = os.path.dirname(os.path.abspath(__file__))
 
+# El número de propuestas se decía a mano en el índice y en la cinta de cada
+# página. Al añadir la cuarta quedaron todos desfasados, así que se deriva.
+_NUM = {2: "dos", 3: "tres", 4: "cuatro", 5: "cinco", 6: "seis"}
+NUM_TXT = _NUM.get(len(C.PROPUESTAS), str(len(C.PROPUESTAS)))
+
 
 def e(t):
     """Escapa texto para HTML. Todo el contenido pasa por aquí."""
@@ -105,6 +110,17 @@ def seccion(sid, num, cuerpo, cls=""):
             f'<div class="wrap">{cuerpo}</div></section>')
 
 
+def cinta(items, veces=3):
+    """Cinta rodante. No añade contenido nuevo: repite las materias que ya
+    están en el hero. Se duplica la tira porque el bucle es un desplazamiento
+    del -50%: con una sola copia se vería el corte al reiniciar."""
+    tira = "".join(
+        f'<span>{e(x)}</span><span class="cinta-sep" aria-hidden="true">✳</span>'
+        for x in items)
+    return (f'<div class="cinta" aria-hidden="true"><div class="cinta-pista">'
+            f'{tira * veces}{tira * veces}</div></div>')
+
+
 def boton(texto, href, tipo="pri"):
     flecha = "→" if tipo == "pri" else "↓"
     return f'<a class="btn btn-{tipo}" href="{href}">{e(texto)} <span aria-hidden="true">{flecha}</span></a>'
@@ -114,7 +130,53 @@ def boton(texto, href, tipo="pri"):
 # Secciones
 # --------------------------------------------------------------------------
 
-def s_hero():
+def perfil_animado():
+    """Perfil de creadora que se monta solo en el hero de la propuesta 4.
+
+    El montaje es CSS puro con retardos escalonados: no depende de JS, así que
+    ocurre igual si el script tarda o falla. Va marcado aria-hidden porque es
+    una ilustración — lo que dice ya está en el titular y en el pie."""
+    f = C.PERFIL_ANIMADO
+    stats = "".join(
+        f'<div class="pf-stat" style="--i:{i}"><b>{e(n)}</b><span>{e(t)}</span></div>'
+        for i, (n, t) in enumerate(f["stats"]))
+    etiquetas = "".join(
+        f'<span class="pf-tag" style="--i:{i}">{e(x)}</span>'
+        for i, x in enumerate(f["etiquetas"]))
+    celdas = "".join(f'<i style="--i:{i}"></i>' for i in range(f["celdas"]))
+    bio = "".join(f'<p class="pf-bio" style="--i:{i}">{e(x)}</p>'
+                  for i, x in enumerate(f["bio"]))
+    # La imagen solo se emite si el archivo está de verdad: un <img> a una ruta
+    # inexistente deja el icono de imagen rota justo en el hero.
+    ruta = os.path.join(RAIZ, "assets", f["retrato"])
+    if os.path.exists(ruta):
+        persona = (f'<img class="pf-persona" src="../assets/{e(f["retrato"])}" '
+                   f'alt="{e(f["retrato_alt"])}" loading="eager" decoding="async">')
+    else:
+        persona = ('<div class="pf-persona pf-persona-hueco pendiente" '
+                   'role="img" aria-label="Falta el recorte de Pierina Alves">'
+                   '<span>Recorte sin fondo<br>de Pierina</span></div>')
+
+    return f"""<div class="pf">
+  {persona}
+  <div class="pf-marco" aria-hidden="true">
+    <div class="pf-top">
+      <span class="pf-avatar"></span>
+      <div class="pf-id">
+        <p class="pf-user">{e(f["usuario"])}<span class="pf-check">✓</span></p>
+        <p class="pf-nombre">{e(f["nombre"])}</p>
+      </div>
+    </div>
+    <div class="pf-stats">{stats}</div>
+    <div class="pf-bios">{bio}</div>
+    <div class="pf-tags">{etiquetas}</div>
+    <div class="pf-grid">{celdas}</div>
+  </div>
+  <p class="pf-pie" aria-hidden="true">{e(f["pie"])}</p>
+</div>"""
+
+
+def s_hero(extra=""):
     h = C.HERO
     cifras = "".join(
         f'<div class="cifra"><b>{e(n)}</b><span>{e(t)}</span></div>'
@@ -127,6 +189,7 @@ def s_hero():
     <svg class="logo" viewBox="0 0 863.98 253.56" role="img" aria-label="Crea y Monetiza Campus"><use href="#logo-full"/></svg>
     <p class="pill">{e(h["eyebrow"])}</p>
     <h1>{e(h["titulo"])}</h1>
+    {extra}
     <p class="entrada">{e(h["entrada"])}</p>
     <ul class="materias-hero">{materias}</ul>
     <p class="remate">{e(h["remate"])}</p>
@@ -461,14 +524,24 @@ def s_cierre():
 </footer>"""
 
 
-SECCIONES = [s_hero, s_carta, s_campus, s_perfil, s_recorrido, s_plan, s_evaluacion,
+def s_cinta_1():
+    return cinta(C.HERO["materias"])
+
+
+def s_cinta_2():
+    return cinta(C.CIERRE["con"])
+
+
+SECCIONES = [s_hero, s_cinta_1, s_carta, s_campus, s_perfil, s_recorrido, s_plan, s_evaluacion,
              s_tesis, s_digital, s_vivo, s_facultad, s_mercado, s_oportunidades,
              s_experiencia, s_historias, s_graduacion, s_registro, s_es_para_ti,
-             s_admisiones, s_cohorte, s_faq, s_cierre]
+             s_admisiones, s_cohorte, s_faq, s_cinta_2, s_cierre]
 
 
 def pagina(prop):
-    cuerpo = "\n".join(s() for s in SECCIONES)
+    extra = perfil_animado() if prop.get("hero_extra") else ""
+    cuerpo = "\n".join(
+        (s(extra) if s is s_hero else s()) for s in SECCIONES)
     titulo = f'{C.MARCA["nombre"]} — Admisiones'
     return f"""<!DOCTYPE html>
 <html lang="es">
@@ -487,7 +560,7 @@ def pagina(prop):
 <link rel="stylesheet" href="../css/base.css">
 <link rel="stylesheet" href="../css/{prop["css"]}">
 </head>
-<body class="v-{prop["slug"][-1]}">
+<body class="v-{prop["slug"].split("-")[-1]}">
 {logo_sprite()}
 <a class="saltar" href="#inicio">Saltar al contenido</a>
 {nav()}
@@ -496,8 +569,8 @@ def pagina(prop):
 </main>
 <a class="cta-fijo" href="#admisiones">{e(C.CTA_FIJO)} <span aria-hidden="true">→</span></a>
 <div class="cambiar">
-  <span>Propuesta {prop["slug"][-1]} · {e(prop["nombre"])}</span>
-  <a href="../">Ver las tres</a>
+  <span>Propuesta {prop["slug"].split("-")[-1]} · {e(prop["nombre"])}</span>
+  <a href="../">Ver las {NUM_TXT}</a>
 </div>
 <script src="../js/campus.js"></script>
 </body>
@@ -518,7 +591,7 @@ def indice():
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crea y Monetiza Campus — Tres propuestas de landing</title>
+<title>Crea y Monetiza Campus — {NUM_TXT.capitalize()} propuestas de landing</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -530,13 +603,13 @@ def indice():
 {logo_sprite()}
 <div class="wrap idx">
   <svg class="logo" viewBox="0 0 863.98 253.56" role="img" aria-label="Crea y Monetiza Campus"><use href="#logo-full"/></svg>
-  <p class="pill">Landing de admisiones · Tres direcciones</p>
-  <h1>Mismo contenido, tres diseños.</h1>
-  <p class="lead">Las tres llevan exactamente la misma copy y las mismas 22 secciones.
+  <p class="pill">Landing de admisiones · {NUM_TXT.capitalize()} direcciones</p>
+  <h1>Mismo contenido, {NUM_TXT} diseños.</h1>
+  <p class="lead">{NUM_TXT.capitalize()} llevan exactamente la misma copy y las mismas 22 secciones.
   Lo único que cambia es la dirección visual, para que la decisión sea sobre diseño
   y no sobre texto.</p>
   <div class="p-grid">{tarjetas}</div>
-  <p class="nota-idx">Las tres omiten por completo cualquier cifra económica: eso se
+  <p class="nota-idx">{NUM_TXT.capitalize()} omiten por completo cualquier cifra económica: eso se
   comunica solo, y en privado, durante la entrevista de admisión. La build lo verifica
   antes de escribir cada página.</p>
 </div>

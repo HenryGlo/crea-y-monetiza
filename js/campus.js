@@ -225,6 +225,7 @@
         form.reset();
         msg.className = "form-msg ok";
         msg.textContent = msg.dataset.ok;
+        confeti(btn);
       } catch (err) {
         msg.className = "form-msg err";
         msg.textContent = "No pudimos enviar tu registro. Vuelve a intentarlo en un momento.";
@@ -235,8 +236,125 @@
     });
   }
 
+  /* ------------------------------------------------- titulares palabra a palabra */
+
+  function titularesPorPalabra() {
+    if (quieto) return;
+    /* Se parte por palabras y no por letras: por letras el lector de pantalla
+       deletrea, y `text-wrap:balance` deja de funcionar al perder los espacios. */
+    document.querySelectorAll(".hero h1, .cierre-final h2, .tesis-nombre").forEach(function (h) {
+      if (h.querySelector(".pal")) return;
+      const palabras = h.textContent.trim().split(/\s+/);
+      h.setAttribute("aria-label", h.textContent.trim());
+      h.textContent = "";
+      palabras.forEach(function (p, i) {
+        const s = document.createElement("span");
+        s.className = "pal";
+        s.setAttribute("aria-hidden", "true");
+        s.style.setProperty("--i", i);
+        s.textContent = p;
+        h.appendChild(s);
+        h.appendChild(document.createTextNode(" "));
+      });
+      h.classList.add("por-palabra");
+    });
+
+    const obs = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add("entra");
+        obs.unobserve(en.target);
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll(".por-palabra").forEach(function (h) {
+      /* El del hero se anima solo desde CSS (ver .hero .por-palabra en
+         base.css): ya está en pantalla al cargar y no debe depender de que
+         una clase llegue a tiempo. */
+      if (!h.closest(".hero")) obs.observe(h);
+    });
+  }
+
+  /* ------------------------------------------------------------ botones imantados */
+
+  function imanes() {
+    if (quieto || matchMedia("(pointer: coarse)").matches) return;
+    document.querySelectorAll(".btn, .nav-cta, .cta-fijo").forEach(function (b) {
+      b.addEventListener("pointermove", function (ev) {
+        const r = b.getBoundingClientRect();
+        /* Desplazamiento corto y proporcional: si el botón se va demasiado
+           lejos del cursor, se vuelve difícil de pulsar. */
+        const x = (ev.clientX - r.left - r.width / 2) * 0.22;
+        const y = (ev.clientY - r.top - r.height / 2) * 0.3;
+        b.style.transform = "translate(" + x + "px," + y + "px)";
+      });
+      b.addEventListener("pointerleave", function () { b.style.transform = ""; });
+    });
+  }
+
+  /* ------------------------------------------------------------ tarjetas con relieve */
+
+  function relieve() {
+    if (quieto || matchMedia("(pointer: coarse)").matches) return;
+    document.querySelectorAll(".card").forEach(function (c) {
+      c.addEventListener("pointermove", function (ev) {
+        const r = c.getBoundingClientRect();
+        const px = (ev.clientX - r.left) / r.width - 0.5;
+        const py = (ev.clientY - r.top) / r.height - 0.5;
+        c.style.setProperty("--rx", (-py * 5).toFixed(2) + "deg");
+        c.style.setProperty("--ry", (px * 5).toFixed(2) + "deg");
+        /* Posición del brillo, para que la luz siga al cursor. */
+        c.style.setProperty("--mx", ((px + 0.5) * 100).toFixed(1) + "%");
+        c.style.setProperty("--my", ((py + 0.5) * 100).toFixed(1) + "%");
+      });
+      c.addEventListener("pointerleave", function () {
+        c.style.removeProperty("--rx");
+        c.style.removeProperty("--ry");
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------- foco del cursor */
+
+  function focoCursor() {
+    if (quieto || matchMedia("(pointer: coarse)").matches) return;
+    const hero = document.querySelector(".v-3 .hero, .v-4 .hero");
+    if (!hero) return;
+    hero.addEventListener("pointermove", function (ev) {
+      const r = hero.getBoundingClientRect();
+      hero.style.setProperty("--fx", (((ev.clientX - r.left) / r.width) * 100).toFixed(1) + "%");
+      hero.style.setProperty("--fy", (((ev.clientY - r.top) / r.height) * 100).toFixed(1) + "%");
+    });
+  }
+
+  /* ------------------------------------------------------------------- confeti */
+
+  function confeti(origen) {
+    if (quieto) return;
+    const colores = ["#F18BC4", "#98B7FD", "#F9FF80", "#500711"];
+    const r = origen.getBoundingClientRect();
+    const capa = document.createElement("div");
+    capa.className = "confeti";
+    for (let i = 0; i < 34; i++) {
+      const p = document.createElement("i");
+      p.style.setProperty("--c", colores[i % colores.length]);
+      p.style.setProperty("--x", (Math.random() * 2 - 1).toFixed(2));
+      p.style.setProperty("--r", Math.round(Math.random() * 360) + "deg");
+      p.style.setProperty("--d", (Math.random() * 0.25).toFixed(2) + "s");
+      capa.appendChild(p);
+    }
+    capa.style.left = r.left + r.width / 2 + "px";
+    capa.style.top = r.top + scrollY + "px";
+    document.body.appendChild(capa);
+    setTimeout(function () { capa.remove(); }, 2200);
+  }
+
   function iniciar() {
     prepararEntradas();
+    titularesPorPalabra();
+    imanes();
+    relieve();
+    focoCursor();
     navActiva();
     progresoYCta();
     contadores();

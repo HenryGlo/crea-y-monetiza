@@ -45,6 +45,9 @@ body.v-indice{
 .p-3 h2{ color:#F6EDE8 }
 .p-3 p{ color:rgba(246,237,232,.8) }
 .p-3 .btn-pri{ background:var(--rosa); color:#2A0207; border-color:var(--rosa) }
+.p-4{ background:#FBF7F4; box-shadow:8px 8px 0 var(--azul) }
+.p-4:hover{ box-shadow:12px 12px 0 var(--azul) }
+.p-4 .btn-pri{ background:var(--vino); color:var(--crema); border-color:var(--vino) }
 
 .nota-idx{
   margin:48px auto 0; max-width:62ch; font-size:14px; opacity:.65;
