@@ -21,7 +21,7 @@ body.v-4{
    retardo, así que cambiar el ritmo de la escena es tocar estas dos líneas.
    Ritmo ajustado: la escena entera cierra en ~1.6s. Más lenta se hacía esperar
    justo en el primer pantallazo, que es donde menos paciencia hay. */
-.v-4{ --t:.36s; --paso:.062s }
+.v-4{ --t:.2s; --paso:.024s }
 
 /* --------------------------------------------------------------------- hero */
 
@@ -106,18 +106,20 @@ body.v-4{
    orden cuenta la idea sola — primero se ve lo que se construye, después quién
    te enseña a construirlo.
 
-   Va detrás de la tarjeta (z-index) y anclada al borde inferior, que es como
-   se lee un recorte de persona: apoyada, no flotando. */
+   Va por delante de la tarjeta y anclada al borde inferior, que es como se lee
+   un recorte de persona: apoyada, no flotando. */
 .v-4 .pf-persona{
-  /* Asomando por la derecha y por detrás: si se superpone a la tarjeta tapa
-     justo la retícula, que es el gesto que la escena está contando. */
-  position:absolute; right:-40%; bottom:-4%; z-index:0;
+  /* Delante de todo: detrás, el borde de la tarjeta le cortaba el brazo y
+     parecía un error de recorte más que una superposición buscada. Solo pisa
+     la franja derecha de la retícula, así que el gesto que cuenta la escena
+     —el perfil armándose— se sigue leyendo entero. */
+  position:absolute; right:-40%; bottom:-4%; z-index:3;
   width:min(340px,66%); height:auto;
   filter:drop-shadow(-14px 18px 30px rgba(80,7,17,.35));
-  animation:pf-persona .9s cubic-bezier(.2,.8,.25,1) calc(var(--paso) * 21) both;
+  animation:pf-persona .55s cubic-bezier(.2,.8,.25,1) calc(var(--paso) * 20) both;
   pointer-events:none;
 }
-/* La tarjeta va por delante del recorte. */
+/* La tarjeta queda por debajo del recorte, pero por encima del fondo. */
 .v-4 .pf-marco{ position:relative; z-index:1 }
 .v-4 .pf-pie{ position:relative; z-index:2 }
 @keyframes pf-persona{
@@ -239,7 +241,7 @@ body.v-4{
   color:var(--vino); max-width:26ch; margin:0;
   /* Entra cuando la retícula ya se completó: primero se ve el resultado,
      después se dice que no llega solo. */
-  animation:pf-entra .7s ease calc(var(--paso) * 24) both;
+  animation:pf-entra .45s ease calc(var(--paso) * 23) both;
 }
 
 /* -------------------------------------------------------- resto de la página */
