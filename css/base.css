@@ -33,6 +33,13 @@
   --texto-f:'Outfit',system-ui,-apple-system,sans-serif;
   --mano:'Caveat',cursive;
 
+  /* Interlineado de titulares. Medido, no elegido a ojo: en Anton la tilde de
+     la Ñ sube a 1.07em sobre la línea base y el acento de la Ó a 1.10em, contra
+     0.86em de una mayúscula sin acento. Por debajo de 1.10 el acento de una
+     línea pisa la tinta de la anterior, y este contenido está lleno de
+     GRADUACIÓN, MONETIZACIÓN y ADMISIÓN en titular. */
+  --lh-display:1.12;
+
   --wrap:1180px;
   --sec-y:clamp(72px,10vw,150px);
 
@@ -73,7 +80,7 @@ h1,h2,h3{
   font-family:var(--display);
   font-weight:400;
   text-transform:uppercase;
-  line-height:.94;
+  line-height:var(--lh-display);
   letter-spacing:-.015em;
   margin:0 0 .5em;
   /* Anton no trae versalitas reales; el balance evita viudas en los titulares

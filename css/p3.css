@@ -71,7 +71,7 @@ body.v-3{
 }
 
 .v-3 .hero h1{
-  max-width:14ch; margin:0 auto .42em; letter-spacing:-.03em; line-height:.88;
+  max-width:14ch; margin:0 auto .42em; letter-spacing:-.03em; line-height:var(--lh-display);
   background:linear-gradient(178deg,#fff 30%,#f3c9dd 78%,#c98fae 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
@@ -182,7 +182,7 @@ body.v-3{
 .v-3 .tesis .lista li::before{ display:none }
 .v-3 .tesis-nombre{
   font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(42px,10vw,150px); line-height:.86; letter-spacing:-.035em; margin:0 0 .35em;
+  font-size:clamp(42px,10vw,150px); line-height:var(--lh-display); letter-spacing:-.035em; margin:0 0 .35em;
   background:linear-gradient(100deg,var(--azul),var(--rosa) 55%,var(--amar));
   -webkit-background-clip:text; background-clip:text; color:transparent;
   filter:drop-shadow(0 0 40px rgba(241,139,196,.35));
@@ -214,7 +214,7 @@ body.v-3{
 }
 .v-3 .pregunta{
   font-family:var(--display); text-transform:uppercase; letter-spacing:-.025em;
-  font-size:clamp(24px,4vw,54px); line-height:.98; margin:54px 0 0; max-width:18ch;
+  font-size:clamp(24px,4vw,54px); line-height:var(--lh-display); margin:54px 0 0; max-width:18ch;
 }
 .v-3 .nota{ font-size:13px; opacity:.5 }
 

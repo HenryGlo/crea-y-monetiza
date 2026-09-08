@@ -147,7 +147,7 @@ body.v-1{
 
 .v-1 .tesis-nombre{
   font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(38px,7vw,92px); line-height:.92; margin:0 0 .35em;
+  font-size:clamp(38px,7vw,92px); line-height:var(--lh-display); margin:0 0 .35em;
   background:linear-gradient(100deg,var(--vino) 20%,var(--rosa) 50%,var(--azul) 80%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
