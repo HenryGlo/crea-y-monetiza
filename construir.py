@@ -111,27 +111,32 @@ def parrafos(ps, cls=""):
     return "".join(f"<p{c}>{e(p)}</p>" for p in ps)
 
 
+# Los óvalos del juego de Nathaly no se usan aquí: son parches bordados en
+# blanco, pensados para llevar una palabra encima. Sueltos como adorno se leen
+# como una mancha de color, que es exactamente lo que reportó el cliente. Si
+# alguna vez llevan texto, vuelven.
+#
 # Pegatinas repartidas por la página. Cada sección lleva las suyas, colocadas
 # desde CSS por la clase del hueco (d1 arriba-izquierda, d2 arriba-derecha,
 # d3 abajo-izquierda, d4 abajo-derecha). Entran con un rebote al aparecer la
 # sección y luego flotan, igual que las del hero.
 DECORACION = {
     "campus":       [("estrella-rosa", "d2")],
-    "perfil":       [("flor-amar", "d1")],
-    "recorrido":    [("rayo-azul", "d2"), ("ovalo-rosa", "d3")],
-    "plan":         [("flor-rosa", "d1")],
+    "perfil":       [("estrella-rosa", "d1")],
+    "recorrido":    [("rayo-azul", "d2"), ("estrella-amar", "d3")],
+    "plan":         [("rayo-azul", "d1")],
     "evaluacion":   [("estrella-amar", "d2")],
-    "tesis":        [("flor-rosa", "d1"), ("estrella-azul", "d4")],
-    "experiencia":  [("ovalo-amar", "d2")],
+    "tesis":        [("estrella-amar", "d1"), ("estrella-azul", "d4")],
+    "experiencia":  [("rayo-rosa", "d2")],
     "vivo":         [("rayo-rosa", "d1")],
     "mentoras":     [("estrella-rosa", "d4")],
-    "oportunidades":[("ovalo-azul", "d2")],
-    "incluye":      [("flor-amar", "d3")],
+    "oportunidades":[("rayo-amar", "d2")],
+    "incluye":      [("estrella-azul", "d3")],
     "graduacion":   [("estrella-amar", "d1"), ("rayo-azul", "d4")],
-    "registro":     [("flor-rosa", "d2")],
+    "registro":     [("rayo-amar", "d2")],
     "admisiones":   [("estrella-azul", "d1")],
-    "faq":          [("ovalo-rosa", "d2")],
-    "historias":    [("flor-azul", "d1")],
+    "faq":          [("estrella-rosa", "d2")],
+    "historias":    [("estrella-rosa", "d1")],
     "para-ti":      [("estrella-amar", "d4")],
     "cohorte":      [("rayo-amar", "d2")],
 }
@@ -236,7 +241,7 @@ def s_hero(extra=""):
         for n, t in h["cifras"])
     materias = "".join(f"<li>{e(m)}</li>" for m in h["materias"])
     return f"""<header id="inicio" class="hero">
-  {stickers([("estrella-azul","s1"),("rayo-amar","s2"),("flor-rosa","s3"),("ovalo-azul","s4")])}
+  {stickers([("estrella-azul","s1"),("rayo-amar","s2"),("rayo-rosa","s3"),("estrella-rosa","s4")])}
   <div class="wrap">
     <svg class="logo" viewBox="0 0 863.98 253.56" role="img" aria-label="Crea y Monetiza Campus"><use href="#logo-full"/></svg>
     <p class="pill">{e(h["eyebrow"])}</p>
@@ -250,8 +255,23 @@ def s_hero(extra=""):
       {boton(h["cta_2"], "#campus", "sec")}
     </div>
     <div class="cifras">{cifras}</div>
+    {equipo_hero()}
   </div>
 </header>"""
+
+
+def equipo_hero():
+    """Las tres mentoras, anunciadas ya en el hero. Es el activo de confianza
+    principal —los dos competidores directos del nicho ponen a la fundadora
+    arriba del todo— y estaba enterrado en la sección once."""
+    q = C.EQUIPO_HERO
+    caras = "".join(
+        f'<span class="cara" title="{e(n)}">{e(n[0])}</span>' for n in q["personas"])
+    nombres = " · ".join(q["personas"])
+    return (f'<a class="equipo" href="#mentoras">'
+            f'<span class="caras">{caras}</span>'
+            f'<span class="equipo-txt"><b>{e(q["etiqueta"])}</b>'
+            f'<i>{e(nombres)}</i></span></a>')
 
 
 def s_carta():
@@ -362,20 +382,49 @@ def s_plan():
         cuerpo = f"<p>{e(d)}</p>" if d else ""
         if sub:
             cuerpo += '<ul class="temas">' + "".join(f"<li>{e(x)}</li>" for x in sub) + "</ul>"
+        # La duración solo se pinta si el Campus la confirmó.
+        dur = C.DURACIONES.get(i, "").strip()
+        dur_html = f'<span class="materia-dur">{e(dur)}</span>' if dur else ""
+        # Las materias se abren de una en una. Diez tarjetas abiertas eran 2.800px
+        # de scroll para leer diez títulos; plegadas caben en pantalla y se
+        # exploran, que es como se lee un plan de estudios.
         ms += f"""<li class="ruta-paso">
       <span class="ruta-nodo" aria-hidden="true">{i:02d}</span>
-      <article class="card materia">
-        <p class="materia-n">Materia {i:02d}</p>
-        <h3>{e(t)}</h3>
-        {cuerpo}
-      </article>
+      <details class="card materia">
+        <summary>
+          <span class="materia-n">Materia {i:02d}</span>
+          <h3>{e(t)}</h3>
+          {dur_html}
+        </summary>
+        <div class="materia-cuerpo">{cuerpo}</div>
+      </details>
     </li>"""
     return seccion("plan", "06", f"""
     {eyebrow(p["eyebrow"])}
     <h2>{e(p["titulo"])}</h2>
     <p class="lead">{e(p["bajada"])}</p>
     <ol class="ruta">{ms}</ol>
-    {parrafos(p["cierre"], "cierre")}""", "plan")
+    {parrafos(p["cierre"], "cierre")}
+    {bloque_evaluacion()}""", "plan")
+
+
+def bloque_evaluacion():
+    """Cómo se evalúa. Era la sección 07 y ahora cierra el plan de estudios:
+    las dos responden "cómo aprendo", y separadas obligaban a leer dos veces lo
+    mismo con otro titular."""
+    v = C.EVALUACION
+    items = "".join(f'<div class="ev"><b>{e(t)}</b><span>{e(d)}</span></div>'
+                    for t, d in v["items"])
+    # Plegado: es información que se consulta, no que se lee de corrido, y
+    # abierta ocupaba 600px al final del plan.
+    return f"""<details class="evaluacion-bloque">
+      <summary><h3>{e(v["eyebrow"])}</h3><span>{e(v["titulo"])}</span></summary>
+      <div class="ev-cuerpo">
+        {parrafos(v["intro"])}
+        <div class="ev-grid">{items}</div>
+        <p class="cierre">{e(v["cierre"])}</p>
+      </div>
+    </details>"""
 
 
 def s_evaluacion():
@@ -391,6 +440,9 @@ def s_evaluacion():
 
 
 def s_tesis():
+    """A sangre completa y en vino. Es el mejor nombre de toda la landing y lo
+    que de verdad separa al Campus de "otro curso más"; tratada como una sección
+    normal se perdía entre las otras veintiuna."""
     t = C.TESIS
     return seccion("tesis", "08", f"""
     {eyebrow(t["eyebrow"])}
@@ -638,10 +690,140 @@ def s_cinta_2():
     return cinta(C.CIERRE["con"])
 
 
-SECCIONES = [s_hero, s_cinta_1, s_carta, s_campus, s_perfil, s_recorrido, s_plan, s_evaluacion,
-             s_tesis, s_digital, s_vivo, s_facultad, s_mercado, s_oportunidades,
-             s_experiencia, s_historias, s_graduacion, s_registro, s_es_para_ti,
-             s_admisiones, s_cohorte, s_faq, s_cinta_2, s_cierre]
+def s_experiencia_unificada():
+    """Campus digital + sesiones en vivo + todo lo que incluye, en un solo
+    bloque. Las tres respondían "qué recibo" y estaban separadas por otras
+    secciones: eran 24 tarjetas repartidas en tres titulares distintos."""
+    d, v, x = C.DIGITAL, C.VIVO, C.EXPERIENCIA
+
+    bloques = ""
+    for b in d["bloques"]:
+        extra = lista(b["lista"], "lista") if b["lista"] else ""
+        bloques += f"""<article class="card bloque">
+      <p class="kicker">{e(b["kicker"])}</p>
+      <h3>{e(b["titulo"])}</h3>
+      {parrafos(b["texto"])}
+      {extra}
+      <div class="ph" role="img" aria-label="{e(b["placeholder"])}"><span>{e(b["placeholder"])}</span></div>
+    </article>"""
+
+    vivo = "".join(f'<article class="card mini"><h3>{e(t)}</h3><p>{e(dd)}</p></article>'
+                   for t, dd in v["items"])
+
+    # Los quince puntos de "todo lo que incluye" eran quince tarjetas: aquí van
+    # como lista de dos columnas, que es como se lee un temario de lo incluido.
+    incluye = "".join(f'<li><b>{e(t)}</b><span>{e(dd)}</span></li>' for t, dd in x["items"])
+
+    return seccion("experiencia", "09", f"""
+    {eyebrow(d["eyebrow"])}
+    <h2>{e(d["titulo"])}</h2>
+    <ul class="lista piezas">{"".join(f"<li>{e(z)}</li>" for z in d["piezas"])}</ul>
+    <p class="remate">{e(d["remate"])}</p>
+    <div class="grid grid-3">{bloques}</div>
+
+    <div class="sub">
+      <h3>{e(v["titulo"])}</h3>
+      <p class="lead">{e(v["bajada"])}</p>
+      <div class="grid grid-4">{vivo}</div>
+    </div>
+
+    <div class="sub">
+      <h3>{e(x["titulo"])}</h3>
+      <ul class="incluye-lista">{incluye}</ul>
+    </div>""", "digital")
+
+
+def s_mercado_unificado():
+    """Del campus al mercado + banco de oportunidades. Las dos responden "qué
+    pasa cuando salgo"; la segunda era el detalle de la primera."""
+    m, o = C.MERCADO, C.OPORTUNIDADES
+    return seccion("mercado", "12", f"""
+    {eyebrow(m["eyebrow"])}
+    <h2>{e(m["titulo"])}</h2>
+    {parrafos(m["intro"], "lead")}
+    <p class="lead-min">{e(m["lead"])}</p>
+    {lista(m["items"], "lista dos-col")}
+
+    <div class="sub">
+      <h3>{e(o["titulo"])}</h3>
+      <p class="lead">{e(o["intro"])}</p>
+      {lista(o["items"], "lista chips")}
+      {parrafos(o["cierre"], "cierre")}
+    </div>""", "mercado")
+
+
+def s_admisiones_unificada():
+    """¿Es para ti? + proceso + próximas fechas + registro prioritario. Las
+    cuatro son el mismo momento —decidir si entras— y estaban repartidas con
+    otras secciones en medio, obligando a subir y bajar para decidir."""
+    p, a, c, r = C.ES_PARA_TI, C.ADMISIONES, C.COHORTE, C.REGISTRO
+
+    pasos = "".join(
+        f'<li class="paso"><span class="paso-n">{i:02d}</span><h3>{e(t)}</h3><p>{e(dd)}</p></li>'
+        for i, (t, dd) in enumerate(a["pasos"], 1))
+    datos = "".join(f'<div class="dato"><span>{e(k)}</span><b>{e(val)}</b></div>'
+                    for k, val in c["datos"])
+
+    campos = "".join(f"""<label class="campo-f">
+      <span>{e(lab)}</span>
+      <input type="{tipo}" name="{n}" {"required" if req else ""} autocomplete="{'email' if tipo == 'email' else 'on'}">
+    </label>""" for n, lab, tipo, req in r["campos"])
+    opciones = "".join(f'<option value="{e(o)}">{e(o)}</option>' for o in r["punto_opciones"])
+
+    return seccion("admisiones", "17", f"""
+    {eyebrow(p["eyebrow"])}
+    <h2>{e(a["titulo"])}</h2>
+
+    <div class="grid grid-2">
+      <article class="card si"><h3>{e(p["si_titulo"])}</h3>{lista(p["si"], "lista check")}</article>
+      <article class="card no"><h3>{e(p["no_titulo"])}</h3>{lista(p["no"], "lista cruz")}</article>
+    </div>
+    <p class="cierre">{e(p["cierre"])}</p>
+
+    <div class="sub">
+      <h3>{e(a["eyebrow"])}</h3>
+      {parrafos(a["intro"], "lead")}
+      {lista(a["queremos"], "lista")}
+      <ol class="pasos-grid">{pasos}</ol>
+      <p class="nota">{e(a["nota"])}</p>
+    </div>
+
+    <div class="sub">
+      <h3>{e(c["titulo"])}</h3>
+      <div class="datos">{datos}</div>
+    </div>
+
+    <div class="sub" id="registro">
+      <h3>{e(r["titulo"])}</h3>
+      {lista(r["items"], "lista chips")}
+      <p class="lead">{e(r["bajada"])}</p>
+      <form class="form" id="form-registro" novalidate>
+        <p class="form-t">{e(r["form_titulo"])}</p>
+        <div class="campos">{campos}</div>
+        <label class="campo-f">
+          <span>{e(r["punto_label"])}</span>
+          <select name="punto" required><option value="">Selecciona una opción</option>{opciones}</select>
+        </label>
+        <label class="campo-f">
+          <span>{e(r["objetivo_label"])}</span>
+          <textarea name="objetivo" rows="4"></textarea>
+        </label>
+        <button class="btn btn-pri" type="submit">{e(r["boton"])} <span aria-hidden="true">→</span></button>
+        <p class="form-msg" role="status" data-ok="{e(r["confirmacion"])}"></p>
+      </form>
+    </div>
+
+    <p class="pregunta">{e(a["pregunta"])}</p>
+    <div class="ctas">{boton(a["boton"], "#registro", "pri")}</div>""", "admisiones")
+
+
+# Quince bloques donde antes había veintidós. No se quitó contenido: se
+# fusionaron las secciones que respondían la misma pregunta y se plegó lo
+# secundario. Los competidores directos del nicho tienen entre cuatro y cinco.
+SECCIONES = [s_hero, s_cinta_1, s_carta, s_campus, s_perfil, s_recorrido,
+             s_plan, s_tesis, s_experiencia_unificada, s_facultad,
+             s_mercado_unificado, s_historias, s_graduacion,
+             s_admisiones_unificada, s_faq, s_cinta_2, s_cierre]
 
 
 def cinta_propuestas(prop):

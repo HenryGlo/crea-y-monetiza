@@ -41,7 +41,9 @@
   --lh-display:1.12;
 
   --wrap:1180px;
-  --sec-y:clamp(72px,10vw,150px);
+  /* Con 13 secciones, 150px arriba y abajo son casi 4.000px de la página solo
+     en aire. A 104 se sigue leyendo cada bloque como un bloque. */
+  --sec-y:clamp(52px,6.5vw,104px);
 
   /* Escala fluida: una sola fuente de verdad para los tamaños de titular. */
   /* El titular del hero se mide contra el pliegue, no contra el gusto: a 96px
@@ -254,7 +256,9 @@ a{ color:inherit }
 
 .video{
   position:relative; aspect-ratio:16/9; border-radius:var(--r); overflow:hidden;
-  margin:34px 0; background:var(--vino); box-shadow:var(--shadow-alta);
+  margin:30px 0; background:var(--vino); box-shadow:var(--shadow-alta);
+  /* A ancho completo el vídeo mide 660px de alto y empuja media sección. */
+  max-width:880px;
 }
 .video iframe{ position:absolute; inset:0; width:100%; height:100%; border:0 }
 .video-btn{
@@ -296,7 +300,7 @@ a{ color:inherit }
    nadie confunda un hueco con una decisión de diseño. */
 .ph{
   margin-top:20px; border:2px dashed color-mix(in srgb,var(--texto) 28%,transparent);
-  border-radius:var(--r-s); min-height:150px;
+  border-radius:var(--r-s); min-height:104px;
   display:grid; place-items:center; text-align:center; padding:20px;
   background:color-mix(in srgb,var(--texto) 4%,transparent);
 }
@@ -526,26 +530,30 @@ a{ color:inherit }
 }
 
 /* ============================================================ plan de estudios
-   Las materias dejan de ser una cuadrícula suelta y pasan a leerse como un
-   recorrido: van encadenadas por una vía que se dibuja a medida que se baja, con
-   una flecha entre cada una. Es lo que convierte "diez materias" en "una ruta",
-   que es exactamente lo que el Campus dice vender. */
+
+   Las materias van encadenadas por una vía que se dibuja al bajar, con nodos
+   numerados que se encienden al llegar. Es lo que convierte "diez materias" en
+   "una ruta", que es exactamente lo que el Campus dice vender.
+
+   Van en una sola columna y no alternando lados: alternando, cada materia
+   ocupaba una fila entera y el bloque medía 1.800px para diez títulos. En
+   columna, cada materia cerrada es una fila de 70px y el plan entero cabe casi
+   en una pantalla — que es como se explora un plan de estudios. */
 
 .ruta{
-  list-style:none; padding:0; margin:44px 0 0; position:relative;
-  display:grid; gap:clamp(20px,3vw,38px);
+  list-style:none; padding:0; margin:36px 0 0; position:relative;
+  display:grid; gap:10px;
 }
 
 /* La vía: un carril tenue (::before) con el trazo de avance encima (::after).
-   Van como pseudo-elementos y no como un <span> dentro del <ol>: ahí serían
-   HTML inválido y, peor, desplazarían el nth-child de todas las materias, que
-   es lo que decide de qué lado cae cada tarjeta.
+   Van como pseudo-elementos del <ol> y no como un <span> dentro: ahí serían
+   HTML inválido y desplazarían el nth-child de las materias.
 
    La altura del trazo la escribe campus.js en --avance, de 0 a 1. Sin JS se
    queda al 100%: la ruta completa, simplemente sin dibujarse. */
 .ruta::before,.ruta::after{
-  content:""; position:absolute; top:0; left:50%;
-  width:3px; margin-left:-1.5px; border-radius:99px;
+  content:""; position:absolute; top:0; left:25px;
+  width:3px; border-radius:99px;
 }
 .ruta::before{
   bottom:0; background:color-mix(in srgb,var(--texto) 14%,transparent);
@@ -557,75 +565,28 @@ a{ color:inherit }
 }
 
 .ruta-paso{
-  display:grid; grid-template-columns:1fr auto 1fr;
-  align-items:center; gap:clamp(14px,2vw,28px);
-  position:relative;
+  display:grid; grid-template-columns:52px 1fr; align-items:start;
+  gap:16px; position:relative;
 }
-/* Alternar lados hace que la vcentral se lea como camino y no como lista con
-   una raya al lado. */
-.ruta-paso > .materia{ grid-column:1 }
-.ruta-paso:nth-child(even) > .materia{ grid-column:3 }
-.ruta-paso > .ruta-nodo{ grid-column:2 }
 
 .ruta-nodo{
   width:52px; height:52px; flex:none; z-index:2;
   display:grid; place-items:center; border-radius:50%;
-  font-family:var(--display); font-size:16px; letter-spacing:.02em;
+  font-family:var(--display); font-size:16px;
   background:var(--fondo); color:var(--texto);
   border:3px solid color-mix(in srgb,var(--texto) 22%,transparent);
   transition:border-color .35s,background .35s,color .35s,transform .35s cubic-bezier(.2,.8,.3,1);
 }
-/* El nodo se enciende cuando su materia ya entró en pantalla. */
 .ruta-paso.dentro > .ruta-nodo,
 .ruta-paso:has(.dentro) > .ruta-nodo{
   border-color:var(--rosa); background:var(--rosa); color:var(--vino);
-  transform:scale(1.08);
+  transform:scale(1.06);
 }
 
-/* Flecha entre materia y materia, sobre la vía. */
-.ruta-paso:not(:last-child)::after{
-  content:""; position:absolute; z-index:2;
-  left:50%; bottom:calc(clamp(20px,3vw,38px) / -2 - 5px);
-  width:11px; height:11px; margin-left:-6px;
-  border-right:3px solid color-mix(in srgb,var(--texto) 30%,transparent);
-  border-bottom:3px solid color-mix(in srgb,var(--texto) 30%,transparent);
-  transform:rotate(45deg);
-  transition:border-color .35s;
-}
-.ruta-paso.dentro:not(:last-child)::after,
-.ruta-paso:has(.dentro):not(:last-child)::after{ border-color:var(--rosa) }
-
-/* Un pico que apunta desde la tarjeta hacia la vía: es lo que hace que se lea
-   conectada y no simplemente apoyada al lado. */
-.ruta-paso > .materia::after{
-  content:""; position:absolute; top:50%; width:0; height:0; margin-top:-8px;
-  border:8px solid transparent;
-}
-.ruta-paso:nth-child(odd) > .materia::after{
-  right:-16px; border-left-color:var(--superficie);
-}
-.ruta-paso:nth-child(even) > .materia::after{
-  left:-16px; border-right-color:var(--superficie);
-}
-
-@media (max-width:900px){
-  /* Sin sitio para alternar, la vía se va al margen izquierdo y todo baja en
-     una sola columna. El pico cambia de lado con ella. */
-  .ruta::before,.ruta::after{ left:26px; margin-left:0 }
-  .ruta-paso{ grid-template-columns:auto 1fr; gap:18px }
-  .ruta-paso > .materia,
-  .ruta-paso:nth-child(even) > .materia{ grid-column:2 }
-  .ruta-paso > .ruta-nodo{ grid-column:1 }
+@media (max-width:600px){
+  .ruta::before,.ruta::after{ left:21px }
+  .ruta-paso{ grid-template-columns:44px 1fr; gap:12px }
   .ruta-nodo{ width:44px; height:44px; font-size:14px }
-  .ruta-paso::after{ left:26px!important }
-  .ruta-paso > .materia::after,
-  .ruta-paso:nth-child(even) > .materia::after{
-    left:-16px; right:auto; border-right-color:var(--superficie); border-left-color:transparent;
-  }
-}
-
-@media (prefers-reduced-motion:reduce){
-  .ruta::after{ height:100% }
 }
 
 /* ================================================================== teléfonos
@@ -738,7 +699,12 @@ a{ color:inherit }
   color:transparent;
 }
 
-/* Un ciclo completo son 200%: el brillo cruza la palabra exactamente una vez. */
+/* El reflejo no para nunca ni se queda esperando: recorre el patrón de forma
+   continua y a velocidad constante. Un ciclo son 200%, que es exactamente el
+   ancho del patrón, así que el bucle empalma sin salto.
+
+   Antes cruzaba en el 14% del ciclo y esperaba el 86% restante. Se leía como un
+   destello que se enciende y se apaga, no como un reflejo. */
 @keyframes reflejo{
   from{ background-position:100% 0 }
   to{ background-position:-100% 0 }
@@ -757,14 +723,14 @@ a{ color:inherit }
 }
 
 .por-palabra .pal{
-  animation:reflejo 6s linear calc(var(--i) * 70ms) infinite;
+  animation:reflejo 5s linear calc(var(--i) * -140ms) infinite;
 }
 
 /* En el hero se suma a la entrada: son propiedades distintas, así que conviven. */
 .hero .por-palabra .pal{
   animation:
     pal-entra .6s cubic-bezier(.2,.8,.3,1) calc(var(--i) * 50ms) both,
-    reflejo 6s linear calc(.5s + var(--i) * 70ms) infinite;
+    reflejo 5s linear calc(var(--i) * -140ms) infinite;
 }
 
 /* Un ciclo infinito en los 22 titulares de la página son casi 180 palabras
@@ -990,3 +956,168 @@ a{ color:inherit }
 .comp-campus h3{ color:var(--crema) }
 .comp-campus .kicker{ color:var(--rosa); opacity:1 }
 .comp-campus li::before{ content:"✓"; background:var(--rosa); color:var(--vino) }
+
+/* ================================================ reestructuración de bloques
+
+   La página pasó de 22 secciones a 15: se fusionaron las que respondían la
+   misma pregunta y se plegó lo secundario. Estas son las piezas que hicieron
+   falta para esa consolidación. */
+
+/* Sub-bloque dentro de una sección fusionada. Marca un cambio de tema sin
+   necesidad de abrir una sección nueva, que es lo que hinchaba la página. */
+.sub{
+  margin-top:clamp(44px,6vw,80px);
+  padding-top:clamp(28px,3.5vw,44px);
+  border-top:2px solid color-mix(in srgb,var(--texto) 12%,transparent);
+}
+.sub > h3{
+  font-size:clamp(22px,3vw,34px); margin-bottom:.5em;
+}
+
+/* --------------------------------------------------- plan de estudios plegado */
+
+/* Diez tarjetas abiertas eran 2.800px de scroll para leer diez títulos. Cerradas
+   caben en pantalla y el plan se explora en vez de leerse en vertical. */
+.materia{ padding:0!important; overflow:hidden }
+.materia summary{
+  cursor:pointer; list-style:none; position:relative;
+  padding:clamp(18px,2vw,24px) 56px clamp(18px,2vw,24px) clamp(20px,2.2vw,28px);
+  display:block;
+}
+.materia summary::-webkit-details-marker{ display:none }
+.materia summary::after{
+  content:"+"; position:absolute; right:22px; top:50%; transform:translateY(-50%);
+  font-family:var(--texto-f); font-size:26px; font-weight:300; color:var(--acento);
+  transition:transform .3s;
+}
+.materia[open] summary::after{ transform:translateY(-50%) rotate(45deg) }
+.materia summary h3{ margin:0 }
+.materia summary:hover h3{ color:var(--acento) }
+.materia-dur{
+  display:inline-block; margin-top:8px;
+  font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  opacity:.55;
+}
+.materia-cuerpo{
+  padding:0 clamp(20px,2.2vw,28px) clamp(20px,2.2vw,28px);
+}
+.materia[open]{ border-color:var(--acento) }
+
+/* --------------------------------------------------------- evaluación plegada */
+
+.evaluacion-bloque{
+  margin-top:clamp(36px,4.5vw,56px); padding-top:clamp(22px,2.6vw,32px);
+  border-top:2px solid color-mix(in srgb,var(--texto) 12%,transparent);
+}
+.evaluacion-bloque summary{
+  cursor:pointer; list-style:none; position:relative; padding-right:48px;
+}
+.evaluacion-bloque summary::-webkit-details-marker{ display:none }
+.evaluacion-bloque summary h3{ margin:0 0 .25em }
+.evaluacion-bloque summary > span{
+  display:block; font-weight:600; font-size:15.5px; opacity:.72; max-width:60ch;
+}
+.evaluacion-bloque summary::after{
+  content:"+"; position:absolute; right:8px; top:2px;
+  font-size:28px; font-weight:300; color:var(--acento); transition:transform .3s;
+}
+.evaluacion-bloque[open] summary::after{ transform:rotate(45deg) }
+.evaluacion-bloque summary:hover h3{ color:var(--acento) }
+.ev-cuerpo{ padding-top:20px }
+.ev-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:2px; background:color-mix(in srgb,var(--texto) 12%,transparent);
+  border:1px solid color-mix(in srgb,var(--texto) 12%,transparent);
+  border-radius:var(--r-s); overflow:hidden; margin:22px 0;
+}
+.ev{ background:var(--fondo); padding:18px 20px }
+.ev b{ display:block; font-family:var(--display); text-transform:uppercase; font-size:15px; margin-bottom:5px }
+.ev span{ font-size:14px; line-height:1.5; opacity:.8 }
+
+/* ------------------------------------------------------- lo que incluye */
+
+/* Quince tarjetas pasan a lista de dos columnas: es un temario de lo incluido,
+   no quince ideas que merezcan una tarjeta cada una. */
+.incluye-lista{
+  list-style:none; padding:0; margin:22px 0 0;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  column-gap:34px;
+}
+.incluye-lista li{
+  padding:13px 0; border-bottom:1px solid color-mix(in srgb,var(--texto) 12%,transparent);
+}
+.incluye-lista b{
+  display:block; font-family:var(--display); text-transform:uppercase;
+  font-size:15px; letter-spacing:.01em;
+}
+.incluye-lista span{ font-size:14.5px; line-height:1.5; opacity:.78 }
+
+/* ------------------------------------------------------------ equipo del hero */
+
+.equipo{
+  display:inline-flex; align-items:center; gap:12px; margin-top:20px;
+  padding:9px 18px 9px 10px; border-radius:999px;
+  border:1.5px solid color-mix(in srgb,var(--texto) 18%,transparent);
+  text-decoration:none; transition:border-color .25s,transform .25s;
+}
+.equipo:hover{ border-color:var(--acento); transform:translateY(-2px) }
+.caras{ display:flex }
+.cara{
+  width:32px; height:32px; border-radius:50%; margin-right:-9px;
+  display:grid; place-items:center; flex:none;
+  font-family:var(--display); font-size:14px; color:var(--vino);
+  background:linear-gradient(140deg,var(--rosa-soft),var(--azul-soft));
+  box-shadow:0 0 0 2px var(--fondo);
+}
+.cara:nth-child(2){ background:linear-gradient(140deg,var(--azul-soft),var(--amar-soft)) }
+.cara:nth-child(3){ background:linear-gradient(140deg,var(--amar-soft),var(--rosa-soft)) }
+.equipo-txt b{
+  display:block; font-size:11px; font-weight:800;
+  letter-spacing:.16em; text-transform:uppercase; opacity:.55;
+}
+.equipo-txt i{ display:block; font-style:normal; font-size:13.5px; font-weight:600 }
+
+@media (max-width:600px){
+  .sub{ margin-top:36px; padding-top:24px }
+  .incluye-lista{ grid-template-columns:1fr }
+  .equipo{ margin-top:14px }
+}
+
+/* ------------------------------------------------- la frase que se rechaza
+
+   Lo que el titular cita para negarlo va manuscrito y tachado, en su propia
+   línea. El titular dice "no estás aquí para convertirte en «una chica que hace
+   videos»": escribirlo a mano y cruzarlo lo dice antes de leerlo. */
+
+.mano{
+  /* En bloque para que caiga en su propia línea, pero ajustado al texto: a
+     ancho completo el tachado seguía cruzando media pantalla vacía. */
+  display:block; width:fit-content; max-width:100%;
+  position:relative;
+  margin:.06em 0 .06em .08em;
+}
+.pal-mano{
+  font-family:var(--mano); text-transform:none;
+  /* Caveat tiene la altura de x muy baja y necesita más cuerpo para igualar a
+     Anton, pero conserva el interlineado del titular: por debajo se saldría de
+     su línea y pisaría la de abajo. */
+  font-size:1.16em; line-height:inherit;
+  letter-spacing:.01em;
+  background:none!important; color:var(--acento)!important;
+  animation-name:pal-entra!important;
+}
+
+/* Un solo tachado para toda la frase, dibujado al entrar. Por palabra quedaban
+   cinco rayas sueltas con hueco entre ellas. */
+.mano::after{
+  content:""; position:absolute; left:-.06em; right:-.06em; top:54%;
+  height:.05em; border-radius:99px; background:var(--acento); opacity:.9;
+  transform:scaleX(0); transform-origin:left;
+  transition:transform .6s cubic-bezier(.2,.8,.3,1) .6s;
+}
+.por-palabra.entra .mano::after,
+.hero .por-palabra .mano::after{ transform:scaleX(1) }
+
+@media (prefers-reduced-motion:reduce){
+  .mano::after{ transform:scaleX(1); transition:none }
+}

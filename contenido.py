@@ -20,18 +20,28 @@ MARCA = {
 }
 
 # El ancla de cada entrada es también el id de la sección correspondiente.
+# Las anclas tienen que existir como id de sección. Al fusionar bloques
+# desaparecieron varias, así que la navegación se ajusta al mapa nuevo.
 NAV = [
     ("Inicio", "inicio"),
     ("El Campus", "campus"),
     ("Tu recorrido", "recorrido"),
     ("Plan de estudios", "plan"),
+    ("La Tesis", "tesis"),
     ("Experiencia", "experiencia"),
     ("Mentoras", "mentoras"),
-    ("Graduación", "graduacion"),
     ("Admisiones", "admisiones"),
 ]
 
 CTA_FIJO = "Iniciar admisión"
+
+# El equipo se anuncia ya en el hero. Es el activo de confianza principal —los
+# dos competidores directos ponen a la fundadora arriba del todo— y estaba
+# enterrado en la sección 11.
+EQUIPO_HERO = {
+    "etiqueta": "Tu equipo",
+    "personas": ["Pierina Alves", "Paola", "Nathaly"],
+}
 
 # 01
 HERO = {
@@ -206,6 +216,9 @@ PLAN = {
     "eyebrow": "Dentro del Campus",
     "titulo": "Este es tu plan de estudios.",
     "bajada": "Cada materia ha sido diseñada para desarrollar una parte concreta de tu carrera como creadora.",
+    # Cada materia lleva su duración —"6 clases · 1h 40m"— que es lo que permite
+    # que el plan se lea como un plan y no como una lista de temas. Vacía hasta
+    # que el Campus la confirme: se pinta solo si tiene valor.
     "materias": [
         ("Onboarding", "Entiende cómo funciona el Campus, define tu punto de partida y construye tu ruta de trabajo.", []),
         ("Marca personal", "Trabaja tu identidad, posicionamiento, diferenciación, mensaje y presencia como creadora.", []),
@@ -228,6 +241,13 @@ PLAN = {
         "Dentro de cada materia encontrarás clases, ejercicios, recursos y entregables que "
         "te ayudarán a pasar de aprender a ejecutar.",
     ],
+}
+
+# Duración de cada materia, por número de materia (1-10). El Campus tiene que
+# confirmarlas; mientras estén vacías no se muestran.
+DURACIONES = {
+    1: "", 2: "", 3: "", 4: "", 5: "",
+    6: "", 7: "", 8: "", 9: "", 10: "",
 }
 
 # 07

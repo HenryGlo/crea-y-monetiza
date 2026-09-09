@@ -427,3 +427,58 @@ body.v-perfil{
   background:url("../assets/stickers/rect-rosa.webp") center/100% 100% no-repeat;
   opacity:.55;
 }
+
+/* ------------------------------------------------------------ la Tesis Creativa
+
+   A sangre y en vino, ocupando la pantalla. Es el mejor nombre de toda la
+   landing y lo que de verdad separa al Campus de "otro curso más"; tratada como
+   una sección normal se perdía entre las otras. Aquí obliga a parar. */
+
+.v-perfil #tesis{
+  background:
+    radial-gradient(70% 55% at 50% 0%,var(--vino-2),transparent 70%),
+    var(--vino);
+  color:var(--crema);
+  --texto:var(--crema);
+  --tinta:var(--crema);
+  --brillo:var(--rosa);
+  min-height:min(100svh,860px);
+  display:grid; align-content:center;
+  text-align:center;
+  border-radius:clamp(28px,4vw,52px);
+  margin:clamp(24px,4vw,56px) 0;
+  overflow:hidden;
+}
+.v-perfil #tesis .wrap{ position:relative; z-index:1 }
+.v-perfil #tesis .eyebrow{ justify-content:center; opacity:.8 }
+.v-perfil #tesis h2{ margin-inline:auto; max-width:22ch }
+.v-perfil #tesis p{ color:color-mix(in srgb,var(--crema) 82%,transparent) }
+.v-perfil #tesis .lead-min{ color:var(--rosa); opacity:1 }
+
+.v-perfil #tesis .tesis-nombre{
+  font-size:clamp(46px,11vw,150px); line-height:var(--lh-display);
+  margin:.1em 0 .45em;
+  background:linear-gradient(100deg,var(--azul),var(--rosa) 50%,var(--amar));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 46px rgba(241,139,196,.45));
+}
+
+.v-perfil #tesis .lista{ justify-items:center; max-width:820px; margin-inline:auto }
+.v-perfil #tesis .lista li{ padding-left:0 }
+.v-perfil #tesis .lista li::before{ display:none }
+.v-perfil #tesis .dos-col li{
+  font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(15px,1.8vw,21px); padding:7px 0;
+}
+.v-perfil #tesis .cierre{ margin-inline:auto; max-width:56ch }
+
+/* Las pegatinas de esta sección van sobre oscuro: se les sube el brillo. */
+.v-perfil #tesis .deco{ filter:drop-shadow(0 0 22px rgba(241,139,196,.4)) }
+
+/* Este titular es el más largo de la página y con la medida de 22ch quedaba
+   apelotonado en la mitad izquierda, con la frase manuscrita partida. A lo
+   ancho respira y la cita cae entera en su línea. */
+.v-perfil #perfil h2{ max-width:min(20ch,100%); font-size:clamp(30px,4.6vw,62px) }
+@media (min-width:1100px){
+  .v-perfil #perfil h2{ max-width:none }
+}

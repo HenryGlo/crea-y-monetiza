@@ -263,14 +263,41 @@
       const palabras = h.textContent.trim().split(/\s+/);
       h.setAttribute("aria-label", h.textContent.trim());
       h.textContent = "";
+
+      /* Lo que va entre comillas angulares se marca aparte: son frases que el
+         titular cita para rechazarlas —«una chica que hace videos»— y en la
+         página se escriben a mano y tachadas. Se detecta aquí, sobre las
+         palabras ya partidas, en vez de con marcado propio: así cualquier
+         titular que use « » recibe el tratamiento sin tocar el generador. */
+      /* La frase citada va en su propio contenedor y en su propia línea. Suelta
+         entre las demás palabras se partía por la mitad —"una" al final de una
+         línea y "chica que hace videos" al principio de la siguiente— y perdía
+         todo el gesto. En bloque cae entera y el tachado la cruza de una vez. */
+      let cita = null;
+
       palabras.forEach(function (p, i) {
+        const abre = p.indexOf("«") !== -1;
+        const cierra = p.indexOf("»") !== -1;
+
+        if (abre && !cita) {
+          cita = document.createElement("span");
+          cita.className = "mano";
+          cita.setAttribute("aria-hidden", "true");
+          h.appendChild(cita);
+        }
+
         const s = document.createElement("span");
-        s.className = "pal";
+        s.className = "pal" + (cita ? " pal-mano" : "");
         s.setAttribute("aria-hidden", "true");
         s.style.setProperty("--i", i);
-        s.textContent = p;
-        h.appendChild(s);
-        h.appendChild(document.createTextNode(" "));
+        /* Las comillas desaparecen: el cambio de letra ya dice que es una cita,
+           y en Anton a esta escala son dos cuñas que ensucian. */
+        s.textContent = p.replace(/[«»]/g, "");
+
+        (cita || h).appendChild(s);
+        (cita || h).appendChild(document.createTextNode(" "));
+
+        if (cierra) cita = null;
       });
       h.classList.add("por-palabra");
     });
