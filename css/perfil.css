@@ -583,3 +583,11 @@ body.v-perfil{
 @media (min-width:1100px){
   .v-perfil #perfil h2{ max-width:none }
 }
+
+/* El titular del cierre es el más largo de la página: con la medida por defecto
+   caía en seis líneas y la sección se leía como un muro. A más ancho quedan
+   cuatro y el remate golpea. */
+.v-perfil .cierre-final h2{
+  max-width:min(26ch,100%);
+  font-size:clamp(28px,4.4vw,58px);
+}

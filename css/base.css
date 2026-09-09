@@ -679,15 +679,16 @@ a{ color:inherit }
    en cualquier posición, y como el patrón mide el doble que la palabra nunca se
    ven dos brillos a la vez. */
 
-:root{
-  --tinta:var(--texto);
-  /* El reflejo no es blanco: es el acento de marca. Un brillo neutro sobre
-     vino se lee como un defecto de la pantalla, no como un reflejo. */
-  /* Mezclado con la tinta: a onda completa el rosa puro teñía la palabra entera
-     en cada pasada y el titular perdía peso. Al 55% se ve el reflejo correr
-     pero el texto sigue siendo vino. */
-  --brillo:color-mix(in srgb,var(--rosa) 62%,var(--tinta));
-}
+/* --tinta y --brillo NO se declaran en :root, a propósito.
+
+   Una variable de :root se resuelve una sola vez, con los valores que :root
+   tenga. `--tinta:var(--texto)` quedaba congelada en el vino del tema claro, y
+   en las secciones oscuras —el cierre, la Tesis— el titular salía vino sobre
+   vino: prácticamente ilegible.
+
+   Se resuelven en el propio .pal contra var(--texto) y var(--acento), que sí
+   heredan el valor de cada sección. Cualquier bloque puede fijar --tinta o
+   --brillo para sobrescribirlos. */
 
 .por-palabra .pal{
   /* Banda estrecha: con el reflejo más ancho la palabra entera se teñía y se
@@ -697,7 +698,9 @@ a{ color:inherit }
      liso, el brillo quedaba fuera de la palabra media vuelta y eso es lo que se
      leía como que se paraba. Así siempre hay variación en movimiento. */
   background-image:linear-gradient(100deg,
-    var(--tinta) 0%, var(--brillo) 50%, var(--tinta) 100%);
+    var(--tinta,var(--texto)) 0%,
+    var(--brillo,color-mix(in srgb,var(--acento) 62%,var(--texto))) 50%,
+    var(--tinta,var(--texto)) 100%);
   /* Baldosa fija de 190px, no relativa a la palabra: así todas fluyen a la
      misma velocidad, sean cortas o largas, y la onda cruza una palabra corta
      igual de rápido que una larga. */
