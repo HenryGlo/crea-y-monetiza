@@ -430,50 +430,151 @@ body.v-perfil{
 
 /* ------------------------------------------------------------ la Tesis Creativa
 
-   A sangre y en vino, ocupando la pantalla. Es el mejor nombre de toda la
-   landing y lo que de verdad separa al Campus de "otro curso más"; tratada como
-   una sección normal se perdía entre las otras. Aquí obliga a parar. */
+   El momento fuerte de la página. Todo lo demás son secciones; esta es una
+   portada: a sangre, en vino, con sello, el nombre a tamaño de cartel y las
+   ocho partes dispuestas como piezas que se juntan. */
 
 .v-perfil #tesis{
   background:
-    radial-gradient(70% 55% at 50% 0%,var(--vino-2),transparent 70%),
+    radial-gradient(60% 50% at 50% 8%,rgba(241,139,196,.28),transparent 62%),
+    radial-gradient(50% 45% at 82% 82%,rgba(152,183,253,.22),transparent 62%),
     var(--vino);
   color:var(--crema);
-  --texto:var(--crema);
-  --tinta:var(--crema);
-  --brillo:var(--rosa);
-  min-height:min(100svh,860px);
-  display:grid; align-content:center;
-  text-align:center;
+  --texto:var(--crema); --tinta:var(--crema);
+  --brillo:color-mix(in srgb,#ffe9f4 70%,var(--crema));
+  min-height:min(100svh,900px);
+  display:grid; align-content:center; text-align:center;
   border-radius:clamp(28px,4vw,52px);
   margin:clamp(24px,4vw,56px) 0;
-  overflow:hidden;
+  overflow:hidden; position:relative;
+  padding-block:clamp(64px,9vw,120px);
 }
-.v-perfil #tesis .wrap{ position:relative; z-index:1 }
-.v-perfil #tesis .eyebrow{ justify-content:center; opacity:.8 }
-.v-perfil #tesis h2{ margin-inline:auto; max-width:22ch }
-.v-perfil #tesis p{ color:color-mix(in srgb,var(--crema) 82%,transparent) }
-.v-perfil #tesis .lead-min{ color:var(--rosa); opacity:1 }
+
+/* Retícula tenue de fondo: da escala y hace que el vino no sea un plano muerto. */
+.v-perfil #tesis::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(246,237,232,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(246,237,232,.06) 1px,transparent 1px);
+  background-size:68px 68px;
+  mask-image:radial-gradient(76% 66% at 50% 45%,#000 18%,transparent 76%);
+}
+
+.v-perfil #tesis .wrap{ position:relative; z-index:2 }
+.v-perfil #tesis .eyebrow{ justify-content:center; opacity:.75 }
+.v-perfil #tesis h2{ margin-inline:auto; max-width:20ch }
+.v-perfil #tesis p{ color:color-mix(in srgb,var(--crema) 84%,transparent) }
+.v-perfil #tesis .lead-min{ color:var(--rosa); opacity:1; margin-bottom:.2em }
+.v-perfil #tesis .tesis-cuerpo{ max-width:60ch; margin:0 auto }
+
+/* ------------------------------------------------------------------ el sello */
+
+/* Gira despacio detrás del nombre. Es el gesto que convierte la sección en una
+   graduación en vez de en otro bloque de texto. */
+/* Centrado y arriba, como el escudo de una graduación. En la esquina caía
+   dentro de la columna de texto y se montaba sobre el titular. */
+.v-perfil .sello{
+  position:relative; z-index:1; pointer-events:none;
+  width:clamp(104px,11vw,152px); aspect-ratio:1;
+  margin:0 auto clamp(14px,2vw,26px);
+  opacity:.95;
+}
+.v-perfil .sello svg{ width:100%; height:100%; animation:girar 26s linear infinite }
+.v-perfil .sello-txt{
+  font-family:var(--texto-f); font-size:13.5px; font-weight:800;
+  letter-spacing:.24em; text-transform:uppercase;
+  fill:color-mix(in srgb,var(--rosa) 80%,var(--crema));
+}
+.v-perfil .sello-estrella{
+  position:absolute; inset:0; margin:auto; width:38%; height:auto;
+  filter:drop-shadow(0 0 18px rgba(249,255,128,.5));
+  animation:latir 4.5s ease-in-out infinite;
+}
+@keyframes girar{ to{ rotate:360deg } }
+@keyframes latir{ 0%,100%{ scale:1 } 50%{ scale:1.09 } }
+
+/* ------------------------------------------------------------- el nombre */
 
 .v-perfil #tesis .tesis-nombre{
-  font-size:clamp(46px,11vw,150px); line-height:var(--lh-display);
-  margin:.1em 0 .45em;
-  background:linear-gradient(100deg,var(--azul),var(--rosa) 50%,var(--amar));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  filter:drop-shadow(0 0 46px rgba(241,139,196,.45));
-}
-
-.v-perfil #tesis .lista{ justify-items:center; max-width:820px; margin-inline:auto }
-.v-perfil #tesis .lista li{ padding-left:0 }
-.v-perfil #tesis .lista li::before{ display:none }
-.v-perfil #tesis .dos-col li{
+  position:relative; display:inline-block;
   font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(15px,1.8vw,21px); padding:7px 0;
+  font-size:clamp(44px,10.5vw,152px); line-height:var(--lh-display);
+  letter-spacing:-.02em; margin:.06em 0 .5em;
+  background:linear-gradient(96deg,var(--azul),var(--rosa) 42%,#ffd9a8 72%,var(--amar));
+  background-size:220% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  /* El degradado se desplaza despacio: el nombre nunca está quieto. */
+  animation:tesis-color 9s linear infinite;
+  filter:drop-shadow(0 0 52px rgba(241,139,196,.4));
 }
-.v-perfil #tesis .cierre{ margin-inline:auto; max-width:56ch }
+@keyframes tesis-color{ to{ background-position:220% 0 } }
 
-/* Las pegatinas de esta sección van sobre oscuro: se les sube el brillo. */
-.v-perfil #tesis .deco{ filter:drop-shadow(0 0 22px rgba(241,139,196,.4)) }
+/* Copia fantasma detrás, desplazada: da volumen sin recurrir a una sombra, que
+   sobre vino se ensucia. */
+.v-perfil #tesis .tesis-nombre::before{
+  content:attr(data-texto);
+  position:absolute; left:.014em; top:.035em; z-index:-1;
+  /* Sin ancho propio el pseudo-elemento parte las líneas donde quiere y la
+     copia fantasma aparecía descolgada debajo del nombre. Con el ancho del
+     padre rompe exactamente igual que el texto real. */
+  width:100%;
+  -webkit-text-stroke:1.5px rgba(246,237,232,.11);
+  color:transparent; background:none;
+  pointer-events:none;
+}
+
+/* --------------------------------------------------------------- las piezas */
+
+/* Las ocho partes que el proyecto integra. Numeradas y en fichas: es lo que el
+   proyecto hace —juntar piezas— dicho con la forma, no con el texto. */
+.v-perfil .tesis-lead{ margin-top:.6em }
+.v-perfil .tesis-piezas{
+  list-style:none; padding:0; margin:26px auto 34px;
+  max-width:900px;
+  display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
+}
+.v-perfil .tesis-piezas li{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:11px 20px 11px 12px; border-radius:999px;
+  border:1px solid rgba(246,237,232,.18);
+  background:rgba(246,237,232,.06);
+  backdrop-filter:blur(6px);
+  font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(13px,1.35vw,17px); letter-spacing:.01em;
+  transition:border-color .3s,background .3s,transform .3s cubic-bezier(.2,.8,.3,1);
+  /* Entran escalonadas, como piezas que van encajando. */
+  animation:pieza-entra .5s cubic-bezier(.2,1.3,.4,1) calc(.15s + var(--n) * .07s) both;
+}
+@keyframes pieza-entra{
+  from{ opacity:0; transform:translateY(14px) scale(.92) }
+  to{ opacity:1; transform:none }
+}
+.v-perfil .tesis-piezas li span{
+  width:26px; height:26px; flex:none; border-radius:50%;
+  display:grid; place-items:center; font-size:11px;
+  background:var(--rosa); color:var(--vino);
+}
+.v-perfil .tesis-piezas li:hover{
+  border-color:var(--rosa); background:rgba(241,139,196,.16);
+  transform:translateY(-3px);
+}
+
+.v-perfil #tesis .cierre{ margin-inline:auto; max-width:56ch }
+.v-perfil #tesis .deco{ filter:drop-shadow(0 0 22px rgba(241,139,196,.35)) }
+.v-perfil #tesis .deco-fondo{ z-index:0 }
+.v-perfil #tesis.sec:has(.dentro) .deco-fondo{ opacity:.12 }
+
+@media (max-width:700px){
+  .v-perfil .sello{ width:96px; top:14px; right:14px }
+  .v-perfil #tesis{ border-radius:22px; padding-block:56px }
+  .v-perfil .tesis-piezas li{ padding:9px 15px 9px 9px }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .v-perfil .sello svg,.v-perfil .sello-estrella,
+  .v-perfil #tesis .tesis-nombre{ animation:none }
+  .v-perfil .tesis-piezas li{ animation:none; opacity:1; transform:none }
+}
 
 /* Este titular es el más largo de la página y con la medida de 22ch quedaba
    apelotonado en la mitad izquierda, con la frase manuscrita partida. A lo

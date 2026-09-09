@@ -111,43 +111,69 @@ def parrafos(ps, cls=""):
     return "".join(f"<p{c}>{e(p)}</p>" for p in ps)
 
 
-# Los óvalos del juego de Nathaly no se usan aquí: son parches bordados en
-# blanco, pensados para llevar una palabra encima. Sueltos como adorno se leen
-# como una mancha de color, que es exactamente lo que reportó el cliente. Si
-# alguna vez llevan texto, vuelven.
-#
-# Pegatinas repartidas por la página. Cada sección lleva las suyas, colocadas
-# desde CSS por la clase del hueco (d1 arriba-izquierda, d2 arriba-derecha,
-# d3 abajo-izquierda, d4 abajo-derecha). Entran con un rebote al aparecer la
-# sección y luego flotan, igual que las del hero.
-DECORACION = {
-    "campus":       [("estrella-rosa", "d2")],
-    "perfil":       [("estrella-rosa", "d1")],
-    "recorrido":    [("rayo-azul", "d2"), ("estrella-amar", "d3")],
-    "plan":         [("rayo-azul", "d1")],
-    "evaluacion":   [("estrella-amar", "d2")],
-    "tesis":        [("estrella-amar", "d1"), ("estrella-azul", "d4")],
-    "experiencia":  [("rayo-rosa", "d2")],
-    "vivo":         [("rayo-rosa", "d1")],
-    "mentoras":     [("estrella-rosa", "d4")],
-    "oportunidades":[("rayo-amar", "d2")],
-    "incluye":      [("estrella-azul", "d3")],
-    "graduacion":   [("estrella-amar", "d1"), ("rayo-azul", "d4")],
-    "registro":     [("rayo-amar", "d2")],
-    "admisiones":   [("estrella-azul", "d1")],
-    "faq":          [("estrella-rosa", "d2")],
-    "historias":    [("estrella-rosa", "d1")],
-    "para-ti":      [("estrella-amar", "d4")],
-    "cohorte":      [("rayo-amar", "d2")],
+# Los óvalos y los círculos del juego de Nathaly no se usan: son parches
+# bordados en blanco, pensados para llevar una palabra encima. Sueltos como
+# adorno se leen como una mancha de color. Si alguna vez llevan texto, vuelven.
+FORMAS = ["estrella-rosa", "estrella-azul", "estrella-amar",
+          "rayo-rosa", "rayo-azul", "rayo-amar"]
+
+# Cuántas pegatinas lleva cada sección. Las que tienen más aire aguantan más;
+# las densas de texto llevan menos para no competir con la lectura.
+DENSIDAD = {
+    "campus": 4, "perfil": 3, "recorrido": 5, "plan": 3, "tesis": 6,
+    "experiencia": 4, "mentoras": 4, "mercado": 4, "historias": 4,
+    "graduacion": 5, "admisiones": 3, "faq": 4, "carta": 3,
 }
 
 
+def _aleatorio(semilla):
+    """Generador determinista. Las posiciones tienen que ser siempre las mismas:
+    con azar real, cada build movería las pegatinas y ninguna revisión de diseño
+    sería comparable con la anterior."""
+    x = semilla
+    while True:
+        x = (x * 1103515245 + 12345) % 2147483648
+        yield x / 2147483648
+
+
 def decoracion(sid):
-    piezas = DECORACION.get(sid, [])
-    return "".join(
-        f'<img class="deco {cls}" src="{RAIZ_WEB}assets/stickers/{n}.webp" alt="" '
-        f'aria-hidden="true" loading="lazy" decoding="async">'
-        for n, cls in piezas)
+    """Pegatinas de fondo. Van en dos planos: las de los márgenes, nítidas y a
+    tamaño de pegatina, y unas pocas grandes y muy tenues detrás del contenido,
+    que son las que dan profundidad sin estorbar la lectura.
+
+    Se colocan solo en las bandas laterales —fuera de la columna de texto— y
+    desaparecen por debajo de 1100px, donde ya no hay margen que ocupar."""
+    n = DENSIDAD.get(sid, 0)
+    if not n:
+        return ""
+
+    r = _aleatorio(sum(ord(c) for c in sid) * 977)
+    piezas = []
+    for i in range(n):
+        forma = FORMAS[int(next(r) * len(FORMAS))]
+        izquierda = i % 2 == 0
+        # Banda lateral: entre el borde y donde empieza la columna de texto.
+        lado = round(1 + next(r) * 9, 1)
+        arriba = round(6 + next(r) * 84, 1)
+        ancho = round(34 + next(r) * 46)
+        giro = round(-24 + next(r) * 48)
+        retardo = round(next(r) * -8, 1)
+        estilo = (f"{'left' if izquierda else 'right'}:{lado}%;top:{arriba}%;"
+                  f"width:{ancho}px;--giro:{giro}deg;animation-delay:{retardo}s")
+        piezas.append(f'<img class="deco" style="{estilo}" '
+                      f'src="{RAIZ_WEB}assets/stickers/{forma}.webp" alt="" '
+                      f'aria-hidden="true" loading="lazy" decoding="async">')
+
+    # Una grande y tenue detrás del contenido, para dar fondo.
+    forma = FORMAS[int(next(r) * len(FORMAS))]
+    estilo = (f"{'right' if n % 2 else 'left'}:{round(6 + next(r) * 22)}%;"
+              f"top:{round(14 + next(r) * 52)}%;width:{round(180 + next(r) * 170)}px;"
+              f"--giro:{round(-18 + next(r) * 36)}deg;animation-delay:{round(next(r) * -12, 1)}s")
+    piezas.append(f'<img class="deco deco-fondo" style="{estilo}" '
+                  f'src="{RAIZ_WEB}assets/stickers/{forma}.webp" alt="" '
+                  f'aria-hidden="true" loading="lazy" decoding="async">')
+
+    return "".join(piezas)
 
 
 def seccion(sid, num, cuerpo, cls=""):
@@ -448,18 +474,39 @@ def s_evaluacion():
 
 
 def s_tesis():
-    """A sangre completa y en vino. Es el mejor nombre de toda la landing y lo
-    que de verdad separa al Campus de "otro curso más"; tratada como una sección
-    normal se perdía entre las otras veintiuna."""
+    """El momento fuerte de la página. La Tesis Creativa es lo que de verdad
+    separa al Campus de "otro curso más", así que se le da tratamiento de
+    portada: sello giratorio, el nombre a tamaño de cartel con una copia
+    fantasma detrás, y los ocho elementos que integra dispuestos como piezas que
+    se juntan — que es literalmente lo que el proyecto hace."""
     t = C.TESIS
+
+    # Sello de graduación: círculo de texto girando alrededor de una estrella.
+    sello = f"""<div class="sello" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <defs><path id="aro" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
+        <text class="sello-txt"><textPath href="#aro" startOffset="0%">
+          {e(t["eyebrow"])} · {e(t["nombre"])} · {e(t["eyebrow"])} · {e(t["nombre"])} ·
+        </textPath></text>
+      </svg>
+      <img class="sello-estrella" src="{RAIZ_WEB}assets/stickers/estrella-amar.webp" alt="">
+    </div>"""
+
+    # Las ocho partes que el proyecto integra, como piezas numeradas que se
+    # juntan. En lista corrida eran ocho frases sueltas y no se veía el gesto.
+    piezas = "".join(
+        f'<li style="--n:{i}"><span>{i:02d}</span>{e(x.rstrip("."))}</li>'
+        for i, x in enumerate(t["integra"], 1))
+
     return seccion("tesis", "08", f"""
+    {sello}
     {eyebrow(t["eyebrow"])}
     <h2>{e(t["titulo"])}</h2>
     <p class="lead-min">{e(t["lo_llamamos"])}</p>
-    <p class="tesis-nombre">{e(t["nombre"])}</p>
-    {parrafos(t["intro"])}
-    <p class="lead-min">{e(t["lead"])}</p>
-    {lista(t["integra"], "lista dos-col")}
+    <p class="tesis-nombre" data-texto="{e(t["nombre"])}">{e(t["nombre"])}</p>
+    <div class="tesis-cuerpo">{parrafos(t["intro"])}</div>
+    <p class="lead-min tesis-lead">{e(t["lead"])}</p>
+    <ul class="tesis-piezas">{piezas}</ul>
     {parrafos(t["cierre"], "cierre")}""", "tesis")
 
 
