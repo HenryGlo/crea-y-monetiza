@@ -634,6 +634,12 @@ PERFIL_ANIMADO = {
 # la que se enseña primero. El nombre del archivo CSS y la clase del body salen
 # de "clave", no de la posición, para que reordenar aquí no obligue a renombrar
 # nada — que es justo lo que pasaba cuando iban como p1/p2/p3.
+# La propuesta que se publica en la raíz del dominio. Las demás se siguen
+# generando en /propuesta-N/ solo si BORRADORES está activo: sirven para
+# comparar mientras se decide, y se apagan al publicar.
+PUBLICADA = "perfil"
+BORRADORES = False
+
 PROPUESTAS = [
     {
         "clave": "perfil",

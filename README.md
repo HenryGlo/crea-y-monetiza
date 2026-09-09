@@ -5,64 +5,13 @@ Publicado en <https://web-crea-y-monetiza.perfectflow.cloud>.
 
 ## Qué hay aquí
 
-| Ruta | Qué es |
-|---|---|
-| `/` | Portada interna para comparar las tres. Desaparece al elegir dirección. |
-| `/propuesta-1/` | **Prospecto** — continuidad con la carpeta y el pensum: crema, stickers, tarjetas. |
-| `/propuesta-2/` | **Expediente** — institucional: retícula marcada, filetes, catálogo universitario. |
-| `/propuesta-3/` | **Nocturno** — premium: vino a sangre, tipografía a gran escala, luz de color. |
-| `/propuesta-4/` | **Perfil** — el hero monta en directo el perfil de una creadora y remata en que eso no pasa solo. |
+La landing publicada es la propuesta **Perfil**, servida en la raíz del dominio.
 
-Las cuatro llevan **exactamente la misma copy** y las mismas 22 secciones. Lo único
-que cambia entre ellas es la hoja de estilo.
-
-## Lenguaje visual
-
-La propuesta Perfil combina nuestra base con los recursos de la propuesta de
-Nathaly, que resuelven mejor la parte de "creatividad":
-
-- **Pegatinas con volumen** (estrellas, rayos, flores, óvalos) repartidas por 15
-  secciones, en vez de siluetas planas. La sombra y el brillo vienen en la propia
-  imagen: es lo que las hace parecer pegadas encima de la página.
-- **Teclas de teclado** para los seis ejes de formación. Es el recurso más táctil
-  del conjunto y convierte una lista de competencias en algo que dan ganas de pulsar.
-- **Cuaderno de espiral** con etiqueta amarilla para el retrato de Pierina.
-- **Nota amarilla** para su cita, en vez de texto suelto.
-- **Franja a sangre en vino** para rematar el bloque de perfil.
-- **Trazo de rotulador** detrás del remate del hero y de la pregunta de admisiones.
-- **Botón principal en rosa** y última línea del titular en rosa.
-
-Los 19 recursos pesan 591 KB en total, desde los ~11 MB de los originales: se
-sirven en WebP al tamaño en que realmente se ven.
-
-## Responsive
-
-Verificado midiendo, no a ojo, en iPhone SE (375×667), iPhone 15 (393×852),
-iPhone 15 Pro Max (430×932), iPad mini (768×1024) e iPad Pro (1024×1366).
-
-El criterio: **el botón de admisión entra en el pliegue en las cuatro propuestas
-y en los cinco tamaños**, y ninguna página produce scroll horizontal. En una
-landing cuyo único trabajo es abrir una admisión, un hero que no enseña su botón
-no cumple.
-
-Se resuelve por estructura y no encogiendo tipografía hasta que quepa: en móvil
-los botones se adelantan a la lista de materias con `order`, sin tocar el
-marcado — en escritorio el orden del guion sí cabe entero. En la propuesta
-Perfil la tarjeta del perfil pasa por detrás del botón en teléfonos (mide 637px
-y por sí sola echaba el CTA fuera de pantalla) y vuelve delante en tablet.
-
-## Movimiento
-
-Reflejo que cruza los titulares palabra a palabra, cinta rodante entre secciones,
-titulares que entran palabra a palabra, tarjetas
-con relieve que sigue al cursor, botones imantados con barrido de luz, stickers
-flotando, cifras que suben al entrar en pantalla y confeti al confirmar el
-registro. La propuesta 4 añade el montaje del perfil.
-
-Todo se apaga por completo con `prefers-reduced-motion`, y nada de ello decide
-si el contenido se puede leer: si el JS no llega a ejecutarse, la página se lee
-entera igual. El titular del hero se anima desde CSS por ese motivo — no puede
-quedar en blanco esperando a que una clase llegue.
+Las otras tres direcciones (Prospecto, Expediente, Nocturno) siguen en el repo:
+su hoja de estilo está en `css/` y su contenido en `contenido.py`. Para volver a
+generarlas y compararlas, poner `BORRADORES = True` en `contenido.py` y
+reconstruir: aparecen en `/propuesta-N/` con un índice en `/propuestas/`. Para
+publicar otra, cambiar `PUBLICADA` a su clave.
 
 ## Cómo se edita
 

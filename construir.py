@@ -23,6 +23,12 @@ RAIZ = os.path.dirname(os.path.abspath(__file__))
 _NUM = {2: "dos", 3: "tres", 4: "cuatro", 5: "cinco", 6: "seis"}
 NUM_TXT = _NUM.get(len(C.PROPUESTAS), str(len(C.PROPUESTAS)))
 
+# Prefijo de las rutas a css/, js/ y assets/. Es "" para la página publicada,
+# que vive en la raíz, y "../" para los borradores en /propuesta-N/. Va como
+# global del módulo porque lo necesitan funciones sueltas —las pegatinas, las
+# teclas— a las que no tiene sentido arrastrarles el parámetro.
+RAIZ_WEB = "../"
+
 
 def e(t):
     """Escapa texto para HTML. Todo el contenido pasa por aquí."""
@@ -134,7 +140,7 @@ DECORACION = {
 def decoracion(sid):
     piezas = DECORACION.get(sid, [])
     return "".join(
-        f'<img class="deco {cls}" src="../assets/stickers/{n}.webp" alt="" '
+        f'<img class="deco {cls}" src="{RAIZ_WEB}assets/stickers/{n}.webp" alt="" '
         f'aria-hidden="true" loading="lazy" decoding="async">'
         for n, cls in piezas)
 
@@ -165,7 +171,7 @@ def boton(texto, href, tipo="pri"):
 # Secciones
 # --------------------------------------------------------------------------
 
-def perfil_animado():
+def perfil_animado(raiz="../"):
     """Perfil de creadora que se monta solo en el hero de la propuesta 4.
 
     El montaje es CSS puro con retardos escalonados: no depende de JS, así que
@@ -187,7 +193,7 @@ def perfil_animado():
     # Lo soporta todo navegador desde 2020, así que no hace falta alternativa.
     ruta = os.path.join(RAIZ, "assets", f["retrato"])
     if os.path.exists(ruta):
-        persona = (f'<img class="pf-persona" src="../assets/{e(f["retrato"])}" '
+        persona = (f'<img class="pf-persona" src="{raiz}assets/{e(f["retrato"])}" '
                    f'alt="{e(f["retrato_alt"])}" loading="eager" decoding="async">')
     else:
         persona = ('<div class="pf-persona pf-persona-hueco pendiente" '
@@ -218,7 +224,7 @@ def stickers(piezas):
     la sombra propios de cada pieza son justo lo que las hace parecer pegadas
     encima de la página en vez de dibujadas dentro."""
     return "".join(
-        f'<img class="sticker {cls}" src="../assets/stickers/{n}.webp" alt="" '
+        f'<img class="sticker {cls}" src="{RAIZ_WEB}assets/stickers/{n}.webp" alt="" '
         f'aria-hidden="true" loading="lazy" decoding="async">'
         for n, cls in piezas)
 
@@ -291,7 +297,7 @@ def s_perfil():
     ejes = "".join(
         f'<article class="card eje">'
         f'<span class="tecla" aria-hidden="true">'
-        f'<img src="../assets/stickers/tecla-{teclas[(i-1) % 4]}.webp" alt="" loading="lazy" decoding="async">'
+        f'<img src="{RAIZ_WEB}assets/stickers/tecla-{teclas[(i-1) % 4]}.webp" alt="" loading="lazy" decoding="async">'
         f'<i>{signos[(i-1) % len(signos)]}</i></span>'
         f'<span class="eje-n">{i:02d}</span>'
         f'<h3>{e(t)}</h3><p>{e(d)}</p></article>'
@@ -302,7 +308,7 @@ def s_perfil():
     <div class="grid grid-3">{ejes}</div>""", "perfil") + f"""
 <div class="franja"><div class="wrap">
   <p>{e(p["cierre"])}</p>
-  <img class="franja-sticker" src="../assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy">
+  <img class="franja-sticker" src="{RAIZ_WEB}assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy">
 </div></div>"""
 
 
@@ -419,7 +425,7 @@ def s_facultad():
         Las demás mantienen el marcador hasta que lleguen sus fotos."""
         if pers["nombre"].startswith("Pierina") and tiene_foto:
             return (f'<div class="cuaderno">'
-                    f'<img class="cuaderno-foto" src="../assets/{e(foto)}" '
+                    f'<img class="cuaderno-foto" src="{RAIZ_WEB}assets/{e(foto)}" '
                     f'alt="Retrato de {e(pers["nombre"])}" loading="lazy" decoding="async">'
                     f'<span class="etiqueta"><b>{e(pers["nombre"])}</b>'
                     f'<i>{e(pers["rol"].split("·")[0].strip())}</i></span></div>')
@@ -617,8 +623,18 @@ SECCIONES = [s_hero, s_cinta_1, s_carta, s_campus, s_perfil, s_recorrido, s_plan
              s_admisiones, s_cohorte, s_faq, s_cinta_2, s_cierre]
 
 
+def cinta_propuestas(prop):
+    """Cinta para saltar entre propuestas. No forma parte de la landing: solo
+    existe mientras se compara, y desaparece en la versión publicada."""
+    if prop["clave"] == C.PUBLICADA:
+        return ""
+    return (f'<div class="cambiar"><span>Propuesta {prop["n"]} · {e(prop["nombre"])}</span>'
+            f'<a href="../">Ver las {NUM_TXT}</a></div>')
+
+
 def pagina(prop):
-    extra = perfil_animado() if prop.get("hero_extra") else ""
+    raiz = RAIZ_WEB
+    extra = perfil_animado(RAIZ_WEB) if prop.get("hero_extra") else ""
     cuerpo = "\n".join(
         (s(extra) if s is s_hero else s()) for s in SECCIONES)
     titulo = f'{C.MARCA["nombre"]} — Admisiones'
@@ -633,11 +649,12 @@ def pagina(prop):
 <meta property="og:title" content="{e(titulo)}">
 <meta property="og:description" content="{e(C.MARCA["descripcion"])}">
 <meta property="og:type" content="website">
+<link rel="icon" href="{raiz}favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="../css/base.css">
-<link rel="stylesheet" href="../css/{prop["clave"]}.css">
+<link rel="stylesheet" href="{raiz}css/base.css">
+<link rel="stylesheet" href="{raiz}css/{prop["clave"]}.css">
 </head>
 <body class="v-{prop["clave"]}">
 {logo_sprite()}
@@ -647,11 +664,8 @@ def pagina(prop):
 {cuerpo}
 </main>
 <a class="cta-fijo" href="#admisiones">{e(C.CTA_FIJO)} <span aria-hidden="true">→</span></a>
-<div class="cambiar">
-  <span>Propuesta {prop["n"]} · {e(prop["nombre"])}</span>
-  <a href="../">Ver las {NUM_TXT}</a>
-</div>
-<script src="../js/campus.js"></script>
+{cinta_propuestas(prop)}
+<script src="{raiz}js/campus.js"></script>
 </body>
 </html>"""
 
@@ -663,7 +677,7 @@ def indice():
       <p class="p-n">Propuesta {i}</p>
       <h2>{e(p["nombre"])}</h2>
       <p>{e(p["resumen"])}</p>
-      <a class="btn btn-pri" href="{p["slug"]}/">Abrir <span aria-hidden="true">→</span></a>
+      <a class="btn btn-pri" href="../{p["slug"]}/">Abrir <span aria-hidden="true">→</span></a>
     </article>"""
     return f"""<!DOCTYPE html>
 <html lang="es">
@@ -675,8 +689,8 @@ def indice():
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/indice.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/indice.css">
 </head>
 <body class="v-indice">
 {logo_sprite()}
@@ -696,28 +710,51 @@ def indice():
 </html>"""
 
 
+def escribir(ruta, contenido, etiqueta):
+    revisar_precios(contenido, etiqueta)
+    os.makedirs(os.path.dirname(ruta) or RAIZ, exist_ok=True)
+    with open(ruta, "w", encoding="utf-8") as f:
+        f.write(contenido)
+    print(f"  {os.path.relpath(ruta, RAIZ)}  ({len(contenido) // 1024} KB)")
+
+
 def main():
+    global RAIZ_WEB
+
     # slug y número salen de la posición en la lista: el orden se cambia ahí y
     # solo ahí.
     for i, prop in enumerate(C.PROPUESTAS, 1):
         prop["slug"] = f"propuesta-{i}"
         prop["n"] = i
 
-    for prop in C.PROPUESTAS:
-        d = os.path.join(RAIZ, prop["slug"])
-        os.makedirs(d, exist_ok=True)
-        pg = pagina(prop)
-        revisar_precios(pg, prop["slug"])
-        with open(os.path.join(d, "index.html"), "w", encoding="utf-8") as f:
-            f.write(pg)
-        print(f"  {prop['slug']}/index.html  ({len(pg) // 1024} KB)")
+    publicada = next((p for p in C.PROPUESTAS if p["clave"] == C.PUBLICADA), None)
+    if publicada is None:
+        print(f"ABORTADO — PUBLICADA={C.PUBLICADA!r} no existe en PROPUESTAS", file=sys.stderr)
+        sys.exit(1)
 
-    idx = indice()
-    revisar_precios(idx, "index")
-    with open(os.path.join(RAIZ, "index.html"), "w", encoding="utf-8") as f:
-        f.write(idx)
-    print(f"  index.html  ({len(idx) // 1024} KB)")
-    print("Sin cifras económicas en ninguna página.")
+    # La elegida va en la raíz: es la que sirve el dominio.
+    RAIZ_WEB = ""
+    escribir(os.path.join(RAIZ, "index.html"), pagina(publicada), "index")
+
+    if C.BORRADORES:
+        RAIZ_WEB = "../"
+        for prop in C.PROPUESTAS:
+            escribir(os.path.join(RAIZ, prop["slug"], "index.html"),
+                     pagina(prop), prop["slug"])
+        escribir(os.path.join(RAIZ, "propuestas", "index.html"), indice(), "indice")
+    else:
+        # Se borran los borradores para que no queden servidos por el dominio.
+        import shutil
+        for prop in C.PROPUESTAS:
+            d = os.path.join(RAIZ, prop["slug"])
+            if os.path.isdir(d):
+                shutil.rmtree(d)
+                print(f"  retirado {prop['slug']}/")
+        d = os.path.join(RAIZ, "propuestas")
+        if os.path.isdir(d):
+            shutil.rmtree(d)
+
+    print(f"Publicada: {publicada['nombre']}. Sin cifras económicas.")
 
 
 if __name__ == "__main__":
