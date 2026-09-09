@@ -347,10 +347,18 @@ def s_perfil():
     {eyebrow(p["eyebrow"])}
     <h2>{e(p["titulo"])}</h2>
     <div class="grid grid-3">{ejes}</div>""", "perfil") + f"""
-<div class="franja"><div class="wrap">
-  <p>{e(p["cierre"])}</p>
-  <img class="franja-sticker" src="{RAIZ_WEB}assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy">
-</div></div>"""
+<div class="franja">
+  <svg class="onda onda-arriba" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 155-32 265-40v62z"/>
+  </svg>
+  <div class="wrap">
+    <p>{e(p["cierre"])}</p>
+    <img class="franja-sticker" src="{RAIZ_WEB}assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy">
+  </div>
+  <svg class="onda onda-abajo" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 155-32 265-40v62z"/>
+  </svg>
+</div>"""
 
 
 def s_recorrido():

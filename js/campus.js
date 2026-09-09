@@ -286,18 +286,41 @@
           h.appendChild(cita);
         }
 
+        /* La puntuación que va detrás del cierre pertenece a la frase de
+           fuera, no a la cita: en «…hace videos». el punto es del titular. Sin
+           separarlo quedaba dentro del tachado, que es un error de lectura. */
+        const limpio = p.replace(/[«»]/g, "");
+        let dentro = limpio, fuera = "";
+        if (cierra) {
+          const corte = p.indexOf("»");
+          dentro = p.slice(0, corte).replace(/«/g, "");
+          fuera = p.slice(corte + 1);
+        }
+
         const s = document.createElement("span");
         s.className = "pal" + (cita ? " pal-mano" : "");
         s.setAttribute("aria-hidden", "true");
         s.style.setProperty("--i", i);
-        /* Las comillas desaparecen: el cambio de letra ya dice que es una cita,
-           y en Anton a esta escala son dos cuñas que ensucian. */
-        s.textContent = p.replace(/[«»]/g, "");
+        s.textContent = dentro;
 
         (cita || h).appendChild(s);
         (cita || h).appendChild(document.createTextNode(" "));
 
-        if (cierra) cita = null;
+        if (cierra) {
+          cita = null;
+          /* Si detrás del cierre solo queda puntuación, se descarta: la cita va
+             en su propia línea, así que el punto caía suelto al principio de la
+             línea siguiente. El salto de línea ya cierra la frase. */
+          if (fuera && !/^[.,;:!?]+$/.test(fuera)) {
+            const post = document.createElement("span");
+            post.className = "pal";
+            post.setAttribute("aria-hidden", "true");
+            post.style.setProperty("--i", i);
+            post.textContent = fuera;
+            h.appendChild(post);
+            h.appendChild(document.createTextNode(" "));
+          }
+        }
       });
       h.classList.add("por-palabra");
     });

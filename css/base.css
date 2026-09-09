@@ -787,10 +787,39 @@ a{ color:inherit }
 
 /* Franja a sangre para rematar un bloque. Rompe la sucesión de secciones sobre
    crema y da un respiro fuerte antes de la siguiente. */
+/* La franja no es un rectángulo: entra y sale en onda, y la onda se mueve
+   despacio. Un bloque plano de color partía la página en dos con un corte
+   recto; en onda el vino parece derramarse sobre la sección.
+
+   Las ondas son dos SVG del color del fondo que muerden la franja por arriba y
+   por abajo. Miden el doble de ancho y se desplazan un 50%: como el trazo se
+   repite, el bucle empalma sin salto visible. */
 .franja{
-  background:var(--vino); color:var(--crema);
-  padding:clamp(34px,5vw,62px) 0; margin-top:clamp(40px,6vw,72px);
+  background:
+    radial-gradient(60% 120% at 20% 0%,var(--vino-2),transparent 60%),
+    radial-gradient(50% 100% at 85% 100%,var(--vino-2),transparent 60%),
+    var(--vino);
+  color:var(--crema);
+  padding:clamp(58px,8vw,104px) 0 clamp(62px,8.5vw,112px);
+  margin-top:clamp(30px,4vw,56px);
   position:relative; overflow:hidden;
+}
+.onda{
+  position:absolute; left:0; height:clamp(38px,5vw,74px);
+  display:block; fill:var(--fondo); pointer-events:none;
+  /* El reset global limita svg a max-width:100%, así que el 200% se quedaba en
+     100% y al desplazarse la onda dejaba media franja con el borde recto. */
+  width:200%; max-width:none;
+}
+.onda-arriba{ top:-1px; transform:scaleY(-1); animation:ondear 16s linear infinite }
+.onda-abajo{ bottom:-1px; animation:ondear 21s linear infinite reverse }
+@keyframes ondear{ to{ transform:translateX(-50%) } }
+/* La de arriba está volteada, así que su animación tiene que conservar el giro. */
+@keyframes ondear-invertida{ from{ transform:scaleY(-1) translateX(0) } to{ transform:scaleY(-1) translateX(-50%) } }
+.onda-arriba{ animation-name:ondear-invertida }
+
+@media (prefers-reduced-motion:reduce){
+  .onda{ animation:none }
 }
 .franja .wrap{ display:flex; align-items:center; gap:26px; justify-content:center }
 .franja p{
@@ -1086,38 +1115,53 @@ a{ color:inherit }
 /* ------------------------------------------------- la frase que se rechaza
 
    Lo que el titular cita para negarlo va manuscrito y tachado, en su propia
-   línea. El titular dice "no estás aquí para convertirte en «una chica que hace
-   videos»": escribirlo a mano y cruzarlo lo dice antes de leerlo. */
+   línea: "no estás aquí para convertirte en «una chica que hace videos»".
+   Verlo tachado lo niega antes de leerlo. */
 
 .mano{
   /* En bloque para que caiga en su propia línea, pero ajustado al texto: a
-     ancho completo el tachado seguía cruzando media pantalla vacía. */
+     ancho completo el tachado cruzaba media pantalla vacía. */
   display:block; width:fit-content; max-width:100%;
   position:relative;
-  margin:.06em 0 .06em .08em;
+  /* Caveat arranca con más margen lateral que Anton; sin compensarlo la línea
+     manuscrita se ve desalineada respecto a las de arriba y abajo. */
+  margin:.04em 0 .04em -.03em;
 }
+
 .pal-mano{
   font-family:var(--mano); text-transform:none;
   /* Caveat tiene la altura de x muy baja y necesita más cuerpo para igualar a
      Anton, pero conserva el interlineado del titular: por debajo se saldría de
      su línea y pisaría la de abajo. */
-  font-size:1.16em; line-height:inherit;
-  letter-spacing:.01em;
-  background:none!important; color:var(--acento)!important;
-  animation-name:pal-entra!important;
+  font-size:1.18em; line-height:inherit;
+  letter-spacing:.005em;
+  /* Rosa de marca oscurecido: el --rosa puro sobre crema queda lavado y la
+     frase se perdía justo cuando tiene que leerse para poder negarla. */
+  background:none!important; color:#c0578f!important;
+  /* La declaración va completa a propósito. Sobrescribir solo animation-name
+     dejaba la duración, el retardo y las iteraciones de la regla del reflejo:
+     las palabras hacían pal-entra durante 5s y en bucle infinito, es decir
+     aparecían y desaparecían para siempre. */
+  animation:pal-entra .6s cubic-bezier(.2,.8,.3,1) calc(var(--i) * 50ms) both!important;
 }
 
-/* Un solo tachado para toda la frase, dibujado al entrar. Por palabra quedaban
-   cinco rayas sueltas con hueco entre ellas. */
+/* El tachado es un trazo dibujado, no un borde: irregular, con grosor variable
+   y remates redondos. Una línea recta de CSS se leía como un subrayado mal
+   colocado, que es exactamente lo que parecía. */
 .mano::after{
-  content:""; position:absolute; left:-.06em; right:-.06em; top:54%;
-  height:.05em; border-radius:99px; background:var(--acento); opacity:.9;
-  transform:scaleX(0); transform-origin:left;
-  transition:transform .6s cubic-bezier(.2,.8,.3,1) .6s;
+  content:""; position:absolute; z-index:2;
+  left:-.05em; right:-.05em;
+  /* A media altura de la equis de Caveat, no de la caja: la caja incluye los
+     ascendentes y la raya salía cruzando por encima de las letras. */
+  top:58%; height:.34em; transform:translateY(-50%);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 12' preserveAspectRatio='none'%3E%3Cpath d='M2 7.4C46 4.2 92 8.6 138 5.8s92-3.4 160 1.2' fill='none' stroke='%23500711' stroke-width='4.2' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+  /* Se dibuja de izquierda a derecha al entrar, como si se tachara. */
+  clip-path:inset(0 100% 0 0);
+  transition:clip-path .55s cubic-bezier(.3,.7,.4,1) .55s;
 }
 .por-palabra.entra .mano::after,
-.hero .por-palabra .mano::after{ transform:scaleX(1) }
+.hero .por-palabra .mano::after{ clip-path:inset(0 0 0 0) }
 
 @media (prefers-reduced-motion:reduce){
-  .mano::after{ transform:scaleX(1); transition:none }
+  .mano::after{ clip-path:inset(0 0 0 0); transition:none }
 }
