@@ -338,17 +338,11 @@
       if (!h.closest(".hero")) obs.observe(h);
     });
 
-    /* El reflejo es infinito, así que se para en los titulares que no se están
-       viendo. Sin esto son casi 180 palabras repintándose a la vez en una
-       página de 28.000px, casi toda fuera de pantalla. */
-    const quieto2 = new IntersectionObserver(function (ents) {
-      ents.forEach(function (en) {
-        en.target.classList.toggle("reflejo-quieto", !en.isIntersecting);
-      });
-    }, { rootMargin: "150px 0px" });
-    document.querySelectorAll(".por-palabra").forEach(function (h) {
-      quieto2.observe(h);
-    });
+    /* Antes se pausaba el reflejo en los titulares fuera de pantalla para no
+       tener 188 palabras repintándose a la vez. Se quitó: el cliente pidió
+       expresamente que no se detenga nunca, y era el único mecanismo capaz de
+       detenerlo. Si el consumo llega a notarse en móvil, la vía correcta es
+       reducir el número de titulares con reflejo, no pausarlos. */
   }
 
   /* --------------------------------------------- el perfil espera a estar a la vista */

@@ -731,6 +731,10 @@ a{ color:inherit }
 
 .por-palabra .pal{
   animation:reflejo 3.2s linear calc(var(--i) * -190ms) infinite;
+  /* background-position no se compone en GPU: hay que repintar el texto en cada
+     fotograma. Avisarlo evita que el navegador se quede atrás y el reflejo dé
+     tirones o parezca detenido. */
+  will-change:background-position;
 }
 
 /* En el hero se suma a la entrada: son propiedades distintas, así que conviven. */
@@ -740,13 +744,10 @@ a{ color:inherit }
     reflejo 3.2s linear calc(var(--i) * -190ms) infinite;
 }
 
-/* Un ciclo infinito en los 22 titulares de la página son casi 180 palabras
-   repintándose a la vez, la mayoría fuera de pantalla. La clase la pone
-   campus.js al salir de vista; sin JS nada se pausa y todo sigue animando.
-
-   Pausar es seguro: el degradado se repite, así que en cualquier posición en
-   que se detenga el texto queda pintado. */
-.reflejo-quieto .pal{ animation-play-state:paused }
+/* El reflejo no se pausa nunca, tampoco fuera de pantalla: es un requisito
+   explícito del cliente y cualquier pausa acaba viéndose. Si el consumo llega
+   a notarse en móvil, la vía correcta es reducir el número de titulares con
+   reflejo, no pausarlos. */
 
 @media (prefers-reduced-motion:reduce){
   .por-palabra .pal,.hero .por-palabra .pal{

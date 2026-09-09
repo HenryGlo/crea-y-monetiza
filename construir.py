@@ -9,6 +9,7 @@ la hoja de estilo. Así una corrección de copy se hace en un solo sitio y llega
 las tres, que es justo lo que hace falta mientras se elige dirección.
 """
 
+import hashlib
 import html
 import os
 import re
@@ -28,6 +29,24 @@ NUM_TXT = _NUM.get(len(C.PROPUESTAS), str(len(C.PROPUESTAS)))
 # global del módulo porque lo necesitan funciones sueltas —las pegatinas, las
 # teclas— a las que no tiene sentido arrastrarles el parámetro.
 RAIZ_WEB = "../"
+
+
+def version(*rutas):
+    """Huella del contenido, para romper la caché al desplegar.
+
+    GitHub Pages sirve css/ y js/ con caché larga: sin versión en la URL, quien
+    ya visitó el sitio ejecuta los archivos viejos junto al HTML nuevo. Eso deja
+    la página a medias —una regla que falta pinta un SVG en negro, un script
+    viejo no aplica un tratamiento— y es invisible desde una ventana nueva, que
+    es justo donde uno lo prueba.
+
+    Va por hash del contenido y no por fecha a mano: se actualiza sola cuando el
+    archivo cambia y no cambia cuando no cambia."""
+    h = hashlib.sha1()
+    for r in rutas:
+        with open(os.path.join(RAIZ, r), "rb") as f:
+            h.update(f.read())
+    return h.hexdigest()[:8]
 
 
 def e(t):
@@ -374,14 +393,14 @@ def s_perfil():
     <h2>{e(p["titulo"])}</h2>
     <div class="grid grid-3">{ejes}</div>""", "perfil") + f"""
 <div class="franja">
-  <svg class="onda onda-arriba" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
+  <svg class="onda onda-arriba" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true" fill="#FBF7F4">
     <path d="M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 155-32 265-40v62z"/>
   </svg>
   <div class="wrap">
     <p>{e(p["cierre"])}</p>
     <img class="franja-sticker" src="{RAIZ_WEB}assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy">
   </div>
-  <svg class="onda onda-abajo" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
+  <svg class="onda onda-abajo" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true" fill="#FBF7F4">
     <path d="M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 155-32 265-40v62z"/>
   </svg>
 </div>"""
@@ -892,6 +911,9 @@ def cinta_propuestas(prop):
 
 def pagina(prop):
     raiz = RAIZ_WEB
+    v_base = version("css/base.css")
+    v_tema = version(f"css/{prop['clave']}.css")
+    v_js = version("js/campus.js")
     extra = perfil_animado(RAIZ_WEB) if prop.get("hero_extra") else ""
     cuerpo = "\n".join(
         (s(extra) if s is s_hero else s()) for s in SECCIONES)
@@ -911,8 +933,8 @@ def pagina(prop):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="{raiz}css/base.css">
-<link rel="stylesheet" href="{raiz}css/{prop["clave"]}.css">
+<link rel="stylesheet" href="{raiz}css/base.css?v={v_base}">
+<link rel="stylesheet" href="{raiz}css/{prop["clave"]}.css?v={v_tema}">
 </head>
 <body class="v-{prop["clave"]}">
 {logo_sprite()}
@@ -923,7 +945,7 @@ def pagina(prop):
 </main>
 <a class="cta-fijo" href="#admisiones">{e(C.CTA_FIJO)} <span aria-hidden="true">→</span></a>
 {cinta_propuestas(prop)}
-<script src="{raiz}js/campus.js"></script>
+<script src="{raiz}js/campus.js?v={v_js}"></script>
 </body>
 </html>"""
 
