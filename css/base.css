@@ -1193,39 +1193,59 @@ a{ color:inherit }
      inferior de una sección de 1.300px, los birretes volaban por la mitad de
      abajo y no se veían al llegar. Aquí cruzan por donde está el titular. */
   position:absolute; inset:0 0 auto 0; height:min(76%,660px);
-  overflow:hidden; pointer-events:none; z-index:1;
+  overflow:hidden; pointer-events:none; z-index:0;
 }
+/* El texto por delante de los birretes. Un elemento posicionado pinta por
+   encima del contenido en flujo aunque tenga z-index 0, así que hay que
+   levantar el contenido, no bajar los birretes: bajarlos los metería detrás del
+   fondo de la sección y desaparecerían. */
+#graduacion .wrap > *:not(.birretes){ position:relative; z-index:2 }
 .birrete{
-  position:absolute; bottom:-60px;
-  width:clamp(30px,3.4vw,52px); aspect-ratio:64/48;
+  position:absolute; bottom:-70px;
+  width:clamp(46px,5vw,84px); aspect-ratio:64/48;
   /* Ciclo de 5s con los seis birretes escalonados a lo largo de 2.5s: siempre
-     hay alguno en el aire. Con 8s y salidas juntas, la sección pasaba casi
-     cinco segundos sin nada volando y parecía que la animación se había roto. */
-  animation:lanzar 5s cubic-bezier(.18,.62,.5,1) infinite;
+     hay alguno en el aire. Con salidas juntas, la sección pasaba segundos sin
+     nada volando y eso se lee como que la animación se rompió.
+
+     Sin easing en la animación: cada tramo lleva el suyo dentro del keyframe,
+     porque subir y caer no se mueven igual. */
+  animation:lanzar 5s linear infinite;
   opacity:0;
+  will-change:translate,scale;
 }
 .birrete svg{ width:100%; height:100%; display:block; overflow:visible }
-.b-tabla{ fill:var(--vino) }
-.b-copa{ fill:var(--vino-2) }
-.b-borla{ stroke:var(--amar) }
-.b-nudo{ fill:var(--amar) }
 
+/* Semitransparentes: son fondo, no contenido. A plena opacidad competían con el
+   titular y las tarjetas de la sección. */
+.b-tabla{ fill:var(--vino); opacity:.5 }
+.b-copa{ fill:var(--vino-2); opacity:.5 }
+.b-borla{ stroke:var(--amar); opacity:.75 }
+.b-nudo{ fill:var(--amar); opacity:.75 }
+
+/* Parábola de verdad: sube frenando y cae acelerando, como cualquier cosa que
+   se lanza. Antes subía y se desvanecía sin caer nunca, y eso es lo que no se
+   sentía fluido. El easing va por tramo, no en la declaración. */
 @keyframes lanzar{
-  0%{ opacity:0; translate:0 0; rotate:0deg; scale:.7 }
-  4%{ opacity:1 }
-  /* Cima del arco: aquí pierde velocidad, como un objeto lanzado de verdad. */
-  20%{ translate:calc(var(--deriva) * .62) calc(var(--alto) * -1); scale:1 }
-  32%{ opacity:1; translate:var(--deriva) calc(var(--alto) * -.72) }
-  40%{ opacity:0; translate:calc(var(--deriva) * 1.15) calc(var(--alto) * -.2) }
-  41%,100%{ opacity:0; translate:0 0; scale:.7 }
+  0%{
+    opacity:0; translate:0 40px; scale:.78;
+    animation-timing-function:cubic-bezier(.12,.62,.38,1);
+  }
+  6%{ opacity:1 }
+  48%{
+    translate:calc(var(--deriva) * .58) calc(var(--alto) * -1); scale:1;
+    animation-timing-function:cubic-bezier(.52,0,.78,.42);
+  }
+  88%{ opacity:1 }
+  96%{ translate:var(--deriva) 70px; scale:.9; opacity:0 }
+  100%{ opacity:0; translate:0 40px; scale:.78 }
 }
-/* El giro va en su propia animación y a velocidad constante: encajado en el
-   arco, el birrete frenaba de girar justo en la cima. */
+
+/* El giro va aparte y a velocidad constante: metido dentro del vuelo, el
+   birrete frenaba de girar justo en la cima y se veía mecánico. */
 .birrete svg{ animation:girar-birrete 5s linear infinite; animation-delay:inherit }
 @keyframes girar-birrete{
-  0%{ rotate:0deg }
-  41%{ rotate:var(--giro-b) }
-  100%{ rotate:var(--giro-b) }
+  from{ rotate:0deg }
+  to{ rotate:var(--giro-b) }
 }
 
 /* Sobre el vino del cierre los birretes en vino desaparecen. */
