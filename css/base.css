@@ -1261,3 +1261,29 @@ a{ color:inherit }
 @media (prefers-reduced-motion:reduce){
   .birretes{ display:none }
 }
+
+/* ---------------------------------------------- correcciones de la pasada final */
+
+/* Los kickers de las tarjetas ("La plataforma", "Seguimiento", "Comunidad")
+   salían en minúscula y sin estilo, como texto suelto encima del título. En el
+   resto de la página los rótulos van en versalita espaciada; aquí faltaba. */
+.kicker{
+  font-size:11.5px; font-weight:800; letter-spacing:.2em;
+  text-transform:uppercase; opacity:.55; margin-bottom:8px;
+}
+
+/* Seis palabras sueltas ocupaban seis líneas con su punto cada una. En fila se
+   leen de un vistazo, que es lo que son: un listado rápido de lo que incluye. */
+.piezas{ display:flex; flex-wrap:wrap; gap:8px 10px; margin-bottom:1em }
+.piezas li{ padding-left:0 }
+.piezas li::before{ display:none }
+.piezas li{
+  padding:7px 15px; border-radius:999px;
+  border:1.5px solid color-mix(in srgb,var(--texto) 16%,transparent);
+  font-weight:600; font-size:14.5px;
+}
+
+/* La columna de "probablemente no es para ti" tiene la mitad de puntos que la
+   otra: estirada para igualar alturas dejaba un bloque vacío enorme. */
+.para-ti .grid-2 > .no,
+#admisiones .grid-2 > .no{ align-self:start }
