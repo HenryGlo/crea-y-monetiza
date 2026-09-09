@@ -133,6 +133,8 @@ def parrafos(ps, cls=""):
 # Los óvalos y los círculos del juego de Nathaly no se usan: son parches
 # bordados en blanco, pensados para llevar una palabra encima. Sueltos como
 # adorno se leen como una mancha de color. Si alguna vez llevan texto, vuelven.
+PLANTILLA_BIRRETE = '<span class="birrete" style="{estilo}"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="b-tabla" d="M32 2 62 15 32 28 2 15z"/><path class="b-copa" d="M16 21v11c0 4 7 7 16 7s16-3 16-7V21l-16 7z"/><path class="b-borla" d="M56 19v13" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle class="b-nudo" cx="56" cy="34" r="4"/></svg></span>'
+
 FORMAS = ["estrella-rosa", "estrella-azul", "estrella-amar",
           "rayo-rosa", "rayo-azul", "rayo-amar"]
 
@@ -644,6 +646,28 @@ def s_historias():
     <div class="grid grid-3">{casos}</div>""", "historias")
 
 
+def birretes(n=6):
+    """Los birretes que se lanzan al aire al llegar a la graduación.
+
+    Van en SVG y no como imagen: hay que teñirlos con los colores de marca y
+    girarlos, y a 40px una foto no aguanta el giro.
+
+    Cada uno lleva su propia deriva, giro, altura y retardo, así que el
+    lanzamiento se ve desordenado —como uno de verdad— con una sola animación."""
+    piezas = []
+    r = _aleatorio(20260909)
+    for _ in range(n):
+        deriva = round(-150 + next(r) * 300)
+        giro = round(300 + next(r) * 420) * (1 if next(r) > .5 else -1)
+        alto = round(330 + next(r) * 210)
+        retardo = round(next(r) * 2.5, 2)
+        salida = round(8 + next(r) * 84)
+        estilo = (f"left:{salida}%;--deriva:{deriva}px;--giro-b:{giro}deg;"
+                  f"--alto:{alto}px;animation-delay:{retardo}s")
+        piezas.append(PLANTILLA_BIRRETE.format(estilo=estilo))
+    return '<div class="birretes" aria-hidden="true">' + "".join(piezas) + "</div>"
+
+
 def s_graduacion():
     g = C.GRADUACION
     bs = ""
@@ -651,6 +675,7 @@ def s_graduacion():
         f = f'<p class="fecha">{e(fecha)}</p>' if fecha else ""
         bs += (f'<article class="card mini"><h3>{e(t)}</h3>{parrafos(ps)}{f}</article>')
     return seccion("graduacion", "16", f"""
+    {birretes()}
     {eyebrow(g["eyebrow"])}
     <h2>{e(g["titulo"])}</h2>
     {parrafos(g["intro"], "lead")}
