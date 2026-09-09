@@ -115,6 +115,30 @@ CAMPUS = {
     ],
 }
 
+# 03b — Comparación. Esta copy NO viene del guion original: la escribió Nathaly
+# en su propuesta y se incorpora tal cual, a petición del cliente. Si Pierina
+# quiere ajustarla, se edita aquí.
+COMPARACION = {
+    "izq_kicker": "Lo habitual",
+    "izq_titulo": "Un curso grabado",
+    "izq": [
+        "Compras el acceso y avanzas sola.",
+        "Videos sueltos sin orden ni criterio de avance.",
+        "Nadie revisa lo que haces ni te corrige.",
+        "Terminas con apuntes, no con activos.",
+        "El día que se acaba, se acaba todo.",
+    ],
+    "der_kicker": "El Campus",
+    "der_titulo": "Una formación universitaria",
+    "der": [
+        "Un plan de estudios de 10 materias con orden, ejercicios y entregables.",
+        "Dos etapas: primero te formas, después sales al mercado.",
+        "Mentoras que revisan tu trabajo y te corrigen de verdad.",
+        "Sales con portafolio, pitch, tarifas y sistema de contenido.",
+        "Te gradúas y recibes tu certificado de creadora profesional.",
+    ],
+}
+
 # 04
 PERFIL = {
     "eyebrow": "En qué te estás formando",

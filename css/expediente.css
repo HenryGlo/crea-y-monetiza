@@ -196,7 +196,7 @@ body.v-expediente{
 
 .v-expediente .si,.v-expediente .no{ border-top-width:3px }
 .v-expediente .no{ opacity:.7 }
-.v-expediente .faq{ border-top:1px solid var(--texto) }
+.v-expediente .faq-lista{ border-top:1px solid var(--texto) }
 .v-expediente .faq-item summary{ letter-spacing:-.02em }
 
 .v-expediente .form{ border-top:1px solid var(--texto); padding-top:30px }

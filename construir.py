@@ -285,7 +285,28 @@ def s_campus():
     <h2>{e(c["titulo"])}</h2>
     {parrafos(c["intro"], "lead")}
     {lista(c["necesidades"], "lista necesidades")}
-    {parrafos(c["cierre"], "cierre")}""", "campus")
+    {parrafos(c["cierre"], "cierre")}
+    {comparacion()}""", "campus")
+
+
+def comparacion():
+    """Lo habitual frente al Campus. Es el único bloque cuya copy no viene del
+    guion original: la escribió Nathaly y se incorpora a petición del cliente."""
+    c = C.COMPARACION
+    izq = "".join(f"<li>{e(x)}</li>" for x in c["izq"])
+    der = "".join(f"<li>{e(x)}</li>" for x in c["der"])
+    return f"""<div class="comparar">
+      <article class="comp comp-antes">
+        <p class="kicker">{e(c["izq_kicker"])}</p>
+        <h3>{e(c["izq_titulo"])}</h3>
+        <ul>{izq}</ul>
+      </article>
+      <article class="comp comp-campus">
+        <p class="kicker">{e(c["der_kicker"])}</p>
+        <h3>{e(c["der_titulo"])}</h3>
+        <ul>{der}</ul>
+      </article>
+    </div>"""
 
 
 def s_perfil():
@@ -587,7 +608,7 @@ def s_faq():
     return seccion("faq", "21", f"""
     {eyebrow(f["eyebrow"])}
     <h2>{e(f["titulo"])}</h2>
-    <div class="faq">{items}</div>""", "faq")
+    <div class="faq-lista">{items}</div>""", "faq")
 
 
 def s_cierre():

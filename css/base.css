@@ -342,7 +342,7 @@ a{ color:inherit }
 
 /* ---------------------------------------------------------------------- faq */
 
-.faq{ max-width:900px; border-top:1px solid var(--linea) }
+.faq-lista{ max-width:900px; border-top:1px solid var(--linea) }
 .faq-item{ border-bottom:1px solid var(--linea) }
 .faq-item summary{
   cursor:pointer; list-style:none; padding:24px 44px 24px 0; position:relative;
@@ -941,3 +941,52 @@ a{ color:inherit }
   .hero .ctas{ margin:18px 0 }
   .hero .entrada{ font-size:16px }
 }
+
+/* ------------------------------------------------------------- comparación
+
+   Lo habitual frente al Campus. La columna de la izquierda queda apagada y la
+   del Campus en vino a plena intensidad: la comparación se lee antes por el
+   contraste que por el texto. */
+
+.comparar{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:clamp(16px,2vw,26px); margin:clamp(32px,4vw,54px) 0 0;
+}
+.comp{ border-radius:var(--r); padding:clamp(24px,2.6vw,34px) }
+.comp .kicker{
+  font-size:11.5px; font-weight:800; letter-spacing:.2em;
+  text-transform:uppercase; opacity:.6; margin-bottom:8px;
+}
+.comp h3{ margin-bottom:20px }
+.comp ul{ list-style:none; padding:0; margin:0; display:grid }
+.comp li{
+  position:relative; padding:13px 0 13px 34px;
+  border-top:1px solid color-mix(in srgb,currentColor 14%,transparent);
+  font-size:15.5px; line-height:1.5;
+}
+.comp li:first-child{ border-top:0; padding-top:0 }
+.comp li::before{
+  position:absolute; left:0; top:13px;
+  width:21px; height:21px; border-radius:50%;
+  display:grid; place-items:center; font-size:12px; font-weight:800;
+}
+.comp li:first-child::before{ top:0 }
+
+.comp-antes{
+  background:color-mix(in srgb,var(--vino) 6%,transparent);
+  border:1px dashed color-mix(in srgb,var(--vino) 22%,transparent);
+  color:var(--vino);
+}
+.comp-antes li{ opacity:.72 }
+.comp-antes li::before{
+  content:"·"; background:color-mix(in srgb,var(--vino) 10%,transparent);
+  color:var(--vino); font-size:17px; line-height:1;
+}
+
+.comp-campus{
+  background:var(--vino); color:var(--crema); border:1px solid var(--vino);
+  box-shadow:var(--shadow);
+}
+.comp-campus h3{ color:var(--crema) }
+.comp-campus .kicker{ color:var(--rosa); opacity:1 }
+.comp-campus li::before{ content:"✓"; background:var(--rosa); color:var(--vino) }

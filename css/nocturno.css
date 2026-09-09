@@ -232,7 +232,7 @@ body.v-nocturno{
 .v-nocturno .si{ --acento:var(--rosa); border-color:color-mix(in srgb,var(--rosa) 45%,transparent) }
 .v-nocturno .no{ --acento:var(--azul); opacity:.75 }
 
-.v-nocturno .faq,.v-nocturno .faq-item{ border-color:var(--linea) }
+.v-nocturno .faq-lista,.v-nocturno .faq-item{ border-color:var(--linea) }
 .v-nocturno .faq-item summary:hover{ color:var(--rosa) }
 
 .v-nocturno .ph{ background:rgba(246,237,232,.04); border-color:var(--linea) }
