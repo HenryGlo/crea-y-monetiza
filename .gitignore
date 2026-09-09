@@ -1,3 +1,7 @@
 .DS_Store
 __pycache__/
 *.pyc
+
+# Notas internas. La raíz del repo es la raíz del sitio publicado, así que
+# cualquier archivo suelto aquí queda accesible desde el dominio.
+mensaje-nathaly.txt
