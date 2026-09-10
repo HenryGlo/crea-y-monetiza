@@ -978,8 +978,9 @@ def s_mercado_unificado():
         for i, x in enumerate(m["items"], 1))
 
     recursos = "".join(
-        f'<li><i aria-hidden="true">{ico}</i>{e(txt.rstrip("."))}</li>'
-        for ico, txt in o["items"])
+        f'<li style="--n:{i}"><i aria-hidden="true">{ico}</i>'
+        f'<span>{e(txt.rstrip("."))}</span></li>'
+        for i, (ico, txt) in enumerate(o["items"], 1))
 
     return seccion("mercado", "12", f"""
     {eyebrow(m["eyebrow"])}

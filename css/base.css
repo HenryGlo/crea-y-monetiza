@@ -1574,15 +1574,33 @@ a{ color:inherit }
   display:flex; align-items:center; gap:14px;
   padding:16px 20px; border-radius:16px;
   border:2px solid var(--vino);
-  transition:transform .3s cubic-bezier(.2,.8,.3,1);
+  /* La ficha entra y, un instante después, se marca su casilla. */
+  opacity:0; translate:0 14px;
+  transition:transform .3s cubic-bezier(.2,.8,.3,1),
+             opacity .45s ease, translate .5s cubic-bezier(.2,.9,.3,1);
+  transition-delay:0s,calc(var(--n) * .07s),calc(var(--n) * .07s);
 }
+.activos.dentro li{ opacity:1; translate:0 0 }
+
 /* Un check en cada uno: son cosas que sales sabiendo hacer, no un índice
-   numerado. */
+   numerado. La lista se va marcando de arriba abajo al entrar en pantalla,
+   como una checklist que alguien va tachando: nueve cosas que ya sabes hacer
+   pesan más vistas cayendo una a una que las nueve de golpe. */
 .activos li b{
   width:26px; height:26px; flex:none; border-radius:50%;
   display:grid; place-items:center; font-size:14px; font-weight:800;
-  background:var(--vino); color:var(--crema);
+  background:transparent; color:transparent;
+  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--vino) 35%,transparent);
+  transition:background .3s ease, color .3s ease, box-shadow .3s ease,
+             scale .45s cubic-bezier(.3,1.8,.5,1);
+  transition-delay:calc(.24s + var(--n) * .07s);
 }
+.activos.dentro li b{
+  background:var(--vino); color:var(--crema);
+  box-shadow:inset 0 0 0 2px var(--vino); scale:1;
+}
+.activos.dentro li b{ animation:marcar .45s cubic-bezier(.3,1.7,.5,1) calc(.24s + var(--n) * .07s) both }
+@keyframes marcar{ 0%{ scale:.6 } 60%{ scale:1.18 } 100%{ scale:1 } }
 .activos li span{
   font-family:var(--display); text-transform:uppercase;
   font-size:clamp(14px,1.5vw,18px); line-height:1.06;
@@ -1593,21 +1611,53 @@ a{ color:inherit }
 @media (hover:hover){
   .activos li:hover{ transform:translateY(-4px) rotate(-1deg) }
 }
+/* Sin movimiento la lista está entera y marcada: la animación cuenta el gesto
+   de tachar, no lo sustituye. */
+@media (prefers-reduced-motion:reduce){
+  .activos li{ opacity:1; translate:0 0; transition:none }
+  .activos li b{ background:var(--vino); color:var(--crema); animation:none; transition:none }
+}
 
-/* Los recursos del banco de oportunidades, con su icono. Seis palabras sueltas
-   en fila eran lo más plano de la página. */
+/* El banco de oportunidades, como matriz de fichas.
+
+   Eran seis píldoras en fila, del tamaño de una etiqueta, y el banco es de lo
+   más concreto que ofrece el Campus: lo que más se parece a una puerta abierta
+   al mercado. En fichas grandes, con el icono a tamaño de señal y flotando, se
+   lee como un escaparate y no como un pie de sección. */
 .recursos{
-  list-style:none; padding:0; margin:22px 0 0;
-  display:flex; flex-wrap:wrap; gap:10px;
+  list-style:none; padding:0; margin:28px 0 0;
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px;
 }
 .recursos li{
-  display:inline-flex; align-items:center; gap:10px;
-  padding:11px 20px 11px 14px; border-radius:999px;
-  border:2px solid var(--vino); background:#fff;
-  font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(13px,1.4vw,17px);
+  display:grid; gap:16px; justify-items:center; align-content:start;
+  text-align:center; padding:clamp(24px,3vw,36px) 16px clamp(20px,2.4vw,30px);
+  border-radius:22px; border:2px solid var(--vino); background:#fff;
+  transition:transform .35s cubic-bezier(.2,.8,.3,1), box-shadow .35s ease;
 }
-.recursos li i{ font-style:normal; font-size:1.25em; line-height:1 }
+.recursos li i{
+  font-style:normal; line-height:1;
+  width:clamp(74px,7.6vw,104px); aspect-ratio:1; border-radius:50%;
+  display:grid; place-items:center;
+  font-size:clamp(34px,3.6vw,50px);
+  background:rgba(255,255,255,.72);
+  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--vino) 12%,transparent);
+  /* Cada icono con su propio desfase: flotan, no laten a la vez. */
+  animation:flotar-icono 5.2s ease-in-out infinite;
+  animation-delay:calc(var(--n) * -.62s);
+}
+.recursos li span{
+  font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(14px,1.5vw,19px); line-height:1.06;
+}
+@keyframes flotar-icono{ 0%,100%{ translate:0 0 } 50%{ translate:0 -7px } }
+@media (hover:hover){
+  .recursos li:hover{ transform:translateY(-6px); box-shadow:var(--shadow) }
+}
+@media (prefers-reduced-motion:reduce){
+  .recursos li i{ animation:none }
+}
+@media (max-width:900px){ .recursos{ grid-template-columns:repeat(2,minmax(0,1fr)) } }
+@media (max-width:460px){ .recursos{ grid-template-columns:1fr } }
 .recursos li:nth-child(3n+1){ background:var(--amar-soft) }
 .recursos li:nth-child(3n+2){ background:var(--rosa-soft) }
 .recursos li:nth-child(3n+3){ background:var(--azul-soft) }
