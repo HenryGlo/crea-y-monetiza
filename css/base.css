@@ -211,9 +211,13 @@ a{ color:inherit }
 .nav .brand{ font-family:var(--display); font-size:15px; letter-spacing:.04em; text-transform:uppercase }
 .nav-links{ display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; flex:1; justify-content:flex-end }
 .nav-links::-webkit-scrollbar{ display:none }
+/* 36px de alto se quedaba corto para el dedo, y en móvil el menú es una barra
+   que se arrastra: cuesta acertar. 42 entra dentro de lo cómodo sin subir la
+   altura de la barra, porque el CTA de al lado ya mide eso. */
 .nav-links a{
   font-size:12.5px; font-weight:600; text-decoration:none; white-space:nowrap;
-  padding:8px 13px; border-radius:999px; opacity:.6; transition:.2s;
+  padding:11px 13px; border-radius:999px; opacity:.6; transition:.2s;
+  display:flex; align-items:center;
 }
 .nav-links a:hover{ opacity:1; background:color-mix(in srgb,var(--acento) 22%,transparent) }
 .nav-links a.en-vista{ opacity:1; background:var(--texto); color:var(--fondo) }
@@ -312,6 +316,9 @@ a{ color:inherit }
 .pendiente{ position:relative }
 /* Un hueco puede decir qué le falta: con data-nota la etiqueta lo explica en
    vez de repetir la frase genérica. */
+/* La etiqueta no puede ser más ancha que lo que marca: en el hueco vertical
+   del hero, a 360px, se salía por la izquierda del propio marco. */
+.pendiente::after{ max-width:calc(100% - 28px); text-align:center }
 .pendiente[data-nota]::after{ content:attr(data-nota) }
 .pendiente::after{
   content:"Pendiente de contenido real";
@@ -471,7 +478,7 @@ a{ color:inherit }
 /* El sello y la nota a mano, juntos en la banda derecha. */
 .cierre-lado{ position:absolute; right:0; top:0; height:100%; pointer-events:none }
 
-@media (max-width:900px){
+@media (max-width:999px){
   .con-lista{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:26px 0 }
   .con-lista li:nth-child(odd){ border-left:0 }
 }
@@ -778,7 +785,7 @@ a{ color:inherit }
      desplazable, arrancaba mostrando el final: la primera entrada visible era
      "…encia" en vez de "Inicio". */
   .nav-links{ justify-content:flex-start; gap:0 }
-  .nav-links a{ padding:8px 11px; font-size:12px }
+  .nav-links a{ padding:11px 11px; font-size:12px }
   .nav-in{ gap:10px }
 
   /* La píldora del hero parte en dos líneas y queda como un bloque pesado justo
@@ -1576,10 +1583,13 @@ a{ color:inherit }
 .linea::before{ background:color-mix(in srgb,var(--texto) 16%,transparent) }
 .linea::after{
   background:var(--rosa);
-  transform-origin:0 50%; scale:0 1;
+  transform-origin:0 50%;
   transition:scale 1.7s cubic-bezier(.35,0,.15,1) .1s;
 }
-.linea.dentro::after{ scale:1 1 }
+/* Igual que la lista de activos: el estado sin trazar cuelga de .rv, que la
+   pone el script. Sin script, el raíl está trazado y los seis momentos se ven. */
+.linea.rv::after{ scale:0 1 }
+.linea.rv.dentro::after{ scale:1 1 }
 
 /* Las filas fijas y la ficha ocupando el resto. Con filas automáticas, el
    sobrante de altura de la retícula se repartía entre las dos y cada ficha
@@ -1593,26 +1603,26 @@ a{ color:inherit }
   background:var(--superficie);
   border:2px solid color-mix(in srgb,var(--texto) 18%,transparent);
   font-family:var(--display); font-size:15px; color:var(--texto);
-  position:relative; z-index:1;
-  opacity:0; scale:.4;
+  position:relative; z-index:1; border-color:var(--rosa);
   transition:opacity .35s ease, scale .5s cubic-bezier(.3,1.7,.5,1),
              border-color .35s ease, background .35s ease;
   transition-delay:calc(.2s + var(--i) * .2s);
 }
-.linea.dentro .hito-nodo{ opacity:1; scale:1; border-color:var(--rosa) }
+.linea.rv .hito-nodo{ opacity:0; scale:.4; border-color:rgba(0,0,0,.2) }
+.linea.rv.dentro .hito-nodo{ opacity:1; scale:1; border-color:var(--rosa) }
 /* El último es el destino, no un paso más. */
-.linea.dentro .hito:last-child .hito-nodo{ background:var(--rosa); color:var(--vino) }
+.linea .hito:last-child .hito-nodo{ background:var(--rosa); color:var(--vino) }
 
 .hito-caja{
   background:var(--superficie);
   border:1px solid color-mix(in srgb,var(--texto) 9%,transparent);
   box-shadow:0 14px 30px -22px rgba(80,7,17,.4);
   border-radius:14px; padding:16px 16px 18px; width:100%;
-  opacity:0; translate:0 16px;
   transition:opacity .5s ease, translate .5s cubic-bezier(.2,.9,.3,1);
   transition-delay:calc(.3s + var(--i) * .2s);
 }
-.linea.dentro .hito-caja{ opacity:1; translate:0 0 }
+.linea.rv .hito-caja{ opacity:0; translate:0 16px }
+.linea.rv.dentro .hito-caja{ opacity:1; translate:0 0 }
 .hito-caja b{
   display:block; font-family:var(--display); text-transform:uppercase;
   font-size:16px; margin-bottom:6px;
@@ -1634,8 +1644,10 @@ a{ color:inherit }
 /* Sin movimiento la línea está trazada y los seis momentos visibles: la
    animación cuenta el orden, no lo sustituye. */
 @media (prefers-reduced-motion:reduce){
-  .linea::after{ scale:1 1; transition:none }
-  .hito-nodo,.hito-caja{ opacity:1; scale:1; translate:0 0; transition:none }
+  .linea.rv::after{ scale:1 1; transition:none }
+  .linea.rv .hito-nodo,.linea.rv .hito-caja{
+    opacity:1; scale:1; translate:0 0; transition:none;
+  }
 }
 /* La frase que cierra la evaluación va escrita a mano y subrayada a lápiz.
 
@@ -1691,13 +1703,15 @@ a{ color:inherit }
   display:flex; align-items:center; gap:14px;
   padding:16px 20px; border-radius:16px;
   border:2px solid var(--vino);
-  /* La ficha entra y, un instante después, se marca su casilla. */
-  opacity:0; translate:0 14px;
   transition:transform .3s cubic-bezier(.2,.8,.3,1),
              opacity .45s ease, translate .5s cubic-bezier(.2,.9,.3,1);
   transition-delay:0s,calc(var(--n) * .07s),calc(var(--n) * .07s);
 }
-.activos.dentro li{ opacity:1; translate:0 0 }
+/* El estado oculto cuelga de .rv, que la pone el script: si el script falla o
+   no llega, la lista está entera y visible. Esconder por CSS y revelar por JS
+   es apostar el contenido a que un archivo cargue. */
+.activos.rv li{ opacity:0; translate:0 14px }
+.activos.rv.dentro li{ opacity:1; translate:0 0 }
 
 /* Un check en cada uno: son cosas que sales sabiendo hacer, no un índice
    numerado. La lista se va marcando de arriba abajo al entrar en pantalla,
@@ -1706,17 +1720,22 @@ a{ color:inherit }
 .activos li b{
   width:26px; height:26px; flex:none; border-radius:50%;
   display:grid; place-items:center; font-size:14px; font-weight:800;
-  background:transparent; color:transparent;
-  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--vino) 35%,transparent);
+  background:var(--vino); color:var(--crema);
+  box-shadow:inset 0 0 0 2px var(--vino);
   transition:background .3s ease, color .3s ease, box-shadow .3s ease,
              scale .45s cubic-bezier(.3,1.8,.5,1);
   transition-delay:calc(.24s + var(--n) * .07s);
 }
-.activos.dentro li b{
+/* Sin marcar solo mientras espera su turno, y solo si hay script. */
+.activos.rv li b{
+  background:transparent; color:transparent;
+  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--vino) 35%,transparent);
+}
+.activos.rv.dentro li b{
   background:var(--vino); color:var(--crema);
   box-shadow:inset 0 0 0 2px var(--vino); scale:1;
+  animation:marcar .45s cubic-bezier(.3,1.7,.5,1) calc(.24s + var(--n) * .07s) both;
 }
-.activos.dentro li b{ animation:marcar .45s cubic-bezier(.3,1.7,.5,1) calc(.24s + var(--n) * .07s) both }
 @keyframes marcar{ 0%{ scale:.6 } 60%{ scale:1.18 } 100%{ scale:1 } }
 .activos li span{
   font-family:var(--display); text-transform:uppercase;
@@ -1731,8 +1750,8 @@ a{ color:inherit }
 /* Sin movimiento la lista está entera y marcada: la animación cuenta el gesto
    de tachar, no lo sustituye. */
 @media (prefers-reduced-motion:reduce){
-  .activos li{ opacity:1; translate:0 0; transition:none }
-  .activos li b{ background:var(--vino); color:var(--crema); animation:none; transition:none }
+  .activos.rv li{ opacity:1; translate:0 0; transition:none }
+  .activos.rv li b{ background:var(--vino); color:var(--crema); animation:none; transition:none }
 }
 
 /* El banco de oportunidades, como matriz de fichas.
