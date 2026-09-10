@@ -372,12 +372,72 @@ a{ color:inherit }
 
 /* ------------------------------------------------------------------- cierre */
 
-.cierre-final{ padding:var(--sec-y) 0; text-align:center; position:relative }
-.cierre-final .eyebrow{ justify-content:center }
-.cierre-final .lista{ justify-items:center }
-.cierre-final .lista li{ padding-left:0 }
-.cierre-final .lista li::before{ display:none }
-.cierre-final .ctas{ justify-content:center }
+/* El cierre, a dos paneles. Centrado en una columna era una pila de bloques y
+   todo pesaba igual. A la izquierda, en vino, el argumento; a la derecha, sobre
+   papel, la decisión. Uno cuenta, el otro pide. */
+.cierre-final{
+  position:relative; display:grid; grid-template-columns:1.08fr 1fr;
+  align-items:stretch;
+}
+.cierre-panel{ position:relative; padding:clamp(40px,5.5vw,84px) 0 }
+.panel-dentro{
+  max-width:min(560px,100%);
+  padding-inline:clamp(22px,3.4vw,56px);
+}
+.cierre-argumento{ justify-self:stretch; display:grid; justify-content:end }
+.cierre-argumento .panel-dentro{ margin-left:auto }
+.cierre-decision{ display:grid; justify-content:start; align-content:center }
+
+/* Las cuatro formas de recorrerlo, cada una con su ficha de color: es el
+   inventario de lo que el Campus pone, y en viñetas era otra lista más. */
+.con-lista{ list-style:none; padding:0; margin:clamp(22px,3vw,34px) 0 0; display:grid; gap:14px }
+.con-lista li{
+  display:flex; align-items:center; gap:16px;
+  font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(16px,1.9vw,23px); line-height:1.05;
+}
+.con-punto{
+  width:clamp(38px,3.6vw,48px); aspect-ratio:1; border-radius:50%; flex:none;
+  background:var(--rosa);
+}
+.con-lista li:nth-child(2) .con-punto{ background:var(--azul) }
+.con-lista li:nth-child(3) .con-punto{ background:var(--amar) }
+.con-lista li:nth-child(4) .con-punto{ background:var(--crema) }
+
+/* El remate no es una forma más: va abajo, en pequeño, con su filete. */
+.con-remate{
+  margin-top:clamp(24px,3vw,36px); padding-top:18px;
+  font-size:12px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  opacity:.72; max-width:44ch;
+  border-top:2px solid var(--rosa);
+}
+.cierre-final .claim{ margin-top:clamp(20px,2.6vw,32px) }
+
+/* El enlace secundario, subrayado y sin caja: al lado de la píldora rosa, un
+   segundo botón competía con ella en vez de acompañarla. */
+/* En el panel de papel la firma va en texto corriente: justo debajo está la
+   nota manuscrita, y dos bloques a mano seguidos se anulan entre ellos. */
+.cierre-decision .firma{
+  font-family:var(--texto-f); font-size:clamp(15px,1.5vw,18px);
+  line-height:1.6; max-width:34ch; margin:clamp(18px,2.4vw,28px) 0 0;
+  /* En rosa sobre el papel se leía a media luz: aquí es el párrafo que explica
+     el botón, no un adorno. */
+  color:var(--texto); opacity:.8;
+}
+.enlace-sub{
+  display:inline-block; margin-top:18px;
+  font-weight:600; font-size:15px;
+  text-decoration:underline; text-underline-offset:6px;
+  text-decoration-thickness:2px; text-decoration-color:var(--azul);
+}
+.enlace-sub:hover{ text-decoration-color:var(--acento) }
+
+@media (max-width:900px){
+  .cierre-final{ grid-template-columns:1fr }
+  .cierre-argumento,.cierre-decision{ justify-content:center }
+  .cierre-argumento .panel-dentro{ margin-inline:auto }
+  .cierre-panel{ padding:clamp(34px,7vw,64px) 0 }
+}
 .logo-foot{ width:min(420px,74%); height:auto; margin:40px auto 18px; display:block; color:currentColor }
 .claim{ font-weight:600; opacity:.75 }
 .firma{ font-family:var(--mano); font-size:clamp(20px,2.4vw,30px); color:var(--acento); margin-top:34px }
@@ -1849,12 +1909,18 @@ a{ color:inherit }
 .expediente .sello-aro{ right:-118px; bottom:60px; color:var(--vino) }
 @media (min-width:1280px){ .exp-cab{ padding-right:170px } }
 
-.cierre-final .carnet{ left:calc(50% - var(--wrap) / 2 - 150px); top:90px }
-.cierre-final .sello-aro{ right:calc(50% - var(--wrap) / 2 - 160px); top:180px }
+/* En su panel, no contra el ancho de la página: el cierre ya no es una
+   columna centrada. */
+/* Dentro del panel y por debajo del nav, que es fijo y se lo comía. */
+.cierre-decision .carnet{ right:clamp(10px,3vw,54px); top:34px }
+.cierre-decision .sello-aro{ right:clamp(8px,2.4vw,46px); bottom:clamp(30px,5vw,86px) }
+@media (max-width:1279px){
+  .cierre-decision .carnet,.cierre-decision .sello-aro{ display:none }
+}
 
 .cierre-mano{
   font-family:var(--mano); font-size:clamp(22px,2.6vw,32px); line-height:1.15;
-  margin-top:26px; rotate:-2.5deg; color:var(--acento);
+  margin-top:34px; rotate:-2.5deg; color:var(--texto); opacity:.85;
 }
 .cierre-mano span{ display:block }
 

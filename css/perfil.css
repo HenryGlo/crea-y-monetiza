@@ -351,15 +351,17 @@ body.v-perfil{
 .v-perfil .si{ --acento:var(--rosa); border-color:var(--rosa) }
 .v-perfil .no{ --acento:var(--vino-2); opacity:.86 }
 
-.v-perfil .cierre-final{
-  background:var(--vino); color:var(--crema); --texto:var(--crema); --acento:var(--rosa);
-  border-radius:clamp(28px,5vw,56px) clamp(28px,5vw,56px) 0 0; margin-top:40px;
+/* El vino ya no cubre todo el cierre: es el panel izquierdo. El derecho va
+   sobre papel, que es donde se decide. */
+.v-perfil .cierre-final{ margin-top:40px; background:var(--fondo) }
+.v-perfil .cierre-argumento{
+  background:
+    radial-gradient(70% 60% at 18% 10%,var(--vino-2),transparent 62%),
+    var(--vino);
+  color:var(--crema); --texto:var(--crema); --acento:var(--rosa);
 }
-.v-perfil .cierre-final h2{ max-width:20ch; margin-inline:auto }
+.v-perfil .cierre-final h2{ max-width:16ch }
 .v-perfil .cierre-final .btn-pri{ background:var(--rosa); color:var(--vino); border-color:var(--rosa) }
-.v-perfil .cierre-final .btn-sec{ border-color:var(--crema); color:var(--crema) }
-.v-perfil .cierre-final .btn-sec:hover{ background:var(--crema); color:var(--vino) }
-.v-perfil .cierre-final .con li{ font-family:var(--display); text-transform:uppercase; font-size:clamp(17px,2.2vw,26px) }
 .v-perfil .destacado{ font-family:var(--display); text-transform:uppercase; font-size:clamp(20px,2.8vw,36px); max-width:26ch }
 
 /* Sin movimiento el perfil sigue existiendo, montado y completo: la escena es
@@ -619,8 +621,8 @@ body.v-perfil{
    caía en seis líneas y la sección se leía como un muro. A más ancho quedan
    cuatro y el remate golpea. */
 .v-perfil .cierre-final h2{
-  max-width:min(26ch,100%);
-  font-size:clamp(28px,4.4vw,58px);
+  max-width:min(16ch,100%);
+  font-size:clamp(28px,4vw,54px);
 }
 
 
@@ -658,7 +660,7 @@ body.v-perfil{
 /* El claim del cierre en verde: sobre el vino es lo único que brilla, y es la
    frase que resume la escuela. */
 .v-perfil .cierre-final .claim{ color:var(--verde); opacity:1; font-weight:700 }
-.v-perfil .cierre-final .carnet,.v-perfil .cierre-final .sello-aro{ color:var(--crema) }
+.v-perfil .cierre-final .sello-aro{ color:var(--vino) }
 .v-perfil .expediente .carpeta{ border:1px solid rgba(80,7,17,.08) }
 
 /* El cortometraje ocupa la columna donde antes se armaba el perfil. Sin

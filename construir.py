@@ -901,27 +901,48 @@ def s_faq():
 
 
 def s_cierre():
-    """El texto es el que aprobó el cliente y no se toca. Lo que cambia es el
-    envoltorio: el carnet colgando y el sello convierten el final en una
-    despedida —te vas con algo— en vez de en un pie de página con botones."""
+    """El texto es el que aprobó el cliente y no se toca; lo que cambia es la
+    composición. Centrado en una columna, el cierre era una pila de bloques y
+    todo pesaba lo mismo. Ahora son dos paneles: a la izquierda, en vino, el
+    argumento —titular, las cuatro formas de recorrerlo y el claim—; a la
+    derecha, sobre papel, la decisión: botón, registro y firma.
+
+    Los dos paneles reparten los papeles: uno cuenta, el otro pide."""
     c = C.CIERRE
+
+    # Las cuatro primeras van con su ficha de color; la última no es una forma
+    # más de hacerlo, es el remate, y va abajo con su filete.
+    formas, remate = c["con"][:-1], c["con"][-1]
+    marcas = "".join(
+        f'<li style="--n:{i}"><span class="con-punto" aria-hidden="true"></span>'
+        f'{e(x)}</li>' for i, x in enumerate(formas, 1))
+
     mano = "".join(f"<span>{e(x)}</span>" for x in c["mano"].split("\n"))
+
     return f"""<footer id="cierre" class="cierre-final">
-  {carnet(c["carnet_rol"], c["carnet_palabras"])}
-  {sello_aro(c["sello"], "fin")}
-  <div class="wrap">
-    {eyebrow(c["eyebrow"])}
-    <h2>{e(c["titulo"])}</h2>
-    {parrafos(c["parrafos"])}
-    {lista(c["con"], "lista con")}
-    <svg class="logo-foot" viewBox="0 0 863.98 253.56" role="img" aria-label="{e(c["marca"])}"><use href="#logo-full"/></svg>
-    <p class="claim">{e(c["claim"])}</p>
-    <div class="ctas">
-      {boton(c["cta_1"], "#admisiones", "pri")}
-      <a class="btn btn-sec" href="#registro">{e(c["cta_2"])}</a>
+  <div class="cierre-panel cierre-argumento">
+    <div class="panel-dentro">
+      {eyebrow(c["eyebrow"])}
+      <h2>{e(c["titulo"])}</h2>
+      {parrafos(c["parrafos"])}
+      <ul class="con-lista">{marcas}</ul>
+      <p class="con-remate">{e(remate)}</p>
+      <p class="claim">{e(c["claim"])}</p>
     </div>
-    <p class="firma">{e(c["firma"])}</p>
-    <p class="cierre-mano" aria-hidden="true">{mano}</p>
+  </div>
+
+  <div class="cierre-panel cierre-decision">
+    {carnet(c["carnet_rol"], c["carnet_palabras"])}
+    <div class="panel-dentro">
+      <svg class="logo-foot" viewBox="0 0 863.98 253.56" role="img" aria-label="{e(c["marca"])}"><use href="#logo-full"/></svg>
+      <p class="firma">{e(c["firma"])}</p>
+      <div class="ctas">
+        {boton(c["cta_1"], "#admisiones", "pri")}
+      </div>
+      <a class="enlace-sub" href="#registro">{e(c["cta_2"])}</a>
+      {sello_aro(c["sello"], "fin")}
+      <p class="cierre-mano" aria-hidden="true">{mano}</p>
+    </div>
   </div>
 </footer>"""
 
