@@ -139,21 +139,9 @@ def parrafos(ps, cls=""):
 # adorno se leen como una mancha de color. Si alguna vez llevan texto, vuelven.
 PLANTILLA_BIRRETE = '<span class="birrete" style="{estilo}"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="b-tabla" d="M32 2 62 15 32 28 2 15z"/><path class="b-copa" d="M16 21v11c0 4 7 7 16 7s16-3 16-7V21l-16 7z"/><path class="b-borla" d="M56 19v13" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle class="b-nudo" cx="56" cy="34" r="4"/></svg></span>'
 
-FORMAS = ["estrella-rosa", "estrella-azul", "estrella-amar",
-          "rayo-rosa", "rayo-azul", "rayo-amar"]
-
-# Cuántas pegatinas lleva cada sección. Las que tienen más aire aguantan más;
-# las densas de texto llevan menos para no competir con la lectura.
-DENSIDAD = {
-    "campus": 0,  # sin pegatina de fondo: las viñetas ya llevan la estrella "perfil": 3, "recorrido": 0,  # sin pegatinas: en móvil caían encima del texto "plan": 3, "tesis": 6,
-    "experiencia": 4, "mentoras": 0,   # retirada "mercado": 4, "historias": 0,   # retirada
-    "graduacion": 0,  # solo los birretes: con pegatinas encima eran demasiados elementos "admisiones": 3, "faq": 4, "carta": 3,
-}
-
-
 def _aleatorio(semilla):
     """Generador determinista. Las posiciones tienen que ser siempre las mismas:
-    con azar real, cada build movería las pegatinas y ninguna revisión de diseño
+    con azar real, cada build movería las piezas y ninguna revisión de diseño
     sería comparable con la anterior."""
     x = semilla
     while True:
@@ -162,46 +150,43 @@ def _aleatorio(semilla):
 
 
 def decoracion(sid):
-    """Pegatinas de fondo. Van en dos planos: las de los márgenes, nítidas y a
-    tamaño de pegatina, y unas pocas grandes y muy tenues detrás del contenido,
-    que son las que dan profundidad sin estorbar la lectura.
+    """El fondo de cada sección: dos piezas de la marca, enormes y casi
+    imperceptibles, detrás del contenido.
 
-    Se colocan solo en las bandas laterales —fuera de la columna de texto— y
-    desaparecen por debajo de 1100px, donde ya no hay margen que ocupar."""
-    n = DENSIDAD.get(sid, 0)
-    if not n:
-        return ""
+    Van en todas las secciones y no en unas pocas, pero nunca con el mismo
+    patrón: la semilla sale del propio nombre de la sección, así que cada una
+    tiene su combinación de formas, colores, tamaños, posiciones y giros, y el
+    fondo deja de ser un color plano sin repetirse nunca. Es determinista: la
+    misma sección da siempre el mismo resultado y dos revisiones de diseño son
+    comparables.
 
-    r = _aleatorio(sum(ord(c) for c in sid) * 977)
+    A esta opacidad no compiten con la lectura; lo que hacen es que el color de
+    la sección tenga algo debajo.
+
+    Sustituye a la tabla de densidad que decidía qué secciones llevaban pieza y
+    cuáles no: media página se había quedado sin fondo."""
+    r = _aleatorio(sum(ord(c) * (i + 3) for i, c in enumerate(sid)) * 977)
+
+    # Una estrella y un rayo: dos piezas de la misma familia en el mismo fondo
+    # se leen como un error de repetición.
+    familias = ["estrella", "rayo"]
+    if next(r) > .5:
+        familias.reverse()
+    colores = ["rosa", "azul", "amar"]
+
     piezas = []
-    # Las pegatinas pequeñas de los márgenes se retiraron: nítidas y a tamaño de
-    # pegatina se leían como piezas torcidas pegadas al azar. Queda solo la
-    # grande y translúcida del fondo, que es la que gustó — la que se lee como
-    # textura de la sección y no como un adorno encima.
-    for i in range(0):
-        forma = FORMAS[int(next(r) * len(FORMAS))]
-        izquierda = i % 2 == 0
-        # Banda lateral: entre el borde y donde empieza la columna de texto.
-        lado = round(1 + next(r) * 9, 1)
-        arriba = round(6 + next(r) * 84, 1)
-        ancho = round(34 + next(r) * 46)
-        giro = round(-24 + next(r) * 48)
-        retardo = round(next(r) * -8, 1)
-        estilo = (f"{'left' if izquierda else 'right'}:{lado}%;top:{arriba}%;"
-                  f"width:{ancho}px;--giro:{giro}deg;animation-delay:{retardo}s")
-        piezas.append(f'<img class="deco" style="{estilo}" '
+    for i, familia in enumerate(familias):
+        forma = f"{familia}-{colores[int(next(r) * len(colores))]}"
+        lado = "left" if (i + int(next(r) * 2)) % 2 else "right"
+        estilo = (f"{lado}:{round(-8 + next(r) * 26)}%;"
+                  f"top:{round(-6 + next(r) * 76)}%;"
+                  f"width:clamp(200px,{round(26 + next(r) * 20)}vw,{round(360 + next(r) * 300)}px);"
+                  f"--giro:{round(-30 + next(r) * 60)}deg;"
+                  f"animation-delay:{round(next(r) * -14, 1)}s;"
+                  f"animation-duration:{round(14 + next(r) * 12)}s")
+        piezas.append(f'<img class="deco deco-fondo" style="{estilo}" '
                       f'src="{RAIZ_WEB}assets/stickers/{forma}.webp" alt="" '
                       f'aria-hidden="true" loading="lazy" decoding="async">')
-
-    # Una grande y tenue detrás del contenido, para dar fondo.
-    forma = FORMAS[int(next(r) * len(FORMAS))]
-    estilo = (f"{'right' if n % 2 else 'left'}:{round(6 + next(r) * 22)}%;"
-              f"top:{round(8 + next(r) * 56)}%;width:{round(300 + next(r) * 260)}px;"
-              f"--giro:{round(-18 + next(r) * 36)}deg;animation-delay:{round(next(r) * -12, 1)}s")
-    piezas.append(f'<img class="deco deco-fondo" style="{estilo}" '
-                  f'src="{RAIZ_WEB}assets/stickers/{forma}.webp" alt="" '
-                  f'aria-hidden="true" loading="lazy" decoding="async">')
-
     return "".join(piezas)
 
 
@@ -910,11 +895,16 @@ def s_cierre():
     Los dos paneles reparten los papeles: uno cuenta, el otro pide."""
     c = C.CIERRE
 
-    # Las cuatro primeras van con su ficha de color; la última no es una forma
-    # más de hacerlo, es el remate, y va abajo con su filete.
+    # Las cuatro primeras van con su ficha; la última no es una forma más de
+    # hacerlo, es el remate, y va abajo con su filete. Dentro de cada ficha, una
+    # pegatina de la marca: el círculo de color solo era un punto, y cuatro
+    # puntos seguidos no dicen nada.
+    piezas = ["estrella-amar", "rayo-azul", "estrella-rosa", "rayo-amar"]
     formas, remate = c["con"][:-1], c["con"][-1]
     marcas = "".join(
-        f'<li style="--n:{i}"><span class="con-punto" aria-hidden="true"></span>'
+        f'<li style="--n:{i}"><span class="con-punto">'
+        f'<img src="{RAIZ_WEB}assets/stickers/{piezas[i - 1]}.webp" alt="" '
+        f'aria-hidden="true" loading="lazy" decoding="async"></span>'
         f'{e(x)}</li>' for i, x in enumerate(formas, 1))
 
     mano = "".join(f"<span>{e(x)}</span>" for x in c["mano"].split("\n"))
@@ -935,7 +925,9 @@ def s_cierre():
     {carnet(c["carnet_rol"], c["carnet_palabras"])}
     <div class="panel-dentro">
       <svg class="logo-foot" viewBox="0 0 863.98 253.56" role="img" aria-label="{e(c["marca"])}"><use href="#logo-full"/></svg>
-      <p class="firma">{e(c["firma"])}</p>
+      <!-- La firma como titular del panel. De párrafo pequeño no sostenía el
+           espacio y el papel quedaba vacío al lado del vino. -->
+      <p class="firma entra-entero">{e(c["firma"])}</p>
       <div class="ctas">
         {boton(c["cta_1"], "#admisiones", "pri")}
       </div>

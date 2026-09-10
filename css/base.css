@@ -403,9 +403,10 @@ a{ color:inherit }
   font-size:clamp(16px,1.9vw,23px); line-height:1.05;
 }
 .con-punto{
-  width:clamp(38px,3.6vw,48px); aspect-ratio:1; border-radius:50%; flex:none;
-  background:var(--rosa);
+  width:clamp(44px,4.2vw,58px); aspect-ratio:1; border-radius:50%; flex:none;
+  display:grid; place-items:center; background:var(--rosa);
 }
+.con-punto img{ width:56%; height:auto; display:block }
 .con-lista li:nth-child(2) .con-punto{ background:var(--azul) }
 .con-lista li:nth-child(3) .con-punto{ background:var(--amar) }
 .con-lista li:nth-child(4) .con-punto{ background:var(--crema) }
@@ -421,14 +422,14 @@ a{ color:inherit }
 
 /* El enlace secundario, subrayado y sin caja: al lado de la píldora rosa, un
    segundo botón competía con ella en vez de acompañarla. */
-/* En el panel de papel la firma va en texto corriente: justo debajo está la
-   nota manuscrita, y dos bloques a mano seguidos se anulan entre ellos. */
+/* La firma es el titular del panel de papel. Como párrafo pequeño no sostenía
+   el espacio: al lado de un panel vino a sangre, el papel quedaba vacío. En
+   cartel, es el contrapeso del titular de la izquierda. */
 .cierre-decision .firma{
-  font-family:var(--texto-f); font-size:clamp(15px,1.5vw,18px);
-  line-height:1.6; max-width:34ch; margin:clamp(18px,2.4vw,28px) 0 0;
-  /* En rosa sobre el papel se leía a media luz: aquí es el párrafo que explica
-     el botón, no un adorno. */
-  color:var(--texto); opacity:.8;
+  font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(30px,3.6vw,54px); line-height:1.06; letter-spacing:-.005em;
+  max-width:13ch; margin:clamp(20px,2.6vw,32px) 0 0;
+  color:var(--texto); opacity:1;
 }
 .enlace-sub{
   display:inline-block; margin-top:18px;
@@ -1046,14 +1047,8 @@ a{ color:inherit }
 
 /* La grande de fondo: detrás del contenido y casi transparente. Da profundidad
    sin que compita con el texto, que es lo que pasaría a plena opacidad. */
-.deco-fondo{
-  z-index:-1;
-  filter:blur(.5px);
-}
-.sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{
-  opacity:.16;
-  animation-duration:16s;
-}
+.deco-fondo{ z-index:-1; filter:blur(1px) }
+.sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{ opacity:.1 }
 /* Sobre el vino de la Tesis la pieza tenue se pierde; ahí sube. */
 .v-perfil #tesis .deco-fondo{ z-index:0 }
 .v-perfil #tesis.sec:has(.dentro) .deco-fondo{ opacity:.13 }
@@ -1062,10 +1057,11 @@ a{ color:inherit }
    por abajo e invade la siguiente. */
 .sec{ overflow:hidden }
 
-/* Por debajo de 1100px la columna de texto ocupa el ancho y no queda banda
-   lateral: las pegatinas caerían encima de las palabras. */
+/* Antes se ocultaban por debajo de 1100px porque eran pegatinas nítidas en la
+   banda lateral y caían sobre el texto. Ahora son textura de fondo, van detrás
+   y a un décimo de opacidad: se quedan, algo más tenues. */
 @media (max-width:1100px){
-  .deco{ display:none }
+  .sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{ opacity:.07 }
 }
 
 /* Tablets: el punto donde una retícula de tres columnas deja cada tarjeta
@@ -1474,7 +1470,7 @@ a{ color:inherit }
 /* La pieza grande del fondo sube de tamaño y baja de opacidad: es textura de la
    sección, no un adorno encima del texto. */
 .deco-fondo{ z-index:-1; filter:blur(.5px) }
-.sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{ opacity:.13 }
+.sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{ opacity:.1 }
 
 /* Las áreas del plan como palabras clave. Reemplazan a las diez materias
    desplegables: el detalle del plan se cuenta en la llamada. */
