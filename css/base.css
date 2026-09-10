@@ -391,7 +391,8 @@ a{ color:inherit }
 .cierre-final .eyebrow::after{
   content:""; width:7px; height:7px; border-radius:50%; background:var(--acento);
 }
-.cierre-final h2{ margin:clamp(14px,1.8vw,22px) 0 0 }
+.cierre-final h2{ margin:clamp(14px,1.8vw,22px) 0 clamp(18px,2.4vw,30px) }
+.cierre-final .cierre-centro > p + p{ margin-top:0 }
 /* El remate se queda fuera del tope de medida: sus filetes tienen que cruzar
    la página de lado a lado. */
 .cierre-final .cierre-centro > p:not(.con-remate){ max-width:56ch }
@@ -440,8 +441,15 @@ a{ color:inherit }
 .con-lista li:nth-child(3) .con-punto{ background:var(--amar) }
 .con-lista li:nth-child(4) .con-punto{ background:var(--crema) }
 .con-lista li b{
-  font-weight:700; font-size:clamp(11px,1.1vw,13px);
-  letter-spacing:.16em; text-transform:uppercase; line-height:1.4;
+  display:grid; gap:5px; font-weight:400;
+  font-family:var(--display); text-transform:uppercase; line-height:1.02;
+  font-size:clamp(15px,1.7vw,21px); letter-spacing:.01em;
+}
+/* El "Con" de cada etiqueta, en pequeño y a media luz: está, se lee, y deja
+   que el sustantivo mande. */
+.con-lista li b i{
+  font-style:normal; font-family:var(--texto-f);
+  font-size:10.5px; font-weight:700; letter-spacing:.22em; opacity:.55;
 }
 
 .cierre-final .firma{ margin-top:clamp(34px,4.4vw,58px); max-width:44ch }
@@ -1955,9 +1963,11 @@ a{ color:inherit }
    que va fijo. */
 .cierre-final .carnet{ left:clamp(12px,3.5vw,70px); top:96px }
 .cierre-lado .sello-aro{ position:static; width:clamp(120px,10vw,168px); margin-inline:auto }
+/* A la misma altura que el carnet del otro lado: descolgado, el sello se leía
+   como una pieza suelta. */
 .cierre-lado{
-  right:clamp(12px,3vw,64px); top:clamp(120px,14vw,210px); height:auto;
-  display:grid; justify-items:center; gap:22px; width:clamp(150px,15vw,230px);
+  right:clamp(12px,3vw,64px); top:96px; height:auto;
+  display:grid; justify-items:center; gap:26px; width:clamp(150px,15vw,230px);
 }
 @media (max-width:1279px){
   .cierre-final .carnet,.cierre-lado{ display:none }

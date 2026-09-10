@@ -912,11 +912,22 @@ def s_cierre():
     # Las cuatro primeras van al pie con su ficha; la última es el remate.
     piezas = ["estrella-amar", "rayo-azul", "estrella-rosa", "rayo-amar"]
     formas, remate = c["con"][:-1], c["con"][-1]
-    marcas = "".join(
-        f'<li style="--n:{i}"><span class="con-punto">'
-        f'<img src="{RAIZ_WEB}assets/stickers/{piezas[i - 1]}.webp" alt="" '
-        f'aria-hidden="true" loading="lazy" decoding="async"></span>'
-        f'<b>{e(x.rstrip("."))}</b></li>' for i, x in enumerate(formas, 1))
+    # "Con estructura. Con formación. Con implementación. Con acompañamiento."
+    # Cuatro etiquetas seguidas empezando por la misma palabra se leen como una
+    # repetición, no como cuatro cosas distintas. El "Con" baja de tamaño y el
+    # sustantivo se queda con el peso: no se toca una palabra del texto, pero lo
+    # que se lee de un vistazo son las cuatro cosas.
+    def partir(frase):
+        cabeza, _, resto = frase.rstrip(".").partition(" ")
+        return cabeza, resto or cabeza
+
+    marcas = ""
+    for i, x in enumerate(formas, 1):
+        con, que = partir(x)
+        marcas += (f'<li style="--n:{i}"><span class="con-punto">'
+                   f'<img src="{RAIZ_WEB}assets/stickers/{piezas[i - 1]}.webp" alt="" '
+                   f'aria-hidden="true" loading="lazy" decoding="async"></span>'
+                   f'<b><i>{e(con)}</i>{e(que)}</b></li>')
 
     mano = "".join(f"<span>{e(x)}</span>" for x in c["mano"].split("\n"))
 
