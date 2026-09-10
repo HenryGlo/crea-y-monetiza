@@ -1356,15 +1356,45 @@ a{ color:inherit }
    diluida a propósito: tiene que notarse que cambió la sección, no que cambió
    de página. */
 
-.tono{
+/* El color de cada sección no se pinta sobre la sección: vive en una capa
+   propia por detrás. Así se le puede recortar el borde sin tocar el texto.
+
+   El corte entre dos secciones de color era una línea recta a lo ancho de la
+   pantalla, que es lo que hace que el cambio se lea plano. Ahora la capa entra
+   en onda por arriba —la misma onda de la franja en vino— y sale disolviéndose
+   por abajo: el color de la sección siguiente muerde al de la anterior en vez
+   de sustituirlo de golpe. */
+.tono{ position:relative }
+.tono::before{
+  content:""; position:absolute; inset:0; z-index:-2; pointer-events:none;
   background-color:var(--t-base);
   background-image:
     radial-gradient(58% 46% at 12% 0%,var(--t-a),transparent 62%),
     radial-gradient(48% 42% at 88% 100%,var(--t-b),transparent 62%);
+
+  --onda-alto:clamp(34px,4.5vw,72px);
+  /* Rectángulo negro con la onda recortada en hueco (fill-rule evenodd): lo
+     que queda en negro es lo que se ve de la capa de color. El trazo es el
+     mismo de la franja en vino, volteado —está dibujado para morder por abajo
+     y aquí tiene que morder por arriba—. */
+  --onda-mascara:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cg transform='translate(0,90) scale(1,-1)'%3E%3Cpath fill='black' fill-rule='evenodd' d='M0 0h1200v90H0z M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 155-32 265-40v62z'/%3E%3C/g%3E%3C/svg%3E");
+
+  -webkit-mask-image:var(--onda-mascara),linear-gradient(180deg,#000 55%,transparent 100%);
+  mask-image:var(--onda-mascara),linear-gradient(180deg,#000 55%,transparent 100%);
+  -webkit-mask-size:100% var(--onda-alto),100% calc(100% - var(--onda-alto) + 1px);
+  mask-size:100% var(--onda-alto),100% calc(100% - var(--onda-alto) + 1px);
+  -webkit-mask-position:top,bottom;
+  mask-position:top,bottom;
+  -webkit-mask-repeat:no-repeat,no-repeat;
+  mask-repeat:no-repeat,no-repeat;
 }
 .tono-amar{ --t-base:#FDFBF2; --t-a:var(--amar-soft); --t-b:var(--rosa-soft) }
 .tono-rosa{ --t-base:#FDF6F6; --t-a:var(--rosa-soft); --t-b:var(--azul-soft) }
 .tono-azul{ --t-base:#F6F8FD; --t-a:var(--azul-soft); --t-b:var(--amar-soft) }
+
+/* La onda de arriba se come parte del aire de la sección: se le devuelve, o el
+   primer titular queda dentro de la curva. */
+.tono{ padding-top:calc(var(--sec-y) + clamp(20px,2.6vw,44px)) }
 
 /* Las tarjetas sobre un fondo teñido necesitan blanco pleno para despegarse;
    sobre crema bastaba el crema claro. */
