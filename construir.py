@@ -360,13 +360,15 @@ def s_hero(extra=""):
       {boton(h["cta_2"], "#campus", "sec")}
     </div>
     <div class="cifras">{cifras}</div>
-    {equipo_hero()}
   </div>
 </header>"""
 
 
 def equipo_hero():
-    """Las tres mentoras, anunciadas ya en el hero. Es el activo de confianza
+    """NO SE USA: el bloque de equipo sale del hero por decisión del cliente.
+    La función y su copy se quedan; vuelve llamándola de nuevo en s_hero().
+
+    Las tres mentoras, anunciadas ya en el hero. Es el activo de confianza
     principal —los dos competidores directos del nicho ponen a la fundadora
     arriba del todo— y estaba enterrado en la sección once."""
     q = C.EQUIPO_HERO

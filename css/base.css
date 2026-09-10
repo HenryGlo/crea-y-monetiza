@@ -1854,12 +1854,15 @@ a{ color:inherit }
 .hero-video-txt{
   margin-top:18px; text-align:center; max-width:30ch;
 }
+/* En Anton competía con el titular de al lado, que ya es Anton y va tres veces
+   más grande: dos carteles peleando. La frase es Pierina hablando en primera
+   persona, así que va en su letra, la misma de la nota de la carta. */
 .hero-video-txt b{
-  display:block; font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(20px,2.6vw,32px); line-height:1.05;
+  display:block; font-family:var(--mano); font-weight:700;
+  font-size:clamp(28px,3.4vw,44px); line-height:1.05;
 }
 .hero-video-txt span{
-  display:block; margin-top:8px; font-size:clamp(14px,1.5vw,17px); opacity:.8;
+  display:block; margin-top:6px; font-size:clamp(14px,1.5vw,17px); opacity:.75;
 }
 /* Mientras el archivo no llegue, el marco vacío en su proporción: así ya se
    ve la composición definitiva del hero. */
