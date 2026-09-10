@@ -115,11 +115,11 @@ body.v-nocturno{
 
 .v-nocturno .sticker{ position:absolute; z-index:1 }
 .v-nocturno .sticker svg{ width:100%; height:100%; display:block }
-.v-nocturno .s1{ width:clamp(40px,5vw,70px); left:7%; top:20% }
+/* Posición y ancho los pone base.css contra la banda lateral; aquí solo color. */
 .v-nocturno .s1 path{ fill:var(--azul); filter:drop-shadow(0 0 18px rgba(152,183,253,.75)) }
-.v-nocturno .s2{ width:clamp(28px,3.4vw,48px); right:9%; top:30% }
+
 .v-nocturno .s2 path{ fill:var(--amar); filter:drop-shadow(0 0 18px rgba(249,255,128,.6)) }
-@media (max-width:900px){ .v-nocturno .sticker{ display:none } }
+
 
 /* ----------------------------------------------------------------- secciones */
 

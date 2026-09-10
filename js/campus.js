@@ -125,8 +125,12 @@
         if (!m) return;
         const destino = parseInt(m[2], 10);
         const t0 = performance.now();
+        /* 2,2s en vez de 0,9s. A novecientos milisegundos el número saltaba de
+           cero a doscientos setenta antes de que diera tiempo a mirarlo: se
+           veía un parpadeo, no un conteo. */
+        const DURACION = 2200;
         (function paso(t) {
-          const k = Math.min((t - t0) / 900, 1);
+          const k = Math.min((t - t0) / DURACION, 1);
           const suave = 1 - Math.pow(1 - k, 3);
           el.textContent = m[1] + Math.round(destino * suave) + m[3];
           if (k < 1) requestAnimationFrame(paso);

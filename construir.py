@@ -76,7 +76,9 @@ PROHIBIDO = [
 ]
 # "Tu estructura de precios" y "Tarifas" son materia de estudio, no el precio del
 # Campus: son las únicas menciones que el cliente sí pidió mantener.
-EXCEPCIONES = ["Tu estructura de precios.", "Tarifas"]
+# Sin el punto final: ahora las fichas lo recortan y la excepción dejaba de
+# coincidir, con lo que la build abortaba por una frase que sí está permitida.
+EXCEPCIONES = ["Tu estructura de precios", "Tarifas"]
 
 
 def revisar_precios(pagina, nombre):
@@ -143,7 +145,7 @@ FORMAS = ["estrella-rosa", "estrella-azul", "estrella-amar",
 DENSIDAD = {
     "campus": 4, "perfil": 3, "recorrido": 5, "plan": 3, "tesis": 6,
     "experiencia": 4, "mentoras": 4, "mercado": 4, "historias": 4,
-    "graduacion": 5, "admisiones": 3, "faq": 4, "carta": 3,
+    "graduacion": 0,  # solo los birretes: con pegatinas encima eran demasiados elementos "admisiones": 3, "faq": 4, "carta": 3,
 }
 
 
@@ -170,7 +172,11 @@ def decoracion(sid):
 
     r = _aleatorio(sum(ord(c) for c in sid) * 977)
     piezas = []
-    for i in range(n):
+    # Las pegatinas pequeñas de los márgenes se retiraron: nítidas y a tamaño de
+    # pegatina se leían como piezas torcidas pegadas al azar. Queda solo la
+    # grande y translúcida del fondo, que es la que gustó — la que se lee como
+    # textura de la sección y no como un adorno encima.
+    for i in range(0):
         forma = FORMAS[int(next(r) * len(FORMAS))]
         izquierda = i % 2 == 0
         # Banda lateral: entre el borde y donde empieza la columna de texto.
@@ -188,7 +194,7 @@ def decoracion(sid):
     # Una grande y tenue detrás del contenido, para dar fondo.
     forma = FORMAS[int(next(r) * len(FORMAS))]
     estilo = (f"{'right' if n % 2 else 'left'}:{round(6 + next(r) * 22)}%;"
-              f"top:{round(14 + next(r) * 52)}%;width:{round(180 + next(r) * 170)}px;"
+              f"top:{round(8 + next(r) * 56)}%;width:{round(300 + next(r) * 260)}px;"
               f"--giro:{round(-18 + next(r) * 36)}deg;animation-delay:{round(next(r) * -12, 1)}s")
     piezas.append(f'<img class="deco deco-fondo" style="{estilo}" '
                   f'src="{RAIZ_WEB}assets/stickers/{forma}.webp" alt="" '
@@ -197,7 +203,21 @@ def decoracion(sid):
     return "".join(piezas)
 
 
+# Tono de fondo de cada sección. A Pierina le gustan los colores y una sucesión
+# de bloques sobre crema se leía plana; el cambio de tono también marca dónde
+# empieza cada tema sin necesidad de un divisor.
+TONOS = {
+    "campus": "amar", "perfil": "rosa", "recorrido": "azul",
+    "plan": "amar", "experiencia": "rosa", "mentoras": "azul",
+    "mercado": "amar", "historias": "rosa", "graduacion": "azul",
+    "admisiones": "amar", "faq": "azul", "carta": "rosa",
+}
+
+
 def seccion(sid, num, cuerpo, cls=""):
+    tono = TONOS.get(sid)
+    if tono:
+        cls = f"{cls} tono tono-{tono}".strip()
     return (f'<section id="{sid}" class="sec {cls}" data-num="{num}">'
             f'{decoracion(sid)}'
             f'<div class="wrap">{cuerpo}</div></section>')
@@ -253,7 +273,6 @@ def perfil_animado(raiz="../"):
                    '<span>Recorte sin fondo<br>de Pierina</span></div>')
 
     return f"""<div class="pf">
-  {persona}
   <div class="pf-marco" aria-hidden="true">
     <div class="pf-top">
       <span class="pf-avatar"></span>
@@ -312,8 +331,12 @@ def equipo_hero():
     principal —los dos competidores directos del nicho ponen a la fundadora
     arriba del todo— y estaba enterrado en la sección once."""
     q = C.EQUIPO_HERO
+    # Sin inicial dentro. Pierina y Paola comparten letra y salían dos círculos
+    # con P, que se lee como un error antes que como dos personas. El nombre de
+    # cada una ya está al lado; el círculo solo aporta el "son tres". Cuando
+    # lleguen los retratos, entran aquí.
     caras = "".join(
-        f'<span class="cara" title="{e(n)}">{e(n[0])}</span>' for n in q["personas"])
+        f'<span class="cara" title="{e(n)}"></span>' for n in q["personas"])
     nombres = " · ".join(q["personas"])
     return (f'<a class="equipo" href="#mentoras">'
             f'<span class="caras">{caras}</span>'
@@ -336,10 +359,22 @@ def s_carta():
     # dentro de la página, y así se lee.
     cita = (f'<blockquote class="cita nota"><span>{e(c["cita"])}</span>'
             f'<cite>— {e(c["cita_autora"])}</cite></blockquote>')
+    # El recorte de Pierina acompaña a su propia carta. Estaba en el hero, donde
+    # competía con la tarjeta del perfil; aquí es ella hablando en primera
+    # persona y la foto es lo que le pone cara a ese texto.
+    fp = C.PERFIL_ANIMADO
+    retrato = ""
+    if os.path.exists(os.path.join(RAIZ, "assets", fp["retrato"])):
+        retrato = (f'<img class="carta-foto" src="{RAIZ_WEB}assets/{e(fp["retrato"])}" '
+                   f'alt="{e(fp["retrato_alt"])}" loading="lazy" decoding="async">')
+
     return seccion("carta", "02", f"""
     {eyebrow(c["eyebrow"])}
     <h2>{e(c["titulo"])}</h2>
-    <div class="carta-cuerpo">{parrafos(c["parrafos"])}</div>
+    <div class="carta-con-foto">
+      <div class="carta-cuerpo">{parrafos(c["parrafos"])}</div>
+      {retrato}
+    </div>
     {video}
     {cita}
     <div class="ctas">{boton(c["cta"], "#campus", "sec")}</div>""", "carta")
@@ -431,35 +466,22 @@ def s_recorrido():
 
 
 def s_plan():
+    """El plan de estudios ya no se publica materia por materia: se decidió
+    contarlo en la llamada de admisión. Quedan el texto, las áreas como palabras
+    clave —las mismas seis del hero, ya aprobadas, para no inventar copy— y la
+    invitación a agendar.
+
+    Se retiraron con él la ruta de nodos y las materias desplegables: eran la
+    forma de leer un contenido que ya no está."""
     p = C.PLAN
-    ms = ""
-    for i, (t, d, sub) in enumerate(p["materias"], 1):
-        cuerpo = f"<p>{e(d)}</p>" if d else ""
-        if sub:
-            cuerpo += '<ul class="temas">' + "".join(f"<li>{e(x)}</li>" for x in sub) + "</ul>"
-        # La duración solo se pinta si el Campus la confirmó.
-        dur = C.DURACIONES.get(i, "").strip()
-        dur_html = f'<span class="materia-dur">{e(dur)}</span>' if dur else ""
-        # Las materias se abren de una en una. Diez tarjetas abiertas eran 2.800px
-        # de scroll para leer diez títulos; plegadas caben en pantalla y se
-        # exploran, que es como se lee un plan de estudios.
-        ms += f"""<li class="ruta-paso">
-      <span class="ruta-nodo" aria-hidden="true">{i:02d}</span>
-      <details class="card materia">
-        <summary>
-          <span class="materia-n">Materia {i:02d}</span>
-          <h3>{e(t)}</h3>
-          {dur_html}
-        </summary>
-        <div class="materia-cuerpo">{cuerpo}</div>
-      </details>
-    </li>"""
+    areas = "".join(f"<li>{e(x.rstrip('.'))}</li>" for x in C.HERO["materias"])
     return seccion("plan", "06", f"""
     {eyebrow(p["eyebrow"])}
     <h2>{e(p["titulo"])}</h2>
     <p class="lead">{e(p["bajada"])}</p>
-    <ol class="ruta">{ms}</ol>
-    {parrafos(p["cierre"], "cierre")}
+    <ul class="areas">{areas}</ul>
+    <p class="lead-min plan-invita">{e(p["cta_linea"])}</p>
+    <div class="ctas">{boton(p["cta_boton"], "#admisiones", "pri")}</div>
     {bloque_evaluacion()}""", "plan")
 
 
@@ -472,14 +494,17 @@ def bloque_evaluacion():
                     for t, d in v["items"])
     # Plegado: es información que se consulta, no que se lee de corrido, y
     # abierta ocupaba 600px al final del plan.
-    return f"""<details class="evaluacion-bloque">
-      <summary><h3>{e(v["eyebrow"])}</h3><span>{e(v["titulo"])}</span></summary>
-      <div class="ev-cuerpo">
-        {parrafos(v["intro"])}
-        <div class="ev-grid">{items}</div>
-        <p class="cierre">{e(v["cierre"])}</p>
-      </div>
-    </details>"""
+    # Deja de ir plegado. "No queremos que termines sabiendo más, queremos que
+    # termines sabiendo hacer más" es de las frases que mejor separan al Campus
+    # de un curso grabado, y escondida tras un acordeón no la leía nadie. Va a
+    # sangre y en vino: es la única franja oscura de este tramo de la página.
+    return f"""</div></section>
+<section class="sec evaluacion-franja" data-num="07"><div class="wrap">
+      <p class="eyebrow"><span class="dot"></span>{e(v["eyebrow"])}</p>
+      <h2 class="ev-titulo">{e(v["titulo"])}</h2>
+      {parrafos(v["intro"], "lead")}
+      <div class="ev-grid">{items}</div>
+      <p class="cierre destacado">{e(v["cierre"])}</p>"""
 
 
 def s_evaluacion():
@@ -680,7 +705,7 @@ def s_graduacion():
     <h2>{e(g["titulo"])}</h2>
     {parrafos(g["intro"], "lead")}
     <div class="grid grid-3">{bs}</div>
-    <p class="cierre destacado">{e(g["cierre"])}</p>""", "graduacion")
+    """, "graduacion")
 
 
 def s_registro():
@@ -790,63 +815,63 @@ def s_cinta_2():
 
 
 def s_experiencia_unificada():
-    """Campus digital + sesiones en vivo + todo lo que incluye, en un solo
-    bloque. Las tres respondían "qué recibo" y estaban separadas por otras
-    secciones: eran 24 tarjetas repartidas en tres titulares distintos."""
-    d, v, x = C.DIGITAL, C.VIVO, C.EXPERIENCIA
+    """Solo las sesiones en vivo.
 
-    bloques = ""
-    for b in d["bloques"]:
-        extra = lista(b["lista"], "lista") if b["lista"] else ""
-        bloques += f"""<article class="card bloque">
-      <p class="kicker">{e(b["kicker"])}</p>
-      <h3>{e(b["titulo"])}</h3>
-      {parrafos(b["texto"])}
-      {extra}
-      <div class="ph" role="img" aria-label="{e(b["placeholder"])}"><span>{e(b["placeholder"])}</span></div>
-    </article>"""
+    Se retiraron los otros dos bloques que llevaba fusionados:
 
-    vivo = "".join(f'<article class="card mini"><h3>{e(t)}</h3><p>{e(dd)}</p></article>'
-                   for t, dd in v["items"])
+    - "Tu campus, en un solo lugar" (Skool, seguimiento, comunidad), que además
+      esperaba tres capturas que nunca llegaron.
+    - "Cuando formas parte del Campus, no recibes solo clases", los quince
+      puntos de lo que incluye. Descartado por diseño, y su contenido ya se
+      repetía por toda la página.
 
-    # Los quince puntos de "todo lo que incluye" eran quince tarjetas: aquí van
-    # como lista de dos columnas, que es como se lee un temario de lo incluido.
-    incluye = "".join(f'<li><b>{e(t)}</b><span>{e(dd)}</span></li>' for t, dd in x["items"])
+    La copy de los dos sigue en contenido.py, en DIGITAL y EXPERIENCIA: no se
+    borra material del cliente por una decisión de maquetación. Si vuelven,
+    están ahí.
 
+    Conserva el id "experiencia" para no romper el enlace del menú."""
+    v = C.VIVO
+    items = "".join(f'<article class="card mini"><h3>{e(t)}</h3><p>{e(d)}</p></article>'
+                    for t, d in v["items"])
     return seccion("experiencia", "09", f"""
-    {eyebrow(d["eyebrow"])}
-    <h2>{e(d["titulo"])}</h2>
-    <ul class="lista piezas">{"".join(f"<li>{e(z)}</li>" for z in d["piezas"])}</ul>
-    <p class="remate">{e(d["remate"])}</p>
-    <div class="grid grid-3">{bloques}</div>
-
-    <div class="sub">
-      <h3>{e(v["titulo"])}</h3>
-      <p class="lead">{e(v["bajada"])}</p>
-      <div class="grid grid-4">{vivo}</div>
-    </div>
-
-    <div class="sub">
-      <h3>{e(x["titulo"])}</h3>
-      <ul class="incluye-lista">{incluye}</ul>
-    </div>""", "digital")
+    {eyebrow(v["eyebrow"])}
+    <h2>{e(v["titulo"])}</h2>
+    <p class="lead">{e(v["bajada"])}</p>
+    <div class="grid grid-4">{items}</div>""", "vivo")
 
 
 def s_mercado_unificado():
     """Del campus al mercado + banco de oportunidades. Las dos responden "qué
-    pasa cuando salgo"; la segunda era el detalle de la primera."""
+    pasa cuando salgo"; la segunda era el detalle de la primera.
+
+    Los nueve puntos de "trabajarás en" no son un temario: son los activos con
+    los que la creadora sale del Campus. Como viñetas de texto se leían como una
+    lista más; numerados y en fichas se leen como un inventario de lo que se
+    lleva puesto.
+
+    Los recursos del banco llevan icono. La lista de seis palabras sueltas era
+    lo más plano de la página."""
     m, o = C.MERCADO, C.OPORTUNIDADES
+
+    activos = "".join(
+        f'<li style="--n:{i}"><b>{i:02d}</b><span>{e(x.rstrip("."))}</span></li>'
+        for i, x in enumerate(m["items"], 1))
+
+    recursos = "".join(
+        f'<li><i aria-hidden="true">{ico}</i>{e(txt.rstrip("."))}</li>'
+        for ico, txt in o["items"])
+
     return seccion("mercado", "12", f"""
     {eyebrow(m["eyebrow"])}
     <h2>{e(m["titulo"])}</h2>
     {parrafos(m["intro"], "lead")}
     <p class="lead-min">{e(m["lead"])}</p>
-    {lista(m["items"], "lista dos-col")}
+    <ul class="activos">{activos}</ul>
 
     <div class="sub">
       <h3>{e(o["titulo"])}</h3>
       <p class="lead">{e(o["intro"])}</p>
-      {lista(o["items"], "lista chips")}
+      <ul class="recursos">{recursos}</ul>
       {parrafos(o["cierre"], "cierre")}
     </div>""", "mercado")
 

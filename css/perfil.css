@@ -247,9 +247,11 @@ body.v-perfil{
 
 /* -------------------------------------------------------- resto de la página */
 
-.v-perfil .sec:nth-of-type(even){ background:#fff }
+/* Las secciones alternaban blanco y crema para separarse. Ya no hace falta:
+   cada una lleva su tono de color, y estas reglas ganaban en especificidad al
+   color propio de las tarjetas —las dos etapas se quedaban en crema aunque
+   pidieran amarillo y azul—. */
 .v-perfil .card{ box-shadow:var(--shadow) }
-.v-perfil .sec:nth-of-type(even) .card{ background:var(--fondo) }
 .v-perfil .card:hover{ border-color:var(--acento); box-shadow:var(--shadow-alta) }
 
 .v-perfil .grid > .card:nth-child(4n+1){ --acento:var(--rosa) }
@@ -267,14 +269,33 @@ body.v-perfil{
   list-style:none; padding:0; margin:6px 0 0;
   display:flex; flex-wrap:wrap; gap:8px;
 }
+/* Las materias llevan su color de entrada, no al pasar el cursor.
+
+   En un teléfono no hay hover: la mayoría del tráfico entra desde móvil y allí
+   nunca los tocan, así que con el color reservado al hover los seis chips se
+   veían blancos siempre. El color es lo que los hace legibles de un vistazo
+   como las seis áreas del Campus.
+
+   El ciclo va de tres en tres. El anterior mezclaba nth-child(2n) y (3n), que
+   se pisan en el sexto: la secuencia salía amarillo, rosa, azul, rosa,
+   amarillo, azul — sin patrón. */
 .v-perfil .materias-hero li{
   font-family:var(--display); text-transform:uppercase; font-size:clamp(12px,1.1vw,15px);
-  padding:6px 14px; border-radius:999px; background:#fff; border:2px solid var(--vino);
-  transition:transform .25s cubic-bezier(.2,.7,.3,1),background .25s;
+  padding:6px 14px; border-radius:999px; border:2px solid var(--vino);
+  transition:transform .25s cubic-bezier(.2,.7,.3,1),background .25s,color .25s;
 }
-.v-perfil .materias-hero li:hover{ transform:translateY(-3px) rotate(-1.5deg); background:var(--amar) }
-.v-perfil .materias-hero li:nth-child(2n):hover{ background:var(--rosa-soft) }
-.v-perfil .materias-hero li:nth-child(3n):hover{ background:var(--azul-soft) }
+.v-perfil .materias-hero li:nth-child(3n+1){ background:var(--amar-soft) }
+.v-perfil .materias-hero li:nth-child(3n+2){ background:var(--rosa-soft) }
+.v-perfil .materias-hero li:nth-child(3n+3){ background:var(--azul-soft) }
+
+/* El hover sigue existiendo en escritorio, pero como refuerzo: se levanta y se
+   invierte. Si fuera otro tono pastel el cambio no se notaría. */
+@media (hover:hover){
+  .v-perfil .materias-hero li:hover{
+    transform:translateY(-3px) rotate(-1.5deg);
+    background:var(--vino); color:var(--crema);
+  }
+}
 
 .v-perfil .cifras{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-top:8px }
 .v-perfil .cifra{
@@ -282,7 +303,16 @@ body.v-perfil{
   padding:18px 14px; box-shadow:5px 5px 0 var(--vino);
   transition:transform .25s cubic-bezier(.2,.7,.3,1),box-shadow .25s;
 }
-.v-perfil .cifra:hover{ transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--rosa) }
+@media (hover:hover){
+  .v-perfil .cifra:hover{ transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--rosa) }
+}
+
+/* En un teléfono no hay hover, así que la esquina de color —que es lo que le da
+   relieve a la tarjeta— no llegaba a verse nunca. En pantallas táctiles se
+   aplica de entrada. */
+@media (hover:none){
+  .v-perfil .cifra{ box-shadow:7px 7px 0 var(--rosa) }
+}
 .v-perfil .cifra b{ display:block; font-family:var(--display); font-size:clamp(28px,3.6vw,42px); line-height:1 }
 .v-perfil .cifra span{ font-size:12px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; opacity:.6 }
 
@@ -590,4 +620,24 @@ body.v-perfil{
 .v-perfil .cierre-final h2{
   max-width:min(26ch,100%);
   font-size:clamp(28px,4.4vw,58px);
+}
+
+
+/* Las dos etapas, cada una de un color. Eran dos tarjetas blancas idénticas y
+   la única diferencia era el texto; con el color se ve de un vistazo que son
+   dos momentos distintos del recorrido. */
+.v-perfil .etapa:nth-child(1){ background:var(--amar-soft); border-color:var(--amar) }
+.v-perfil .etapa:nth-child(2){ background:var(--azul-soft); border-color:var(--azul) }
+.v-perfil .etapa:nth-child(1)::before{ background:var(--vino) }
+.v-perfil .etapa:nth-child(2)::before{ background:var(--vino) }
+
+/* Las tres formas de cerrar el recorrido, cada una con su color. Eran tres
+   tarjetas blancas iguales sobre un fondo claro: mucho blanco y ninguna
+   jerarquía entre ellas. */
+.v-perfil #graduacion .mini:nth-child(1){ background:var(--amar-soft); border-color:var(--amar) }
+.v-perfil #graduacion .mini:nth-child(2){ background:var(--azul-soft); border-color:var(--azul) }
+.v-perfil #graduacion .mini:nth-child(3){ background:var(--rosa-soft); border-color:var(--rosa) }
+.v-perfil #graduacion .fecha{
+  margin-top:14px; font-weight:700; font-size:13px;
+  letter-spacing:.06em; opacity:.7;
 }

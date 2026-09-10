@@ -236,6 +236,12 @@ PLAN = {
         ("Inteligencia artificial para creadoras", "Utiliza IA para investigar, organizar, crear, optimizar procesos y trabajar de manera más estratégica.", []),
         ("Profesionalización", "Integra lo aprendido, prepara tus activos profesionales y construye tu siguiente etapa como creadora.", []),
     ],
+    # El detalle del plan no se publica: se cuenta en la llamada de admisión.
+    # En la página quedan las áreas —que son las mismas seis del hero, ya
+    # aprobadas— y la invitación a agendar.
+    "cta_linea": "El plan completo, materia por materia, te lo contamos en la llamada.",
+    "cta_boton": "Agenda tu llamada",
+
     "cierre": [
         "Y esto es solo el plan de estudios.",
         "Dentro de cada materia encontrarás clases, ejercicios, recursos y entregables que "
@@ -292,7 +298,9 @@ TESIS = {
     ],
 }
 
-# 09
+# 09 — NO SE PUBLICA. "Tu campus, en un solo lugar" se retiró de la página por
+# decisión del cliente. La copy se conserva por si vuelve; no se borra material
+# del cliente por una decisión de maquetación.
 DIGITAL = {
     "eyebrow": "Dónde vives la experiencia",
     "titulo": "Tu campus, en un solo lugar.",
@@ -414,7 +422,16 @@ OPORTUNIDADES = {
     "eyebrow": "Oportunidades",
     "titulo": "Saber crear es importante. Saber dónde buscar también.",
     "intro": "Dentro del Campus tendrás acceso a recursos diseñados para acercarte al mercado profesional.",
-    "items": ["Marcas.", "Agencias.", "Plataformas UGC.", "Oportunidades.", "Referencias.", "Recursos de prospección."],
+    # Cada recurso con su icono. Van aquí y no en el CSS porque son contenido:
+    # el Campus puede cambiarlos sin tocar una hoja de estilo.
+    "items": [
+        ("🏷️", "Marcas."),
+        ("🏢", "Agencias."),
+        ("📱", "Plataformas UGC."),
+        ("💸", "Oportunidades."),
+        ("🤝", "Referencias."),
+        ("🔎", "Recursos de prospección."),
+    ],
     "cierre": [
         "Información que te ayude a entender dónde buscar y cómo presentarte.",
         "Porque una formación para creadoras no estaría completa si después de aprender no "
@@ -422,7 +439,9 @@ OPORTUNIDADES = {
     ],
 }
 
-# 14
+# 14 — NO SE PUBLICA. "Cuando formas parte del Campus, no recibes solo clases"
+# se retiró: descartado por diseño, y su contenido ya se repetía por toda la
+# página. La copy se conserva por si vuelve.
 EXPERIENCIA = {
     "eyebrow": "Tu experiencia dentro del Campus",
     "titulo": "Cuando formas parte del Campus, no recibes solo clases.",
@@ -489,6 +508,7 @@ GRADUACION = {
          ["Al completar los requisitos del Campus recibirás tu certificado de finalización "
           "de Crea y Monetiza Campus."], ""),
     ],
+    # NO SE PUBLICA: retirada por decisión del cliente. Se conserva la copy.
     "cierre": "No celebramos que terminaste unas clases. Celebramos todo lo que fuiste capaz "
               "de construir mientras las aplicabas.",
 }
