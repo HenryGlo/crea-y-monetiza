@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="css/base.css?v=7f84ca06">
+<link rel="stylesheet" href="css/base.css?v=cb137e98">
 <link rel="stylesheet" href="css/perfil.css?v=2c61dced">
 </head>
 <body class="v-perfil">
@@ -60,7 +60,7 @@
     <svg class="logo" viewBox="0 0 863.98 253.56" role="img" aria-label="Crea y Monetiza Campus"><use href="#logo-full"/></svg>
     <p class="pill">Admisiones · Crea y Monetiza Campus</p>
     <h1>Tu talento puede convertirse en una carrera profesional.</h1>
-    <div class="pf">
+    <div class="hero-media hero-hueco pendiente" data-nota="Aquí va el cortometraje vertical"><div class="pf">
   <div class="pf-marco" aria-hidden="true">
     <div class="pf-top">
       <span class="pf-avatar"></span>
@@ -75,7 +75,7 @@
     <div class="pf-grid"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i><i style="--i:8"></i></div>
   </div>
   <p class="pf-pie" aria-hidden="true">Tu perfil no se arma solo. Aquí aprendes a construirlo.</p>
-</div>
+</div></div>
     <p class="entrada">Bienvenida a Crea y Monetiza Campus, una formación integral para creadoras de contenido que quieren profesionalizar su talento, construir una marca con dirección y aprender a generar oportunidades reales dentro del mundo digital.</p>
     <ul class="materias-hero"><li>Marca personal.</li><li>Creación de contenido.</li><li>UGC profesional.</li><li>Negocio.</li><li>Organización y productividad.</li><li>Monetización.</li></ul>
     <p class="remate">Todo dentro de una misma ruta formativa.</p>
@@ -91,17 +91,41 @@
 <section id="carta" class="sec carta tono tono-rosa" data-num="02"><div class="wrap">
     <p class="eyebrow"><span class="dot"></span>Carta de bienvenida · Pierina Alves</p>
     <h2>Antes de entrar, quiero contarte por qué existe este Campus.</h2>
-    <div class="carta-con-foto">
-      <div class="carta-cuerpo"><p>Durante años he creado contenido, trabajado con marcas, probado estrategias, cometido errores y acompañado a cientos de creadoras en su proceso.</p><p>Y había algo que seguía viendo una y otra vez: mujeres con muchísimo talento intentando construir una carrera con información suelta.</p><p>Un curso para aprender edición. Otro para entender redes. Tutoriales sobre UGC. Videos sobre cómo contactar marcas. Plantillas, prompts, consejos… pero ninguna ruta que conectara todo.</p><p>Por eso nació Crea y Monetiza Campus.</p><p>Quería construir un lugar donde una creadora pudiera formarse de manera integral y entender cómo pasar de tener talento y muchas ideas a tener estructura, criterio, herramientas y una dirección profesional.</p><p>En este video quiero contarte de dónde viene el Campus, qué significa para mí y por qué hemos decidido construirlo de esta manera.</p></div>
-      <img class="carta-foto" src="assets/pierina.webp" alt="Pierina Alves, directora de Crea y Monetiza Campus" loading="lazy" decoding="async">
-    </div>
-    <div class="video" data-src="https://www.youtube-nocookie.com/embed/P2U3sFLbljE?start=8&amp;autoplay=1&amp;rel=0">
+
+    <div class="sobre">
+      <button class="sobre-btn" type="button" aria-expanded="true" aria-controls="carta-hoja">
+        <span class="sobre-solapa" aria-hidden="true"></span>
+        <svg class="sobre-sello" viewBox="0 0 265.42 268.17" aria-hidden="true"><use href="#iso"/></svg>
+        <span class="sobre-de"><b>De la rectora</b><i>Pierina Alves</i></span>
+        <span class="sobre-para">Para la próxima creadora del Campus</span>
+        <span class="sobre-cta" data-abrir="Abrir la carta"
+              data-cerrar="Cerrar la carta">Cerrar la carta</span>
+      </button>
+
+      <div class="carta-hoja" id="carta-hoja">
+        <div class="hoja-interior">
+          <div class="carta-con-foto">
+            <div class="carta-cuerpo"><p>Durante años he creado contenido, trabajado con marcas, probado estrategias, cometido errores y acompañado a cientos de creadoras en su proceso.</p><p>Y había algo que seguía viendo una y otra vez: mujeres con muchísimo talento intentando construir una carrera con información suelta.</p><p>Un curso para aprender edición. Otro para entender redes. Tutoriales sobre UGC. Videos sobre cómo contactar marcas. Plantillas, prompts, consejos… pero ninguna ruta que conectara todo.</p><p>Por eso nació Crea y Monetiza Campus.</p><p>Quería construir un lugar donde una creadora pudiera formarse de manera integral y entender cómo pasar de tener talento y muchas ideas a tener estructura, criterio, herramientas y una dirección profesional.</p><p>En este video quiero contarte de dónde viene el Campus, qué significa para mí y por qué hemos decidido construirlo de esta manera.</p></div>
+            <img class="carta-foto" src="assets/pierina.webp" alt="Pierina Alves, directora de Crea y Monetiza Campus" loading="lazy" decoding="async">
+          </div>
+          <div class="video" data-src="https://www.youtube-nocookie.com/embed/P2U3sFLbljE?start=8&amp;autoplay=1&amp;rel=0">
       <button class="video-btn" type="button" aria-label="Reproducir el video de bienvenida">
         <span class="play" aria-hidden="true">▶</span>
         <span class="video-t">Por qué nació Crea y Monetiza Campus</span>
       </button>
     </div>
-    <blockquote class="cita nota"><span>Quería crear el lugar que yo habría necesitado cuando empecé.</span><cite>— Pierina Alves</cite></blockquote>
+          <blockquote class="cita nota"><span>Quería crear el lugar que yo habría necesitado cuando empecé.</span><cite>— Pierina Alves</cite></blockquote>
+        </div>
+      </div>
+    </div>
+
+    <div class="trayectoria">
+      <h3>Quién firma esta carta.</h3>
+      <div class="cifras tray-cifras"><div class="cifra pendiente-min"><b>[años]</b><span>años creando contenido</span></div><div class="cifra pendiente-min"><b>[nº]</b><span>colaboraciones con marcas</span></div><div class="cifra"><b>+270</b><span>creadoras acompañadas</span></div></div>
+      <p class="tray-marcas-t">Marcas con las que ha trabajado</p>
+      <ul class="marcas pendiente" data-nota="Faltan los nombres de las marcas"><li class="marca-hueca"></li><li class="marca-hueca"></li><li class="marca-hueca"></li><li class="marca-hueca"></li><li class="marca-hueca"></li><li class="marca-hueca"></li></ul>
+    </div>
+
     <div class="ctas"><a class="btn btn-sec" href="#campus">Continuar mi recorrido <span aria-hidden="true">↓</span></a></div></div></section>
 <section id="campus" class="sec campus tono tono-amar" data-num="03"><div class="wrap">
     <p class="eyebrow"><span class="dot"></span>¿Qué es Crea y Monetiza Campus?</p>
@@ -420,6 +444,6 @@
 </main>
 <a class="cta-fijo" href="#admisiones">Iniciar admisión <span aria-hidden="true">→</span></a>
 
-<script src="js/campus.js?v=599ac2fb"></script>
+<script src="js/campus.js?v=dbd0b432"></script>
 </body>
 </html>

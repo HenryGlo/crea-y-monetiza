@@ -98,6 +98,40 @@ CARTA = {
     "cita": "Quería crear el lugar que yo habría necesitado cuando empecé.",
     "cita_autora": "Pierina Alves",
     "cta": "Continuar mi recorrido",
+
+    # La carta llega cerrada y se abre al pulsar. Antes se leía como otro bloque
+    # de texto largo; así se lee como lo que es, una carta de la rectora.
+    "sobre_de": "De la rectora",
+    "sobre_para": "Para la próxima creadora del Campus",
+    "sobre_abrir": "Abrir la carta",
+    "sobre_cerrar": "Cerrar la carta",
+
+    # Quién firma. Los datos que faltan llegan de Pierina; hasta entonces van
+    # entre corchetes y marcados en pantalla, nunca inventados.
+    "trayectoria": {
+        "titulo": "Quién firma esta carta.",
+        "cifras": [
+            ("[años]", "años creando contenido"),
+            ("[nº]", "colaboraciones con marcas"),
+            ("+270", "creadoras acompañadas"),
+        ],
+        "marcas_t": "Marcas con las que ha trabajado",
+        # Los nombres los facilita Pierina, con permiso de uso de cada marca.
+        "marcas": [],
+        "marcas_falta": "Faltan los nombres de las marcas",
+    },
+}
+
+# El cortometraje vertical que sustituye a la tarjeta de perfil en el hero.
+# El archivo llega por Drive; hasta que esté en assets/ con este nombre, la
+# página mantiene el perfil que se arma solo y señala el hueco.
+HERO_VIDEO = {
+    "archivo": "hero-cortometraje.mp4",
+    "poster": "hero-cortometraje.webp",
+    "titular": "Yo también estuve allí.",
+    "texto": "Te aseguro que vale la pena creer en ti.",
+    "alt": "Cortometraje de Pierina Alves sobre sus inicios como creadora",
+    "nota_falta": "Aquí va el cortometraje vertical",
 }
 
 # 03

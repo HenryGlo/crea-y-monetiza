@@ -248,6 +248,38 @@ def boton(texto, href, tipo="pri", externo=False):
 # Secciones
 # --------------------------------------------------------------------------
 
+def hero_media(raiz="../"):
+    """Lo que acompaña al titular del hero.
+
+    El cliente sustituye la tarjeta de perfil por un cortometraje vertical que
+    llega por Drive. Mientras el archivo no esté en assets/, la página mantiene
+    el perfil que se arma solo y señala el hueco: un rectángulo vacío durante
+    semanas es peor que la animación que ya funciona, y un <video> a una ruta
+    inexistente deja un control roto justo en el hero.
+
+    Cuando el archivo aparezca con el nombre de contenido.py, el cambio ocurre
+    solo, sin tocar código."""
+    v = C.HERO_VIDEO
+    if not os.path.exists(os.path.join(RAIZ, "assets", v["archivo"])):
+        return (f'<div class="hero-media hero-hueco pendiente" '
+                f'data-nota="{e(v["nota_falta"])}">{perfil_animado(raiz)}</div>')
+
+    poster = ""
+    if os.path.exists(os.path.join(RAIZ, "assets", v["poster"])):
+        poster = f' poster="{raiz}assets/{e(v["poster"])}"'
+
+    # Silenciado y en bucle: es una pieza atmosférica, no algo que interrumpa a
+    # quien llega. playsinline evita que iOS lo abra a pantalla completa solo.
+    return f"""<figure class="hero-media hero-video">
+  <video src="{raiz}assets/{e(v["archivo"])}"{poster}
+         autoplay muted loop playsinline preload="metadata"
+         aria-label="{e(v["alt"])}"></video>
+  <figcaption class="hero-video-txt">
+    <b>{e(v["titular"])}</b><span>{e(v["texto"])}</span>
+  </figcaption>
+</figure>"""
+
+
 def perfil_animado(raiz="../"):
     """Perfil de creadora que se monta solo en el hero de la propuesta 4.
 
@@ -350,7 +382,16 @@ def equipo_hero():
 
 
 def s_carta():
+    """La carta llega cerrada dentro de su sobre y se abre al pulsar.
+
+    El HTML se emite abierto y es campus.js quien lo cierra al arrancar: si el
+    script falla o tarda, la carta se lee igual. Un desplegable que empieza
+    cerrado en el HTML esconde el texto de quien no tiene JS.
+
+    Debajo va quién firma: la trayectoria de Pierina. La carta pedía creer en
+    ella, y hasta ahora la página no daba ni un dato sobre quién es."""
     c = C.CARTA
+    t = c["trayectoria"]
     src = f'https://www.youtube-nocookie.com/embed/{c["video_id"]}?start={c["video_inicio"]}&autoplay=1&rel=0'
     # Fachada: la miniatura no carga nada de YouTube hasta que se pulsa, así el
     # visitante no queda expuesto a sus cookies solo por abrir la página.
@@ -373,15 +414,55 @@ def s_carta():
         retrato = (f'<img class="carta-foto" src="{RAIZ_WEB}assets/{e(fp["retrato"])}" '
                    f'alt="{e(fp["retrato_alt"])}" loading="lazy" decoding="async">')
 
+    # Las cifras entre corchetes son las que Pierina aún tiene que darnos: se
+    # marcan en pantalla para que nadie las confunda con datos reales.
+    cifras = "".join(
+        f'<div class="cifra{" pendiente-min" if n.startswith("[") else ""}">'
+        f'<b>{e(n)}</b><span>{e(txt)}</span></div>'
+        for n, txt in t["cifras"])
+
+    if t["marcas"]:
+        marcas = "".join(f'<li>{e(m)}</li>' for m in t["marcas"])
+        marcas_cls = "marcas"
+    else:
+        # Seis huecos del tamaño de un logotipo: se ve la forma que tendrá la
+        # fila sin afirmar ninguna marca que no esté confirmada.
+        marcas = "".join('<li class="marca-hueca"></li>' for _ in range(6))
+        marcas_cls = "marcas pendiente"
+
     return seccion("carta", "02", f"""
     {eyebrow(c["eyebrow"])}
     <h2>{e(c["titulo"])}</h2>
-    <div class="carta-con-foto">
-      <div class="carta-cuerpo">{parrafos(c["parrafos"])}</div>
-      {retrato}
+
+    <div class="sobre">
+      <button class="sobre-btn" type="button" aria-expanded="true" aria-controls="carta-hoja">
+        <span class="sobre-solapa" aria-hidden="true"></span>
+        <svg class="sobre-sello" viewBox="0 0 265.42 268.17" aria-hidden="true"><use href="#iso"/></svg>
+        <span class="sobre-de"><b>{e(c["sobre_de"])}</b><i>{e(c["cita_autora"])}</i></span>
+        <span class="sobre-para">{e(c["sobre_para"])}</span>
+        <span class="sobre-cta" data-abrir="{e(c["sobre_abrir"])}"
+              data-cerrar="{e(c["sobre_cerrar"])}">{e(c["sobre_cerrar"])}</span>
+      </button>
+
+      <div class="carta-hoja" id="carta-hoja">
+        <div class="hoja-interior">
+          <div class="carta-con-foto">
+            <div class="carta-cuerpo">{parrafos(c["parrafos"])}</div>
+            {retrato}
+          </div>
+          {video}
+          {cita}
+        </div>
+      </div>
     </div>
-    {video}
-    {cita}
+
+    <div class="trayectoria">
+      <h3>{e(t["titulo"])}</h3>
+      <div class="cifras tray-cifras">{cifras}</div>
+      <p class="tray-marcas-t">{e(t["marcas_t"])}</p>
+      <ul class="{marcas_cls}" data-nota="{e(t["marcas_falta"])}">{marcas}</ul>
+    </div>
+
     <div class="ctas">{boton(c["cta"], "#campus", "sec")}</div>""", "carta")
 
 
@@ -1040,7 +1121,7 @@ def pagina(prop):
     v_base = version("css/base.css")
     v_tema = version(f"css/{prop['clave']}.css")
     v_js = version("js/campus.js")
-    extra = perfil_animado(RAIZ_WEB) if prop.get("hero_extra") else ""
+    extra = hero_media(RAIZ_WEB) if prop.get("hero_extra") else ""
     cuerpo = "\n".join(
         (s(extra) if s is s_hero else s()) for s in SECCIONES)
     titulo = f'{C.MARCA["nombre"]} — Admisiones'

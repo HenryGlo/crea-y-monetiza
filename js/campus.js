@@ -505,10 +505,44 @@
     pintar();
   }
 
+  /* La carta de la rectora.
+
+     El HTML se emite abierto para que se lea sin JS; aquí la cerramos y
+     conectamos el botón. Si este script no llega, la carta sigue completa en
+     pantalla: lo que se pierde es el gesto, no el contenido. */
+  function carta() {
+    const sobre = document.querySelector(".sobre");
+    if (!sobre) return;
+    const btn = sobre.querySelector(".sobre-btn");
+    const cta = sobre.querySelector(".sobre-cta");
+    const hoja = sobre.querySelector(".carta-hoja");
+    if (!btn || !hoja) return;
+
+    function pintar(abierta) {
+      sobre.classList.toggle("cerrada", !abierta);
+      btn.setAttribute("aria-expanded", String(abierta));
+      if (cta) cta.textContent = abierta ? cta.dataset.cerrar : cta.dataset.abrir;
+      hoja.toggleAttribute("inert", !abierta);
+    }
+
+    // El primer cierre es instantáneo: si se anima, quien llega ve la carta
+    // abierta cerrándose sola, que parece un fallo y no un gesto.
+    sobre.classList.add("sin-anim");
+    pintar(false);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { sobre.classList.remove("sin-anim"); });
+    });
+
+    btn.addEventListener("click", function () {
+      pintar(sobre.classList.contains("cerrada"));
+    });
+  }
+
   function iniciar() {
     prepararEntradas();
     ruta();
     titularesPorPalabra();
+    carta();
     montajePerfil();
     imanes();
     relieve();

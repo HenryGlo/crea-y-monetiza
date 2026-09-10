@@ -306,6 +306,9 @@ a{ color:inherit }
 }
 .ph span{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; opacity:.5 }
 .pendiente{ position:relative }
+/* Un hueco puede decir qué le falta: con data-nota la etiqueta lo explica en
+   vez de repetir la frase genérica. */
+.pendiente[data-nota]::after{ content:attr(data-nota) }
 .pendiente::after{
   content:"Pendiente de contenido real";
   position:absolute; top:14px; right:14px;
@@ -1642,3 +1645,161 @@ a{ color:inherit }
 @media (prefers-reduced-motion:reduce){
   .carnet,.sello-aro>svg:first-child{ animation:none }
 }
+
+/* ================================================== la carta de la rectora */
+
+/* La carta llega dentro de su sobre. Cerrada ocupa lo que ocupa un sobre; al
+   pulsar se abre y aparece la hoja. Antes eran seis párrafos seguidos que
+   había que atravesar para llegar al resto de la página. */
+
+.sobre{ margin-top:clamp(20px,3vw,34px) }
+
+.sobre-btn{
+  position:relative; display:block; width:100%; text-align:left; cursor:pointer;
+  background:color-mix(in srgb,var(--amar) 34%,#fff);
+  border:1px solid rgba(80,7,17,.12); border-radius:var(--r);
+  padding:clamp(24px,3.4vw,40px) clamp(22px,3vw,36px) clamp(22px,2.6vw,32px);
+  color:inherit; font:inherit;
+  transition:transform .35s cubic-bezier(.2,.9,.3,1), box-shadow .35s;
+}
+.sobre-btn:hover,.sobre-btn:focus-visible{ transform:translateY(-3px); box-shadow:var(--shadow) }
+.sobre-btn:focus-visible{ outline:2px solid var(--acento); outline-offset:3px }
+
+/* La solapa: el triángulo del reverso de un sobre. Con clip-path en vez de un
+   degradado cónico, que dejaba el corte a un solo lado. */
+.sobre-solapa{
+  position:absolute; left:0; right:0; top:0; height:clamp(74px,9vw,132px);
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--amar) 70%,#fff),
+    color-mix(in srgb,var(--amar) 44%,#fff));
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  border-radius:var(--r) var(--r) 0 0;
+  filter:drop-shadow(0 2px 3px rgba(80,7,17,.14));
+}
+/* El sello de lacre cierra la solapa justo en su punta. */
+.sobre-sello{
+  position:absolute; left:50%; top:calc(clamp(74px,9vw,132px) - clamp(20px,2.4vw,29px));
+  translate:-50% 0;
+  width:clamp(40px,4.8vw,58px); height:auto; fill:var(--vino);
+  filter:drop-shadow(0 5px 12px rgba(80,7,17,.3));
+}
+.sobre-de{ display:block; margin-top:clamp(66px,8vw,112px) }
+.sobre-de b{
+  display:block; font-size:11px; font-weight:800;
+  letter-spacing:.2em; text-transform:uppercase; opacity:.6;
+}
+.sobre-de i{
+  display:block; font-family:var(--display); font-style:normal;
+  text-transform:uppercase; font-size:clamp(22px,3vw,36px); line-height:1.05; margin-top:6px;
+}
+.sobre-para{
+  display:block; margin-top:10px; font-size:14px; opacity:.72;
+}
+.sobre-cta{
+  display:inline-flex; align-items:center; gap:9px; margin-top:20px;
+  font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--vino); background:var(--rosa);
+  padding:11px 20px; border-radius:999px;
+}
+.sobre-cta::after{ content:"↑"; transition:rotate .3s }
+
+/* --- cerrada --- */
+.sobre.cerrada .sobre-cta::after{ rotate:180deg }
+/* El truco de 0fr↔1fr necesita una sola fila y un solo hijo: por eso la hoja
+   lleva dentro un envoltorio con todo el contenido. Con varios hijos solo se
+   colapsaba el primero. */
+.carta-hoja{
+  display:grid; grid-template-rows:1fr; opacity:1;
+  transition:grid-template-rows .55s cubic-bezier(.2,.9,.3,1), opacity .45s .1s;
+}
+/* La hoja sale del sobre: papel propio, no texto suelto debajo de la tarjeta. */
+.hoja-interior{
+  min-height:0; margin-top:clamp(16px,2.2vw,26px);
+  background:var(--superficie); border:1px solid var(--linea);
+  border-radius:var(--r); box-shadow:var(--shadow);
+  padding:clamp(24px,3.4vw,44px);
+}
+.sobre.cerrada .carta-hoja{
+  grid-template-rows:0fr; opacity:0;
+  transition:grid-template-rows .55s cubic-bezier(.2,.9,.3,1), opacity .3s;
+}
+.sobre.cerrada .hoja-interior{ overflow:hidden; padding:0; margin-top:0; border-width:0 }
+.sobre.sin-anim .carta-hoja{ transition:none }
+
+/* --- la hoja: texto a la izquierda, ella a la derecha --- */
+.carta-con-foto{
+  display:grid; gap:clamp(20px,3vw,44px);
+  grid-template-columns:minmax(0,1fr) minmax(220px,320px);
+  align-items:end;
+}
+.carta-con-foto .carta-cuerpo{ max-width:60ch }
+.carta-foto{
+  width:100%; height:auto; display:block; align-self:end;
+  filter:drop-shadow(0 24px 44px rgba(80,7,17,.32));
+  /* Entra deslizándose desde la derecha, como hacía en el hero. */
+  animation:carta-entra .9s cubic-bezier(.2,.9,.3,1) both;
+}
+@keyframes carta-entra{
+  from{ opacity:0; translate:44px 0 }
+  to{ opacity:1; translate:0 0 }
+}
+@media (max-width:860px){
+  .carta-con-foto{ grid-template-columns:1fr }
+  .carta-foto{ max-width:280px; margin-inline:auto }
+}
+
+/* --- quién firma --- */
+.trayectoria{
+  margin-top:clamp(28px,4vw,52px); padding-top:clamp(24px,3vw,36px);
+  border-top:1px solid var(--linea);
+}
+.trayectoria h3{
+  font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(20px,2.6vw,32px); margin-bottom:20px;
+}
+.tray-cifras{ margin-bottom:clamp(22px,3vw,34px) }
+/* Las cifras que aún no tenemos se ven a medio tono: nadie debe leerlas como
+   un dato real mientras Pierina no las confirme. */
+.pendiente-min b{ opacity:.4 }
+.pendiente-min span{ opacity:.55 }
+
+.tray-marcas-t{
+  font-size:11px; font-weight:800; letter-spacing:.2em; text-transform:uppercase;
+  opacity:.6; margin-bottom:14px;
+}
+/* La etiqueta de lo que falta, encima de la fila y no sobre el último hueco. */
+.marcas.pendiente{ padding-top:38px }
+.marcas.pendiente::after{ top:10px; right:10px }
+.marcas{
+  list-style:none; display:grid; gap:12px;
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  padding:18px; border-radius:var(--r-s);
+  background:color-mix(in srgb,var(--texto) 3%,transparent);
+}
+.marcas li{
+  display:grid; place-items:center; min-height:58px; border-radius:10px;
+  background:var(--superficie); border:1px solid var(--linea);
+  font-family:var(--display); text-transform:uppercase; font-size:16px;
+}
+.marcas .marca-hueca{ background:color-mix(in srgb,var(--texto) 5%,transparent); border-style:dashed }
+
+/* ================================================ el cortometraje del hero */
+
+.hero-video{ position:relative; margin:0 }
+.hero-video video{
+  width:100%; aspect-ratio:9/16; object-fit:cover; display:block;
+  border-radius:var(--r); box-shadow:var(--shadow-alta); background:var(--vino);
+}
+.hero-video-txt{
+  margin-top:18px; text-align:center;
+}
+.hero-video-txt b{
+  display:block; font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(20px,2.6vw,32px); line-height:1.05;
+}
+.hero-video-txt span{
+  display:block; margin-top:8px; font-size:clamp(14px,1.5vw,17px); opacity:.8;
+}
+/* Mientras el archivo no llegue, el hueco es la animación que ya funciona con
+   la etiqueta encima. Un rectángulo vacío durante semanas es peor. */
+.hero-hueco{ position:relative }
