@@ -576,8 +576,15 @@ def bloque_evaluacion():
     las dos responden "cómo aprendo", y separadas obligaban a leer dos veces lo
     mismo con otro titular."""
     v = C.EVALUACION
-    items = "".join(f'<div class="ev"><b>{e(t)}</b><span>{e(d)}</span></div>'
-                    for t, d in v["items"])
+    # Los seis no son una lista de métodos sueltos: son el orden en que se
+    # evalúa a lo largo del recorrido, de los primeros ejercicios al proyecto
+    # final. En una retícula de fichas iguales ese orden no se leía; en línea
+    # de tiempo, con el raíl trazándose al entrar en pantalla, se lee solo.
+    items = "".join(
+        f'<li class="hito" style="--i:{i}">'
+        f'<span class="hito-nodo" aria-hidden="true">{i:02d}</span>'
+        f'<div class="hito-caja"><b>{e(t)}</b><span>{e(d)}</span></div></li>'
+        for i, (t, d) in enumerate(v["items"], 1))
     # Plegado: es información que se consulta, no que se lee de corrido, y
     # abierta ocupaba 600px al final del plan.
     # Deja de ir plegado. "No queremos que termines sabiendo más, queremos que
@@ -589,7 +596,7 @@ def bloque_evaluacion():
       <p class="eyebrow"><span class="dot"></span>{e(v["eyebrow"])}</p>
       <h2 class="ev-titulo">{e(v["titulo"])}</h2>
       {parrafos(v["intro"], "lead")}
-      <div class="ev-grid">{items}</div>
+      <ol class="linea">{items}</ol>
       <p class="cierre destacado">{e(v["cierre"])}</p>"""
 
 
