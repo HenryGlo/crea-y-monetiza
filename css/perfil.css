@@ -473,10 +473,12 @@ body.v-perfil{
   --brillo:color-mix(in srgb,#ffe9f4 70%,var(--crema));
   min-height:min(100svh,900px);
   display:grid; align-content:center; text-align:center;
-  border-radius:clamp(28px,4vw,52px);
-  margin:clamp(24px,4vw,56px) 0;
+  /* Sin esquinas redondeadas: es un bloque a sangre, y la tarjeta gigante
+     flotando en medio de la página cortaba el recorrido en seco. Entra y sale
+     en onda, como la franja en vino, que es el gesto con el que ya se pasa de
+     una sección a otra en toda la página. */
   overflow:hidden; position:relative;
-  padding-block:clamp(64px,9vw,120px);
+  padding-block:clamp(96px,11vw,150px);
 }
 
 /* Retícula tenue de fondo: da escala y hace que el vino no sea un plano muerto. */
@@ -595,7 +597,7 @@ body.v-perfil{
 
 @media (max-width:700px){
   .v-perfil .sello{ width:96px; top:14px; right:14px }
-  .v-perfil #tesis{ border-radius:22px; padding-block:56px }
+  .v-perfil #tesis{ padding-block:72px }
   .v-perfil .tesis-piezas li{ padding:9px 15px 9px 9px }
 }
 

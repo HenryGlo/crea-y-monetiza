@@ -216,13 +216,15 @@ TONOS = {
 }
 
 
-def seccion(sid, num, cuerpo, cls=""):
+def seccion(sid, num, cuerpo, cls="", fuera=("", "")):
+    """`fuera` son las piezas que van pegadas al borde de la sección y no dentro
+    de la columna de texto: las ondas de un bloque a sangre, por ejemplo."""
     tono = TONOS.get(sid)
     if tono:
         cls = f"{cls} tono tono-{tono}".strip()
     return (f'<section id="{sid}" class="sec {cls}" data-num="{num}">'
-            f'{decoracion(sid)}'
-            f'<div class="wrap">{cuerpo}</div></section>')
+            f'{decoracion(sid)}{fuera[0]}'
+            f'<div class="wrap">{cuerpo}</div>{fuera[1]}</section>')
 
 
 def cinta(items, veces=3):
@@ -599,7 +601,7 @@ def bloque_evaluacion():
       <h2 class="ev-titulo">{e(v["titulo"])}</h2>
       {parrafos(v["intro"], "lead")}
       <ol class="linea">{items}</ol>
-      <p class="cierre destacado">{e(v["cierre"])}</p>"""
+      <p class="cierre destacado"><span class="lapiz">{e(v["cierre"])}</span></p>"""
 
 
 def s_evaluacion():
@@ -612,6 +614,23 @@ def s_evaluacion():
     {parrafos(v["intro"], "lead")}
     <div class="grid grid-3">{items}</div>
     <p class="cierre">{e(v["cierre"])}</p>""", "evaluacion")
+
+
+ONDA_TRAZO = ("M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 "
+              "155-32 265-40v62z")
+
+
+def ondas():
+    """Las dos ondas que muerden un bloque a sangre por arriba y por abajo.
+
+    Van del color del fondo de la página, así que recortan el bloque en vez de
+    dibujarse encima. Miden el doble de ancho y se desplazan un 50%: como el
+    trazo se repite, el bucle empalma sin salto."""
+    def svg(donde):
+        return (f'<svg class="onda onda-{donde}" viewBox="0 0 1200 90" '
+                f'preserveAspectRatio="none" aria-hidden="true">'
+                f'<path d="{ONDA_TRAZO}"/></svg>')
+    return svg("arriba"), svg("abajo")
 
 
 def s_tesis():
@@ -648,7 +667,7 @@ def s_tesis():
     <div class="tesis-cuerpo">{parrafos(t["intro"])}</div>
     <p class="lead-min tesis-lead">{e(t["lead"])}</p>
     <ul class="tesis-piezas">{piezas}</ul>
-    {parrafos(t["cierre"], "cierre")}""", "tesis")
+    {parrafos(t["cierre"], "cierre")}""", "tesis", ondas())
 
 
 def s_digital():
