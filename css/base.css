@@ -1648,42 +1648,54 @@ a{ color:inherit }
 
 /* ================================================== la carta de la rectora */
 
-/* La carta llega dentro de su sobre. Cerrada ocupa lo que ocupa un sobre; al
-   pulsar se abre y aparece la hoja. Antes eran seis párrafos seguidos que
-   había que atravesar para llegar al resto de la página. */
+/* La carta llega dentro de su sobre. Al pulsar, la solapa se abre hacia atrás
+   —rotación real en 3D, con su reverso más oscuro— y la hoja blanca sale de
+   dentro del sobre amarillo. Antes eran seis párrafos seguidos que había que
+   atravesar para llegar al resto de la página.
 
-.sobre{ margin-top:clamp(20px,3vw,34px) }
+   Todo el color vive en el sobre y la hoja es blanca, como una carta de
+   verdad: el papel se lee, el sobre decora. */
 
-.sobre-btn{
-  position:relative; display:block; width:100%; text-align:left; cursor:pointer;
+.sobre{
+  position:relative;
+  /* Sitio para que la solapa abierta quede por encima sin pisar el titular:
+     abierta se levanta su altura completa. */
+  margin:clamp(84px,10vw,146px) 0 0;
+  padding:clamp(74px,9vw,132px) clamp(20px,2.6vw,34px) clamp(22px,2.6vw,32px);
   background:color-mix(in srgb,var(--amar) 34%,#fff);
   border:1px solid rgba(80,7,17,.12); border-radius:var(--r);
-  padding:clamp(24px,3.4vw,40px) clamp(22px,3vw,36px) clamp(22px,2.6vw,32px);
-  color:inherit; font:inherit;
-  transition:transform .35s cubic-bezier(.2,.9,.3,1), box-shadow .35s;
+  perspective:1400px;
 }
-.sobre-btn:hover,.sobre-btn:focus-visible{ transform:translateY(-3px); box-shadow:var(--shadow) }
-.sobre-btn:focus-visible{ outline:2px solid var(--acento); outline-offset:3px }
 
-/* La solapa: el triángulo del reverso de un sobre. Con clip-path en vez de un
+/* La solapa: el triángulo del reverso de un sobre. clip-path en vez de un
    degradado cónico, que dejaba el corte a un solo lado. */
 .sobre-solapa{
-  position:absolute; left:0; right:0; top:0; height:clamp(74px,9vw,132px);
+  position:absolute; left:-1px; right:-1px; top:-1px; height:clamp(74px,9vw,132px);
   background:linear-gradient(180deg,
     color-mix(in srgb,var(--amar) 70%,#fff),
     color-mix(in srgb,var(--amar) 44%,#fff));
   clip-path:polygon(0 0,100% 0,50% 100%);
   border-radius:var(--r) var(--r) 0 0;
-  filter:drop-shadow(0 2px 3px rgba(80,7,17,.14));
+  transform-origin:50% 0; transform:rotateX(0deg);
+  transition:transform .8s cubic-bezier(.6,-.15,.3,1.2), z-index 0s .4s;
+  z-index:3;
+  /* Sin trucos de cara trasera: clip-path aplana el elemento y un ::after
+     rotado 180° nunca llega a dibujarse. Al abrirse se ve la misma cara del
+     revés, que es exactamente lo que hace una solapa de papel. */
 }
-/* El sello de lacre cierra la solapa justo en su punta. */
 .sobre-sello{
   position:absolute; left:50%; top:calc(clamp(74px,9vw,132px) - clamp(20px,2.4vw,29px));
-  translate:-50% 0;
+  translate:-50% 0; z-index:4;
   width:clamp(40px,4.8vw,58px); height:auto; fill:var(--vino);
   filter:drop-shadow(0 5px 12px rgba(80,7,17,.3));
+  transition:opacity .35s ease, scale .45s cubic-bezier(.3,1.6,.5,1), rotate .5s ease;
 }
-.sobre-de{ display:block; margin-top:clamp(66px,8vw,112px) }
+
+.sobre-btn{
+  position:relative; z-index:2; display:block; width:100%; text-align:left;
+  cursor:pointer; background:none; border:0; padding:0; color:inherit; font:inherit;
+}
+.sobre-btn:focus-visible{ outline:2px solid var(--acento); outline-offset:6px; border-radius:12px }
 .sobre-de b{
   display:block; font-size:11px; font-weight:800;
   letter-spacing:.2em; text-transform:uppercase; opacity:.6;
@@ -1692,39 +1704,53 @@ a{ color:inherit }
   display:block; font-family:var(--display); font-style:normal;
   text-transform:uppercase; font-size:clamp(22px,3vw,36px); line-height:1.05; margin-top:6px;
 }
-.sobre-para{
-  display:block; margin-top:10px; font-size:14px; opacity:.72;
-}
+.sobre-para{ display:block; margin-top:10px; font-size:14px; opacity:.72 }
 .sobre-cta{
   display:inline-flex; align-items:center; gap:9px; margin-top:20px;
   font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
   color:var(--vino); background:var(--rosa);
   padding:11px 20px; border-radius:999px;
+  transition:transform .3s cubic-bezier(.2,.9,.3,1);
 }
+.sobre-btn:hover .sobre-cta{ transform:translateY(-2px) }
 .sobre-cta::after{ content:"↑"; transition:rotate .3s }
 
-/* --- cerrada --- */
+/* --- abierto: la solapa se echa hacia atrás y el lacre se retira --- */
+.sobre:not(.cerrada) .sobre-solapa{
+  transform:rotateX(-166deg);
+  filter:drop-shadow(0 -3px 4px rgba(80,7,17,.16));
+  z-index:0;
+}
+.sobre:not(.cerrada) .sobre-sello{ opacity:0; scale:.55; rotate:-24deg }
+
+/* --- cerrado --- */
 .sobre.cerrada .sobre-cta::after{ rotate:180deg }
+
 /* El truco de 0fr↔1fr necesita una sola fila y un solo hijo: por eso la hoja
    lleva dentro un envoltorio con todo el contenido. Con varios hijos solo se
    colapsaba el primero. */
 .carta-hoja{
   display:grid; grid-template-rows:1fr; opacity:1;
-  transition:grid-template-rows .55s cubic-bezier(.2,.9,.3,1), opacity .45s .1s;
+  transition:grid-template-rows .65s cubic-bezier(.2,.9,.3,1), opacity .5s .15s;
 }
-/* La hoja sale del sobre: papel propio, no texto suelto debajo de la tarjeta. */
+/* La hoja sale de dentro del sobre: papel blanco, y al abrirse asoma
+   deslizándose hacia abajo. */
 .hoja-interior{
   min-height:0; margin-top:clamp(16px,2.2vw,26px);
-  background:var(--superficie); border:1px solid var(--linea);
-  border-radius:var(--r); box-shadow:var(--shadow);
+  background:#fff; border-radius:var(--r-s);
+  box-shadow:0 18px 40px -22px rgba(80,7,17,.5);
   padding:clamp(24px,3.4vw,44px);
+  translate:0 0; transition:translate .65s cubic-bezier(.2,.9,.3,1);
 }
 .sobre.cerrada .carta-hoja{
   grid-template-rows:0fr; opacity:0;
   transition:grid-template-rows .55s cubic-bezier(.2,.9,.3,1), opacity .3s;
 }
-.sobre.cerrada .hoja-interior{ overflow:hidden; padding:0; margin-top:0; border-width:0 }
-.sobre.sin-anim .carta-hoja{ transition:none }
+.sobre.cerrada .hoja-interior{
+  overflow:hidden; padding:0; margin-top:0; translate:0 -40px;
+}
+.sobre.sin-anim .carta-hoja,.sobre.sin-anim .hoja-interior,
+.sobre.sin-anim .sobre-solapa,.sobre.sin-anim .sobre-sello{ transition:none }
 
 /* --- la hoja: texto a la izquierda, ella a la derecha --- */
 .carta-con-foto{
@@ -1746,6 +1772,13 @@ a{ color:inherit }
 @media (max-width:860px){
   .carta-con-foto{ grid-template-columns:1fr }
   .carta-foto{ max-width:280px; margin-inline:auto }
+}
+
+/* Sin movimiento el sobre se abre igual, de golpe: el gesto es un adorno. */
+@media (prefers-reduced-motion:reduce){
+  .sobre-solapa,.sobre-sello,.carta-hoja,.hoja-interior,.carta-foto{
+    transition:none; animation:none;
+  }
 }
 
 /* --- quién firma --- */

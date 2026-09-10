@@ -435,9 +435,10 @@ def s_carta():
     <h2>{e(c["titulo"])}</h2>
 
     <div class="sobre">
+      <span class="sobre-solapa" aria-hidden="true"></span>
+      <svg class="sobre-sello" viewBox="0 0 265.42 268.17" aria-hidden="true"><use href="#iso"/></svg>
+
       <button class="sobre-btn" type="button" aria-expanded="true" aria-controls="carta-hoja">
-        <span class="sobre-solapa" aria-hidden="true"></span>
-        <svg class="sobre-sello" viewBox="0 0 265.42 268.17" aria-hidden="true"><use href="#iso"/></svg>
         <span class="sobre-de"><b>{e(c["sobre_de"])}</b><i>{e(c["cita_autora"])}</i></span>
         <span class="sobre-para">{e(c["sobre_para"])}</span>
         <span class="sobre-cta" data-abrir="{e(c["sobre_abrir"])}"
