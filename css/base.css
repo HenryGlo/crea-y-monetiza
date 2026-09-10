@@ -1530,7 +1530,19 @@ a{ color:inherit }
    la hoja del tema, que carga después de esta. */
 .evaluacion-franja p.destacado{
   font-family:var(--mano); font-weight:700; text-transform:none;
-  font-size:clamp(28px,4.2vw,54px); line-height:1.34; max-width:32ch;
+  line-height:1.34; max-width:none; white-space:nowrap;
+  /* Un solo renglón: el cuerpo sale del ancho disponible, no al revés. La
+     frase mide 31,1 ems en Caveat 700; se divide por 33 para dejar aire y que
+     no se salga si la fuente tarda y entra la sustituta, más ancha. */
+  font-size:min(calc((100vw - 72px) / 33),35px);
+}
+/* Por debajo de mil, un renglón dejaría la frase por debajo de los 29px y
+   empezaría a leerse como letra pequeña: ahí vuelve a dos líneas, partida por
+   su punto, que es donde parte sola. */
+@media (max-width:999px){
+  .evaluacion-franja p.destacado{
+    white-space:normal; font-size:clamp(25px,4.4vw,34px); max-width:20ch;
+  }
 }
 /* El subrayado es una imagen, no text-decoration: ninguna variante de
    text-decoration tiembla como un trazo a mano. Va sobre un <span> en línea con
