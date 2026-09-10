@@ -15,6 +15,10 @@
   --azul-soft:#c2d4fe;
   --amar:#F9FF80;
   --amar-soft:#fdffc4;
+  /* Verde de la casa. Sale del amarillo de marca girando hacia el verde, para
+     que no parezca un color de otro sitio: sobre el vino es lo que más brilla y
+     por eso lo lleva el claim del cierre. */
+  --verde:#7CEFA4;
   --crema:#F8F3EF;
   --ink:#3a0810;
 
@@ -1678,7 +1682,24 @@ a{ color:inherit }
    ve dónde empiezas y cuánto falta. */
 
 .reg{ text-align:center }
-.reg .lista.chips{ justify-content:center }
+.reg .lista.chips{ justify-content:center; gap:12px; margin-bottom:8px }
+/* Con color y con cuerpo. Como píldoras de contorno fino eran una lista de
+   condiciones; con el color rotando y cada una ligeramente torcida se leen
+   como lo que son: todo lo que te llega por entrar al registro. */
+.reg .chips li{
+  padding:12px 22px; border:2px solid var(--vino); border-radius:999px;
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(13px,1.4vw,17px); letter-spacing:.01em;
+  transition:transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s ease;
+}
+.reg .chips li:nth-child(3n+1){ background:var(--amar-soft) }
+.reg .chips li:nth-child(3n+2){ background:var(--rosa-soft) }
+.reg .chips li:nth-child(3n+3){ background:var(--azul-soft) }
+.reg .chips li:nth-child(odd){ rotate:-1.4deg }
+.reg .chips li:nth-child(even){ rotate:1.4deg }
+@media (hover:hover){
+  .reg .chips li:hover{ transform:translateY(-3px); box-shadow:0 10px 20px -12px rgba(80,7,17,.55) }
+}
 .reg-baja{ font-size:clamp(15px,1.5vw,19px); opacity:.8; margin-bottom:22px }
 
 .expediente{ position:relative; margin-top:clamp(28px,4vw,48px) }

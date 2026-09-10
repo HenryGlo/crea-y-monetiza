@@ -655,9 +655,9 @@ body.v-perfil{
 .v-perfil #recorrido > .wrap > .lead{ margin-bottom:.15em }
 .v-perfil #recorrido > .wrap > .lead + .lead{ margin-top:0 }
 
-/* El claim del cierre en amarillo lima: sobre el vino es lo único que brilla,
-   y es la frase que resume la escuela. */
-.v-perfil .cierre-final .claim{ color:var(--amar); opacity:1; font-weight:700 }
+/* El claim del cierre en verde: sobre el vino es lo único que brilla, y es la
+   frase que resume la escuela. */
+.v-perfil .cierre-final .claim{ color:var(--verde); opacity:1; font-weight:700 }
 .v-perfil .cierre-final .carnet,.v-perfil .cierre-final .sello-aro{ color:var(--crema) }
 .v-perfil .expediente .carpeta{ border:1px solid rgba(80,7,17,.08) }
 
