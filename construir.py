@@ -146,7 +146,7 @@ FORMAS = ["estrella-rosa", "estrella-azul", "estrella-amar",
 # las densas de texto llevan menos para no competir con la lectura.
 DENSIDAD = {
     "campus": 0,  # sin pegatina de fondo: las viñetas ya llevan la estrella "perfil": 3, "recorrido": 0,  # sin pegatinas: en móvil caían encima del texto "plan": 3, "tesis": 6,
-    "experiencia": 4, "mentoras": 4, "mercado": 4, "historias": 0,   # retirada
+    "experiencia": 4, "mentoras": 0,   # retirada "mercado": 4, "historias": 0,   # retirada
     "graduacion": 0,  # solo los birretes: con pegatinas encima eran demasiados elementos "admisiones": 3, "faq": 4, "carta": 3,
 }
 
@@ -1125,7 +1125,10 @@ def s_admisiones_unificada():
 # fusionaron las secciones que respondían la misma pregunta y se plegó lo
 # secundario. Los competidores directos del nicho tienen entre cuatro y cinco.
 SECCIONES = [s_hero, s_cinta_1, s_carta, s_campus, s_perfil, s_recorrido,
-             s_plan, s_tesis, s_experiencia_unificada, s_facultad,
+             s_plan, s_tesis, s_experiencia_unificada,
+             # s_facultad — la sección "Tu equipo" sale de la página por
+             # decisión del cliente. La función y su copy siguen intactas:
+             # vuelve descomentándola aquí y devolviendo su entrada al NAV.
              s_mercado_unificado, s_graduacion,
              # s_historias sale mientras Pierina reúne los casos, las capturas y
              # la aprobación de las alumnas. La función sigue abajo intacta:

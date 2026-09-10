@@ -29,7 +29,9 @@ NAV = [
     ("Plan de estudios", "plan"),
     ("La Tesis", "tesis"),
     ("Experiencia", "experiencia"),
-    ("Mentoras", "mentoras"),
+    # ("Mentoras", "mentoras"),  — la sección salió de la página; un enlace del
+    # menú a un ancla que ya no existe deja al visitante en el mismo sitio sin
+    # explicación.
     ("Admisiones", "admisiones"),
 ]
 
