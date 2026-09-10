@@ -722,7 +722,10 @@ a{ color:inherit }
      leía como que se paraba. Así siempre hay variación en movimiento. */
   background-image:linear-gradient(100deg,
     var(--tinta,var(--texto)) 0%,
-    var(--brillo,color-mix(in srgb,var(--acento) 62%,var(--texto))) 50%,
+    /* Al 62% el reflejo metía tanto acento que el titular se leía a dos colores,
+       que es justo lo que el cliente no quiere. Al 24% sigue siendo un brillo
+       que recorre las letras, pero el titular es de un solo color. */
+    var(--brillo,color-mix(in srgb,var(--acento) 24%,var(--texto))) 50%,
     var(--tinta,var(--texto)) 100%);
   /* Baldosa fija de 190px, no relativa a la palabra: así todas fluyen a la
      misma velocidad, sean cortas o largas, y la onda cruza una palabra corta
@@ -1425,9 +1428,12 @@ a{ color:inherit }
   border:2px solid var(--vino);
   transition:transform .3s cubic-bezier(.2,.8,.3,1);
 }
+/* Un check en cada uno: son cosas que sales sabiendo hacer, no un índice
+   numerado. */
 .activos li b{
-  font-family:var(--display); font-size:26px; line-height:1;
-  color:var(--vino); opacity:.42; flex:none;
+  width:26px; height:26px; flex:none; border-radius:50%;
+  display:grid; place-items:center; font-size:14px; font-weight:800;
+  background:var(--vino); color:var(--crema);
 }
 .activos li span{
   font-family:var(--display); text-transform:uppercase;
@@ -1457,3 +1463,182 @@ a{ color:inherit }
 .recursos li:nth-child(3n+1){ background:var(--amar-soft) }
 .recursos li:nth-child(3n+2){ background:var(--rosa-soft) }
 .recursos li:nth-child(3n+3){ background:var(--azul-soft) }
+
+/* Las viñetas de "aquí no vienes a ver clases" son la estrella amarilla del
+   juego de la marca, no un punto de color. */
+.necesidades li{ padding-left:34px }
+.necesidades li::before{
+  content:""; width:20px; height:19px; top:.35em; border-radius:0;
+  background:url("../assets/stickers/estrella-amar.webp") center/contain no-repeat;
+}
+
+/* ============================================================ el expediente */
+
+/* El registro prioritario deja de ser una pila de once campos y pasa a ser un
+   documento de la oficina de admisiones: carpeta, cabecera y tres pasos
+   numerados. Las preguntas son exactamente las mismas; lo que cambia es que se
+   ve dónde empiezas y cuánto falta. */
+
+.reg{ text-align:center }
+.reg .lista.chips{ justify-content:center }
+.reg-baja{ font-size:clamp(15px,1.5vw,19px); opacity:.8; margin-bottom:22px }
+
+.expediente{ position:relative; margin-top:clamp(28px,4vw,48px) }
+
+.carpeta{
+  position:relative;
+  background:color-mix(in srgb,var(--amar) 46%,#fff);
+  border-radius:0 var(--r) var(--r) var(--r);
+  box-shadow:var(--shadow);
+  text-align:left;
+}
+/* La lengüeta es lo que convierte un rectángulo en una carpeta. */
+.carpeta-lengueta{
+  position:absolute; left:0; top:-26px; width:min(210px,44%); height:28px;
+  background:inherit; border-radius:14px 14px 0 0;
+}
+.carpeta-hoja{ padding:clamp(20px,3vw,34px) }
+
+.exp-cab{
+  display:flex; flex-wrap:wrap; gap:18px 32px;
+  align-items:center; justify-content:space-between;
+  padding-bottom:clamp(16px,2vw,24px);
+}
+.exp-of,.exp-sub{
+  font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
+  opacity:.62;
+}
+.exp-t{
+  font-family:var(--display); text-transform:uppercase; line-height:1;
+  font-size:clamp(28px,4.4vw,54px); margin:6px 0 8px;
+}
+.exp-lema{ display:flex; align-items:center; gap:16px; padding-left:18px;
+           border-left:1px solid rgba(80,7,17,.22) }
+.exp-lema b{
+  font-size:11px; font-weight:800; letter-spacing:.2em; text-transform:uppercase;
+  max-width:9ch; line-height:1.5;
+}
+.exp-lema i{ font-family:var(--mano); font-size:22px; line-height:1.15; max-width:16ch }
+
+/* --- los tres pasos --- */
+.grupo-f{
+  display:grid; grid-template-columns:minmax(180px,230px) 1fr; gap:clamp(16px,2.4vw,32px);
+  background:var(--superficie); border-radius:var(--r-s);
+  padding:clamp(16px,2.2vw,26px); margin-bottom:14px;
+  border:1px solid rgba(80,7,17,.06);
+}
+.grupo-cab{ display:flex; align-items:flex-start; gap:14px }
+.grupo-n{
+  flex:none; width:56px; height:56px; border-radius:50%;
+  display:grid; place-items:center;
+  font-family:var(--display); font-size:26px; line-height:1; color:var(--vino);
+}
+.g1 .grupo-n{ background:var(--rosa) }
+.g2 .grupo-n{ background:var(--azul) }
+.g3 .grupo-n{ background:var(--amar) }
+.grupo-txt b{
+  display:block; font-family:var(--display); text-transform:uppercase;
+  font-size:clamp(17px,1.9vw,23px); line-height:1.05;
+}
+.grupo-txt i{
+  display:block; margin-top:7px; font-style:normal;
+  font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  opacity:.55; line-height:1.6;
+}
+.grupo-campos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px }
+.grupo-campos .campo-f{ margin-bottom:0 }
+.grupo-campos .campo-f.ancho{ grid-column:1/-1 }
+.grupo-campos .campo-f>span{ font-weight:600; opacity:.85 }
+
+/* .form nace con 760px de ancho máximo; dentro de la carpeta el formulario ES
+   el documento y ocupa la hoja entera. */
+.expediente .form{ max-width:none; margin-top:0 }
+.exp-pie{ text-align:center; padding-top:6px }
+.exp-pie .btn{ padding-inline:clamp(28px,4vw,54px) }
+.exp-nota{ margin-top:14px; font-size:13px; font-style:italic; opacity:.62 }
+
+@media (max-width:760px){
+  .grupo-f{ grid-template-columns:1fr }
+  .exp-lema{ border-left:0; padding-left:0 }
+}
+
+/* ================================================= el carnet y el sello */
+
+/* Entrar al Campus es recibir un carnet: el objeto dice en un vistazo lo que
+   el texto tarda un párrafo en decir. */
+.carnet{
+  position:absolute; z-index:2; width:186px; pointer-events:none;
+  transform-origin:50% -60px;
+  animation:colgar 7s ease-in-out infinite;
+}
+.carnet-cinta{
+  position:absolute; left:50%; bottom:100%; translate:-50% 0;
+  width:22px; height:86px; background:var(--rosa);
+  border-radius:4px 4px 0 0;
+  background-image:linear-gradient(90deg,rgba(255,255,255,.35) 0 30%,transparent 30%);
+}
+.carnet-clip{
+  position:absolute; left:50%; top:-16px; translate:-50% 0;
+  width:26px; height:26px; border-radius:50%;
+  border:4px solid #c9c9cf; background:transparent;
+}
+.carnet-tarjeta{
+  background:var(--rosa-soft); color:var(--vino);
+  border-radius:14px; padding:20px 18px 22px;
+  box-shadow:0 22px 44px -20px rgba(80,7,17,.55);
+  rotate:-3deg;
+}
+.carnet-iso{ width:34px; height:34px; display:block; fill:var(--vino) }
+.carnet-marca{
+  margin-top:12px; font-size:11px; font-weight:800;
+  letter-spacing:.14em; text-transform:uppercase; line-height:1.5;
+}
+.carnet-marca b{ display:block; font-weight:500; letter-spacing:.3em }
+.carnet-rol{
+  margin-top:14px; padding-top:12px; border-top:1px solid rgba(80,7,17,.28);
+  font-family:var(--display); text-transform:uppercase; line-height:1.05;
+  font-size:19px;
+}
+.carnet-pals{ list-style:none; margin-top:12px; display:grid; gap:5px }
+.carnet-pals li{
+  font-size:10px; font-weight:600; letter-spacing:.22em; text-transform:uppercase;
+  opacity:.72;
+}
+@keyframes colgar{ 0%,100%{ rotate:-1.6deg } 50%{ rotate:1.6deg } }
+
+/* El sello: el texto gira alrededor del isotipo, como el escudo de una
+   secretaría académica. */
+.sello-aro{ position:absolute; z-index:2; width:150px; aspect-ratio:1; pointer-events:none }
+.sello-aro>svg:first-child{ width:100%; height:100%; animation:girar-aro 30s linear infinite }
+.aro-txt{
+  font-family:var(--texto-f); font-size:12px; font-weight:800;
+  letter-spacing:.16em; text-transform:uppercase; fill:currentColor; opacity:.7;
+}
+.aro-iso{
+  position:absolute; inset:0; margin:auto; width:32%; height:32%;
+  fill:currentColor; opacity:.9;
+}
+@keyframes girar-aro{ to{ rotate:360deg } }
+
+/* Los adornos solo aparecen cuando hay banda libre a los lados: nunca encima
+   del texto. Medido contra --wrap, igual que las pegatinas del hero. */
+@media (max-width:1279px){
+  .expediente .carnet,.expediente .sello-aro,
+  .cierre-final .carnet,.cierre-final .sello-aro{ display:none }
+}
+.expediente .carnet{ right:-66px; top:-74px }
+.expediente .sello-aro{ right:-118px; bottom:60px; color:var(--vino) }
+@media (min-width:1280px){ .exp-cab{ padding-right:170px } }
+
+.cierre-final .carnet{ left:calc(50% - var(--wrap) / 2 - 150px); top:90px }
+.cierre-final .sello-aro{ right:calc(50% - var(--wrap) / 2 - 160px); top:180px }
+
+.cierre-mano{
+  font-family:var(--mano); font-size:clamp(22px,2.6vw,32px); line-height:1.15;
+  margin-top:26px; rotate:-2.5deg; color:var(--acento);
+}
+.cierre-mano span{ display:block }
+
+@media (prefers-reduced-motion:reduce){
+  .carnet,.sello-aro>svg:first-child{ animation:none }
+}

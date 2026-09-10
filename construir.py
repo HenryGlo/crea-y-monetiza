@@ -78,7 +78,9 @@ PROHIBIDO = [
 # Campus: son las únicas menciones que el cliente sí pidió mantener.
 # Sin el punto final: ahora las fichas lo recortan y la excepción dejaba de
 # coincidir, con lo que la build abortaba por una frase que sí está permitida.
-EXCEPCIONES = ["Tu estructura de precios", "Tarifas"]
+# "formalizas tu matrícula" habla del acto de matricularse, no de lo que
+# cuesta: la regla del cliente es no publicar cifras, y aquí no hay ninguna.
+EXCEPCIONES = ["Tu estructura de precios", "Tarifas", "formalizas tu matrícula"]
 
 
 def revisar_precios(pagina, nombre):
@@ -143,8 +145,8 @@ FORMAS = ["estrella-rosa", "estrella-azul", "estrella-amar",
 # Cuántas pegatinas lleva cada sección. Las que tienen más aire aguantan más;
 # las densas de texto llevan menos para no competir con la lectura.
 DENSIDAD = {
-    "campus": 4, "perfil": 3, "recorrido": 5, "plan": 3, "tesis": 6,
-    "experiencia": 4, "mentoras": 4, "mercado": 4, "historias": 4,
+    "campus": 0,  # sin pegatina de fondo: las viñetas ya llevan la estrella "perfil": 3, "recorrido": 0,  # sin pegatinas: en móvil caían encima del texto "plan": 3, "tesis": 6,
+    "experiencia": 4, "mentoras": 4, "mercado": 4, "historias": 0,   # retirada
     "graduacion": 0,  # solo los birretes: con pegatinas encima eran demasiados elementos "admisiones": 3, "faq": 4, "carta": 3,
 }
 
@@ -234,9 +236,12 @@ def cinta(items, veces=3):
             f'{tira * veces}{tira * veces}</div></div>')
 
 
-def boton(texto, href, tipo="pri"):
+def boton(texto, href, tipo="pri", externo=False):
     flecha = "→" if tipo == "pri" else "↓"
-    return f'<a class="btn btn-{tipo}" href="{href}">{e(texto)} <span aria-hidden="true">{flecha}</span></a>'
+    # Los enlaces que salen del sitio se abren aparte y con rel de seguridad.
+    fuera = ' target="_blank" rel="noopener"' if externo else ""
+    return (f'<a class="btn btn-{tipo}" href="{href}"{fuera}>{e(texto)} '
+            f'<span aria-hidden="true">{flecha}</span></a>')
 
 
 # --------------------------------------------------------------------------
@@ -416,13 +421,13 @@ def s_perfil():
     # Cada eje sobre una tecla. Los cuatro colores rotan; el icono es un signo
     # simple porque a este tamaño un pictograma detallado se pierde.
     teclas = ["vino", "rosa", "azul", "amar"]
-    signos = ["✦", "✎", "◎", "⚡", "◆", "★"]
+    # Estrella y rayo alternos, que son las dos formas del juego de la marca.
+    signos = ["★", "⚡"]
     ejes = "".join(
         f'<article class="card eje">'
         f'<span class="tecla" aria-hidden="true">'
         f'<img src="{RAIZ_WEB}assets/stickers/tecla-{teclas[(i-1) % 4]}.webp" alt="" loading="lazy" decoding="async">'
         f'<i>{signos[(i-1) % len(signos)]}</i></span>'
-        f'<span class="eje-n">{i:02d}</span>'
         f'<h3>{e(t)}</h3><p>{e(d)}</p></article>'
         for i, (t, d) in enumerate(p["ejes"], 1))
     return seccion("perfil", "04", f"""
@@ -447,15 +452,15 @@ def s_recorrido():
     r = C.RECORRIDO
     etapas = ""
     for et in r["etapas"]:
-        pasos = "".join(f"<li>{e(p)}</li>" for p in et["pasos"])
+        # Sin desglose. El "durante esta etapa" con sus siete pasos y el
+        # "trabajarás sobre" con sus diez convertían cada tarjeta en una lista
+        # larga; la etapa se entiende con lo que la describe.
         intro = "".join(f"<p>{e(x)}</p>" for x in et["intro"].split("\n"))
         etapas += f"""<article class="card etapa" data-x="{e(et["n"].split()[-1])}">
       <p class="etapa-n">{e(et["n"])}</p>
       <p class="etapa-meses">{e(et["meses"])}</p>
       <h3>{e(et["titulo"])}</h3>
       {intro}
-      <p class="lead-min">{e(et["lead"])}</p>
-      <ol class="pasos">{pasos}</ol>
       <p class="cierre">{e(et["cierre"])}</p>
     </article>"""
     return seccion("recorrido", "05", f"""
@@ -466,22 +471,24 @@ def s_recorrido():
 
 
 def s_plan():
-    """El plan de estudios ya no se publica materia por materia: se decidió
-    contarlo en la llamada de admisión. Quedan el texto, las áreas como palabras
-    clave —las mismas seis del hero, ya aprobadas, para no inventar copy— y la
-    invitación a agendar.
+    """El plan no se publica materia por materia: es contenido exclusivo de las
+    alumnas matriculadas. La página cuenta cómo está estructurado y lleva a
+    agendar la llamada de admisión, que es donde se ve completo.
 
-    Se retiraron con él la ruta de nodos y las materias desplegables: eran la
+    Con él se retiraron la ruta de nodos y las materias desplegables: eran la
     forma de leer un contenido que ya no está."""
     p = C.PLAN
-    areas = "".join(f"<li>{e(x.rstrip('.'))}</li>" for x in C.HERO["materias"])
+    bloques = "".join(
+        f'<article class="card mini"><h3>{e(t)}</h3><p>{e(d)}</p></article>'
+        for t, d in p["bloques"])
     return seccion("plan", "06", f"""
     {eyebrow(p["eyebrow"])}
     <h2>{e(p["titulo"])}</h2>
     <p class="lead">{e(p["bajada"])}</p>
-    <ul class="areas">{areas}</ul>
+    <p class="plan-exclusivo">{e(p["exclusivo"])}</p>
+    <div class="grid grid-4">{bloques}</div>
     <p class="lead-min plan-invita">{e(p["cta_linea"])}</p>
-    <div class="ctas">{boton(p["cta_boton"], "#admisiones", "pri")}</div>
+    <div class="ctas">{boton(p["cta_boton"], p["cta_enlace"], "pri", externo=True)}</div>
     {bloque_evaluacion()}""", "plan")
 
 
@@ -615,7 +622,6 @@ def s_facultad():
     </article>""" for p in f["personas"])
     return seccion("mentoras", "11", f"""
     {eyebrow(f["eyebrow"])}
-    <h2>{e(f["titulo"])}</h2>
     {parrafos(f["intro"], "lead")}
     <div class="grid grid-3">{ps}</div>
     <p class="cierre">{e(f["cierre"])}</p>""", "facultad")
@@ -788,8 +794,14 @@ def s_faq():
 
 
 def s_cierre():
+    """El texto es el que aprobó el cliente y no se toca. Lo que cambia es el
+    envoltorio: el carnet colgando y el sello convierten el final en una
+    despedida —te vas con algo— en vez de en un pie de página con botones."""
     c = C.CIERRE
+    mano = "".join(f"<span>{e(x)}</span>" for x in c["mano"].split("\n"))
     return f"""<footer id="cierre" class="cierre-final">
+  {carnet(c["carnet_rol"], c["carnet_palabras"])}
+  {sello_aro(c["sello"], "fin")}
   <div class="wrap">
     {eyebrow(c["eyebrow"])}
     <h2>{e(c["titulo"])}</h2>
@@ -802,6 +814,7 @@ def s_cierre():
       <a class="btn btn-sec" href="#registro">{e(c["cta_2"])}</a>
     </div>
     <p class="firma">{e(c["firma"])}</p>
+    <p class="cierre-mano" aria-hidden="true">{mano}</p>
   </div>
 </footer>"""
 
@@ -854,7 +867,7 @@ def s_mercado_unificado():
     m, o = C.MERCADO, C.OPORTUNIDADES
 
     activos = "".join(
-        f'<li style="--n:{i}"><b>{i:02d}</b><span>{e(x.rstrip("."))}</span></li>'
+        f'<li style="--n:{i}"><b aria-hidden="true">✓</b><span>{e(x.rstrip("."))}</span></li>'
         for i, x in enumerate(m["items"], 1))
 
     recursos = "".join(
@@ -863,7 +876,6 @@ def s_mercado_unificado():
 
     return seccion("mercado", "12", f"""
     {eyebrow(m["eyebrow"])}
-    <h2>{e(m["titulo"])}</h2>
     {parrafos(m["intro"], "lead")}
     <p class="lead-min">{e(m["lead"])}</p>
     <ul class="activos">{activos}</ul>
@@ -876,23 +888,79 @@ def s_mercado_unificado():
     </div>""", "mercado")
 
 
+def sello_aro(texto, ident):
+    """Sello circular: el texto gira alrededor del isotipo. El id del arco tiene
+    que ser único por página, así que lo pone quien llama."""
+    return f"""<div class="sello-aro" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <defs><path id="aro-{ident}" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/></defs>
+        <text class="aro-txt"><textPath href="#aro-{ident}" startOffset="0%">{e(texto)}</textPath></text>
+      </svg>
+      <svg class="aro-iso" viewBox="0 0 265.42 268.17"><use href="#iso"/></svg>
+    </div>"""
+
+
+def carnet(rol, palabras):
+    """El carnet de estudiante colgando de su cinta. Es el objeto que resume de
+    qué va todo esto: entrar al Campus es recibir uno."""
+    pals = "".join(f"<li>{e(x)}</li>" for x in palabras)
+    return f"""<div class="carnet" aria-hidden="true">
+      <span class="carnet-cinta"></span>
+      <span class="carnet-clip"></span>
+      <div class="carnet-tarjeta">
+        <svg class="carnet-iso" viewBox="0 0 265.42 268.17"><use href="#iso"/></svg>
+        <p class="carnet-marca">Crea y Monetiza<b>Campus</b></p>
+        <p class="carnet-rol">{e(rol)}</p>
+        <ul class="carnet-pals">{pals}</ul>
+      </div>
+    </div>"""
+
+
 def s_admisiones_unificada():
-    """¿Es para ti? + proceso + próximas fechas + registro prioritario. Las
-    cuatro son el mismo momento —decidir si entras— y estaban repartidas con
-    otras secciones en medio, obligando a subir y bajar para decidir."""
-    p, a, c, r = C.ES_PARA_TI, C.ADMISIONES, C.COHORTE, C.REGISTRO
+    """¿Es para ti? + proceso + registro prioritario. Las tres son el mismo
+    momento —decidir si entras— y estaban repartidas con otras secciones en
+    medio, obligando a subir y bajar para decidir.
+
+    El registro se presenta como un expediente de la oficina de admisiones: las
+    mismas preguntas de siempre, agrupadas en tres pasos numerados. Sueltas, once
+    campos seguidos se leen como un trámite; por pasos se ve dónde empiezas y
+    cuánto falta.
+
+    Se retiraron el bloque de cohorte y la pregunta de cierre por decisión del
+    cliente; la copy de ambos sigue en contenido.py."""
+    p, a, r = C.ES_PARA_TI, C.ADMISIONES, C.REGISTRO
 
     pasos = "".join(
         f'<li class="paso"><span class="paso-n">{i:02d}</span><h3>{e(t)}</h3><p>{e(dd)}</p></li>'
         for i, (t, dd) in enumerate(a["pasos"], 1))
-    datos = "".join(f'<div class="dato"><span>{e(k)}</span><b>{e(val)}</b></div>'
-                    for k, val in c["datos"])
 
-    campos = "".join(f"""<label class="campo-f">
+    # Cada campo se arma por su nombre para que los grupos puedan citarlos.
+    campos = {n: f"""<label class="campo-f">
       <span>{e(lab)}</span>
-      <input type="{tipo}" name="{n}" {"required" if req else ""} autocomplete="{'email' if tipo == 'email' else 'on'}">
-    </label>""" for n, lab, tipo, req in r["campos"])
+      <input type="{tipo}" name="{n}" placeholder="{e(ph)}" {"required" if req else ""}
+             autocomplete="{'email' if tipo == 'email' else 'on'}">
+    </label>""" for n, lab, tipo, req, ph in r["campos"]}
+
     opciones = "".join(f'<option value="{e(o)}">{e(o)}</option>' for o in r["punto_opciones"])
+    campos["punto"] = f"""<label class="campo-f">
+      <span>{e(r["punto_label"])}</span>
+      <select name="punto" required><option value="">Selecciona una opción</option>{opciones}</select>
+    </label>"""
+    campos["objetivo"] = f"""<label class="campo-f ancho">
+      <span>{e(r["objetivo_label"])}</span>
+      <textarea name="objetivo" rows="4" placeholder="Cuéntanos tu visión…"></textarea>
+    </label>"""
+
+    # Con <fieldset>/<legend> el navegador impone su propio modelo de caja y la
+    # retícula se rompe; el grupo se anuncia con role/aria-label, que da la misma
+    # agrupación al lector de pantalla sin pelearse con el layout.
+    grupos = "".join(f"""<div class="grupo-f g{i}" role="group" aria-label="{e(t)}">
+      <div class="grupo-cab">
+        <span class="grupo-n" aria-hidden="true">{i:02d}</span>
+        <span class="grupo-txt"><b>{e(t)}</b><i>{e(d)}</i></span>
+      </div>
+      <div class="grupo-campos">{"".join(campos[k] for k in claves)}</div>
+    </div>""" for i, (t, d, claves) in enumerate(r["grupos"], 1))
 
     return seccion("admisiones", "17", f"""
     {eyebrow(p["eyebrow"])}
@@ -912,33 +980,38 @@ def s_admisiones_unificada():
       <p class="nota">{e(a["nota"])}</p>
     </div>
 
-    <div class="sub">
-      <h3>{e(c["titulo"])}</h3>
-      <div class="datos">{datos}</div>
-    </div>
-
-    <div class="sub" id="registro">
-      <h3>{e(r["titulo"])}</h3>
+    <div class="sub reg" id="registro">
+      <h3 class="reg-t">{e(r["titulo"])}</h3>
+      <p class="reg-baja">{e(r["bajada"])}</p>
       {lista(r["items"], "lista chips")}
-      <p class="lead">{e(r["bajada"])}</p>
-      <form class="form" id="form-registro" novalidate>
-        <p class="form-t">{e(r["form_titulo"])}</p>
-        <div class="campos">{campos}</div>
-        <label class="campo-f">
-          <span>{e(r["punto_label"])}</span>
-          <select name="punto" required><option value="">Selecciona una opción</option>{opciones}</select>
-        </label>
-        <label class="campo-f">
-          <span>{e(r["objetivo_label"])}</span>
-          <textarea name="objetivo" rows="4"></textarea>
-        </label>
-        <button class="btn btn-pri" type="submit">{e(r["boton"])} <span aria-hidden="true">→</span></button>
-        <p class="form-msg" role="status" data-ok="{e(r["confirmacion"])}"></p>
-      </form>
-    </div>
 
-    <p class="pregunta">{e(a["pregunta"])}</p>
-    <div class="ctas">{boton(a["boton"], "#registro", "pri")}</div>""", "admisiones")
+      <div class="expediente">
+        {carnet(r["carnet_rol"], r["carnet_palabras"])}
+        {sello_aro(r["sello"], "reg")}
+        <div class="carpeta">
+          <span class="carpeta-lengueta" aria-hidden="true"></span>
+          <div class="carpeta-hoja">
+            <header class="exp-cab">
+              <div class="exp-titulos">
+                <p class="exp-of">{e(r["oficina"])}</p>
+                <p class="exp-t">{e(r["form_titulo"])}</p>
+                <p class="exp-sub">{e(r["form_sub"])}</p>
+              </div>
+              <p class="exp-lema"><b>Crea y Monetiza Campus</b><i>{e(r["lema"])}</i></p>
+            </header>
+
+            <form class="form" id="form-registro" novalidate>
+              {grupos}
+              <div class="exp-pie">
+                <button class="btn btn-pri" type="submit">{e(r["boton"])} <span aria-hidden="true">→</span></button>
+                <p class="form-msg" role="status" data-ok="{e(r["confirmacion"])}"></p>
+                <p class="exp-nota">{e(r["nota"])}</p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>""", "admisiones")
 
 
 # Quince bloques donde antes había veintidós. No se quitó contenido: se
@@ -946,7 +1019,10 @@ def s_admisiones_unificada():
 # secundario. Los competidores directos del nicho tienen entre cuatro y cinco.
 SECCIONES = [s_hero, s_cinta_1, s_carta, s_campus, s_perfil, s_recorrido,
              s_plan, s_tesis, s_experiencia_unificada, s_facultad,
-             s_mercado_unificado, s_historias, s_graduacion,
+             s_mercado_unificado, s_graduacion,
+             # s_historias sale mientras Pierina reúne los casos, las capturas y
+             # la aprobación de las alumnas. La función sigue abajo intacta:
+             # vuelve descomentándola aquí.
              s_admisiones_unificada, s_faq, s_cinta_2, s_cierre]
 
 

@@ -641,3 +641,21 @@ body.v-perfil{
   margin-top:14px; font-weight:700; font-size:13px;
   letter-spacing:.06em; opacity:.7;
 }
+
+/* Los seis ejes, cada uno con su color. Eran seis tarjetas blancas iguales:
+   mucho blanco y ninguna diferencia entre ellas salvo el texto. */
+.v-perfil .eje:nth-child(3n+1){ background:var(--amar-soft) }
+.v-perfil .eje:nth-child(3n+2){ background:var(--rosa-soft) }
+.v-perfil .eje:nth-child(3n+3){ background:var(--azul-soft) }
+.v-perfil .eje{ border-color:var(--vino) }
+
+/* Las dos frases que abren el recorrido son una idea partida en dos líneas, no
+   dos párrafos: separadas se leían como dos afirmaciones sueltas. */
+.v-perfil #recorrido > .wrap > .lead{ margin-bottom:.15em }
+.v-perfil #recorrido > .wrap > .lead + .lead{ margin-top:0 }
+
+/* El claim del cierre en amarillo lima: sobre el vino es lo único que brilla,
+   y es la frase que resume la escuela. */
+.v-perfil .cierre-final .claim{ color:var(--amar); opacity:1; font-weight:700 }
+.v-perfil .cierre-final .carnet,.v-perfil .cierre-final .sello-aro{ color:var(--crema) }
+.v-perfil .expediente .carpeta{ border:1px solid rgba(80,7,17,.08) }

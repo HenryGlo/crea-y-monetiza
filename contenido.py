@@ -57,7 +57,7 @@ HERO = {
         "Creación de contenido.",
         "UGC profesional.",
         "Negocio.",
-        "Inteligencia artificial.",
+        "Organización y productividad.",
         "Monetización.",
     ],
     "remate": "Todo dentro de una misma ruta formativa.",
@@ -66,7 +66,9 @@ HERO = {
     "cifras": [
         ("+270", "creadoras formadas"),
         ("6", "meses de recorrido"),
-        ("10", "materias"),
+        # Con "+" porque ya son más de trece y siguen sumando: un número
+        # cerrado quedaría desactualizado en cuanto se añada una.
+        ("+10", "materias"),
         ("1:1", "acompañamiento cercano"),
     ],
 }
@@ -101,7 +103,7 @@ CARTA = {
 # 03
 CAMPUS = {
     "eyebrow": "¿Qué es Crea y Monetiza Campus?",
-    "titulo": "Aquí no vienes solo a ver clases. Vienes a formarte.",
+    "titulo": "Aquí no vienes a ver clases, vienes a formarte.",
     "intro": [
         "Crear contenido puede convertirse en una profesión.",
         "Pero para construir una carrera necesitas mucho más que saber grabar un buen video.",
@@ -189,15 +191,15 @@ RECORRIDO = {
                 "Recibes acompañamiento y feedback.",
                 "Evalúas tu progreso antes de pasar a la siguiente etapa.",
             ],
-            "cierre": "Primero construimos una base sólida. Después la ponemos a trabajar.",
+            "cierre": "Una marca personal que trasciende construye una base sólida.",
         },
         {
             "n": "Etapa 02",
             "meses": "Meses 4–6 · Implementación profesional",
             "titulo": "Sales al mercado",
-            "intro": "Aquí empieza una etapa completamente diferente.\n"
-                     "Lo que has aprendido deja de quedarse dentro de las clases y comienza "
-                     "a aplicarse a tu realidad profesional.",
+            "intro": "En esta etapa empiezas a moverte como creadora profesional: "
+                     "mostrar tu trabajo, conectar con marcas, detectar oportunidades "
+                     "y comenzar a posicionarte dentro del mercado.",
             "lead": "Trabajarás sobre:",
             "pasos": [
                 "Tu posicionamiento.", "Tu contenido.", "Tu portafolio.",
@@ -212,41 +214,34 @@ RECORRIDO = {
 }
 
 # 06
+# El detalle del plan no se publica: es contenido exclusivo de las alumnas
+# matriculadas. En la página quedan cómo está estructurado y la invitación a
+# agendar la llamada de admisión.
 PLAN = {
     "eyebrow": "Dentro del Campus",
-    "titulo": "Este es tu plan de estudios.",
-    "bajada": "Cada materia ha sido diseñada para desarrollar una parte concreta de tu carrera como creadora.",
-    # Cada materia lleva su duración —"6 clases · 1h 40m"— que es lo que permite
-    # que el plan se lea como un plan y no como una lista de temas. Vacía hasta
-    # que el Campus la confirme: se pinta solo si tiene valor.
-    "materias": [
-        ("Onboarding", "Entiende cómo funciona el Campus, define tu punto de partida y construye tu ruta de trabajo.", []),
-        ("Marca personal", "Trabaja tu identidad, posicionamiento, diferenciación, mensaje y presencia como creadora.", []),
-        ("Estrategia de contenido", "Aprende a construir contenido con dirección, intención y objetivos claros.", []),
-        ("Creación de contenido", "Desarrolla ideas, storytelling, estructuras, grabación y ejecución para diferentes formatos y plataformas.", []),
-        ("Producción y postproducción", "Profesionaliza tus procesos de grabación, edición, organización y presentación audiovisual.", []),
-        ("UGC profesional", "", [
-            "Perfil UGC", "Portafolio", "Videos demo", "Pitch", "Contacto con marcas",
-            "Propuestas", "Presupuestos", "Tarifas", "Derechos de uso", "Contratos",
-            "Negociación", "Plataformas", "Primeras oportunidades",
-            "Relaciones profesionales con marcas",
-        ]),
-        ("Negocio para creadoras", "Convierte tus habilidades en servicios y ofertas que puedas presentar y monetizar profesionalmente.", []),
-        ("Monetización", "Aprende a identificar oportunidades alrededor de tu contenido, tus conocimientos, tus servicios y tu marca.", []),
-        ("Inteligencia artificial para creadoras", "Utiliza IA para investigar, organizar, crear, optimizar procesos y trabajar de manera más estratégica.", []),
-        ("Profesionalización", "Integra lo aprendido, prepara tus activos profesionales y construye tu siguiente etapa como creadora.", []),
-    ],
-    # El detalle del plan no se publica: se cuenta en la llamada de admisión.
-    # En la página quedan las áreas —que son las mismas seis del hero, ya
-    # aprobadas— y la invitación a agendar.
-    "cta_linea": "El plan completo, materia por materia, te lo contamos en la llamada.",
-    "cta_boton": "Agenda tu llamada",
+    "titulo": "Tu plan de estudios.",
+    "bajada": "Cada alumna accede a una formación estructurada por materias, clases, "
+              "recursos y ejercicios diseñados para profesionalizar cada área de su "
+              "carrera como creadora.",
+    "exclusivo": "El plan de estudios es exclusivo para alumnas matriculadas en "
+                 "Crea y Monetiza Campus.",
 
-    "cierre": [
-        "Y esto es solo el plan de estudios.",
-        "Dentro de cada materia encontrarás clases, ejercicios, recursos y entregables que "
-        "te ayudarán a pasar de aprender a ejecutar.",
+    "bloques": [
+        ("Formación estructurada",
+         "Materias organizadas para que sepas qué trabajar y en qué orden."),
+        ("Clases + recursos",
+         "Contenido formativo acompañado de herramientas, ejemplos y materiales de aplicación."),
+        ("Ejercicios y entregables",
+         "Cada bloque incluye trabajo práctico para llevar lo aprendido a tu propia realidad."),
+        ("Contenido exclusivo del Campus",
+         "El pensum completo se desbloquea una vez formalizas tu matrícula."),
     ],
+
+    "cta_linea": "Conoce el proceso de admisión y da el primer paso para acceder a tu "
+                 "formación completa dentro del Campus.",
+    "cta_boton": "Desbloquear mi plan académico",
+    # La llamada de admisión se agenda fuera del sitio.
+    "cta_enlace": "https://calendly.com/encuentronl/45min",
 }
 
 # Duración de cada materia, por número de materia (1-10). El Campus tiene que
@@ -360,6 +355,8 @@ VIVO = {
 # 11
 FACULTAD = {
     "eyebrow": "Tu equipo",
+    # NO SE PUBLICA: retirado por decisión del cliente. La sección arranca en
+    # "Cada área necesita una mirada diferente".
     "titulo": "No dependes de una sola persona.",
     "intro": [
         "Cada área necesita una mirada diferente.",
@@ -403,6 +400,8 @@ FACULTAD = {
 # 12
 MERCADO = {
     "eyebrow": "Experiencia profesional",
+    # NO SE PUBLICA: retirado por decisión del cliente. La sección arranca
+    # directamente con "Aprender a crear contenido es solo una parte".
     "titulo": "En algún momento tienes que salir del aula.",
     "intro": [
         "Aprender a crear contenido es solo una parte.",
@@ -516,17 +515,32 @@ GRADUACION = {
 # 17
 REGISTRO = {
     "eyebrow": "Registro de interés",
-    "titulo": "¿Quieres ser de las primeras en enterarte de lo que pasa en el Campus?",
+    "titulo": "Acceso prioritario al Campus.",
+    "bajada": "Sé de las primeras en enterarte de todo lo que pasa en el Campus.",
     "items": ["Nuevas convocatorias.", "Fechas de admisión.", "Masterclasses.", "Novedades.",
               "Eventos.", "Recursos.", "Actualizaciones del Campus."],
-    "bajada": "Las personas que forman parte de nuestro registro prioritario reciben la información directamente.",
-    "form_titulo": "Quiero entrar al registro prioritario",
+
+    # Cabecera del expediente. El formulario se presenta como un documento de la
+    # oficina de admisiones, no como un bloque de campos sueltos.
+    "oficina": "Oficina de admisiones",
+    "form_titulo": "Registro prioritario",
+    "form_sub": "Formulario de interés",
+    "lema": "Más mujeres creando la vida que aman.",
+
+    # Las mismas preguntas de siempre, agrupadas en tres pasos. Cada grupo cita
+    # los campos por su nombre, así que reordenar aquí reordena el formulario.
+    "grupos": [
+        ("Sobre ti", "Cuéntanos un poco de ti.", ["nombre", "apellido", "email", "pais"]),
+        ("Tu momento actual", "Queremos conocer tu contexto.", ["social", "punto"]),
+        ("Hacia dónde vas", "Esto es solo el comienzo.", ["objetivo"]),
+    ],
+
     "campos": [
-        ("nombre", "Nombre", "text", True),
-        ("apellido", "Apellido", "text", True),
-        ("email", "Correo electrónico", "email", True),
-        ("pais", "País", "text", True),
-        ("social", "Instagram o TikTok", "text", True),
+        ("nombre", "Nombre", "text", True, "Tu nombre"),
+        ("apellido", "Apellido", "text", True, "Tu apellido"),
+        ("email", "Correo electrónico", "email", True, "tu@email.com"),
+        ("pais", "País", "text", True, "Tu país"),
+        ("social", "Instagram o TikTok", "text", True, "@tusuario"),
     ],
     "punto_label": "¿En qué punto estás actualmente?",
     "punto_opciones": [
@@ -538,8 +552,15 @@ REGISTRO = {
         "Ya monetizo, pero quiero crecer.",
     ],
     "objetivo_label": "¿Qué te gustaría conseguir profesionalmente con tu contenido durante los próximos 12 meses?",
-    "boton": "Entrar al registro prioritario",
+    "boton": "Enviar mi registro",
     "confirmacion": "Registro recibido. Ahora sí: bienvenida al radar del Campus. 💌",
+    "nota": "El registro prioritario no garantiza la admisión al Campus, pero te "
+            "mantendrás informada de todas las novedades.",
+
+    # El carnet que acompaña al expediente.
+    "carnet_rol": "Estudiante del mañana",
+    "carnet_palabras": ["Crea", "Aprende", "Conecta", "Monetiza"],
+    "sello": "Crea y Monetiza Campus · Admisiones · Un futuro creativo es posible ·",
 }
 
 # 18
@@ -588,12 +609,16 @@ ADMISIONES = {
         ("Evaluamos tu perfil", "Revisamos si el Campus encaja con tus objetivos y si podemos acompañarte en el punto en el que te encuentras."),
         ("Recibes los siguientes pasos", "Si tu perfil encaja con la formación y hay disponibilidad para incorporarte, durante la llamada conocerás todos los detalles de acceso."),
     ],
+    # NO SE PUBLICA: retirada por decisión del cliente. El botón de admisión se
+    # queda; lo que se va es la pregunta.
     "pregunta": "¿Quieres formar parte de la próxima generación de creadoras del Campus?",
     "boton": "Iniciar mi proceso de admisión",
     "nota": "Completar el proceso de admisión no garantiza automáticamente una plaza.",
 }
 
 # 20
+# NO SE PUBLICA: la sección de cohorte se retiró por decisión del cliente. El
+# registro prioritario, que era su desenlace, vive ahora por su cuenta.
 COHORTE = {
     "eyebrow": "Admisiones",
     "titulo": "Cada generación empieza su recorrido en conjunto.",
@@ -637,8 +662,8 @@ FAQ = {
         ("¿Hay acompañamiento?",
          ["Sí.", "El acompañamiento y seguimiento forman parte de la experiencia del Campus."]),
         ("¿Recibiré un certificado?",
-         ["Al completar los requisitos del recorrido recibirás un certificado de finalización "
-          "de Crea y Monetiza Campus."]),
+         ["Al completar los requisitos del recorrido recibirás tu título como "
+          "Creadora Profesional."]),
         ("¿Qué es el Banco de Oportunidades?",
          ["Es un espacio de recursos relacionados con marcas, agencias, plataformas y "
           "oportunidades que pueden ayudarte durante tu etapa de profesionalización."]),
@@ -668,6 +693,13 @@ CIERRE = {
     "cta_1": "Iniciar mi proceso de admisión",
     "cta_2": "Entrar al registro prioritario",
     "firma": "Tu contenido puede ser el comienzo de algo mucho más grande.",
+
+    # Los adornos del cierre. Es la última pantalla de la página: se le da
+    # tratamiento de despedida y no de pie de página.
+    "mano": "Misma pasión.\nNuevas posibilidades.",
+    "carnet_rol": "Creadora en progreso",
+    "carnet_palabras": ["Ideas", "Formación", "Acción", "Libertad"],
+    "sello": "Admisiones abiertas · Creadoras de un futuro real ·",
 }
 
 # Datos del perfil que se arma solo en el hero de la propuesta 4.
