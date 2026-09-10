@@ -251,18 +251,22 @@ def boton(texto, href, tipo="pri", externo=False):
 def hero_media(raiz="../"):
     """Lo que acompaña al titular del hero.
 
-    El cliente sustituye la tarjeta de perfil por un cortometraje vertical que
-    llega por Drive. Mientras el archivo no esté en assets/, la página mantiene
-    el perfil que se arma solo y señala el hueco: un rectángulo vacío durante
-    semanas es peor que la animación que ya funciona, y un <video> a una ruta
-    inexistente deja un control roto justo en el hero.
+    El cortometraje vertical sustituye a la tarjeta de perfil que se armaba
+    sola. Mientras el archivo no esté en assets/, va el marco vacío en su
+    proporción con el texto que lo acompaña: así se ve ya la composición
+    definitiva. Un <video> a una ruta inexistente deja un control roto justo en
+    el hero, por eso el archivo se comprueba antes de emitirlo.
 
-    Cuando el archivo aparezca con el nombre de contenido.py, el cambio ocurre
-    solo, sin tocar código."""
+    Cuando aparezca con el nombre de contenido.py, el cambio ocurre solo, sin
+    tocar código. perfil_animado() queda abajo sin usar, por si vuelve."""
     v = C.HERO_VIDEO
+    texto = (f'<figcaption class="hero-video-txt">'
+             f'<b>{e(v["titular"])}</b><span>{e(v["texto"])}</span></figcaption>')
+
     if not os.path.exists(os.path.join(RAIZ, "assets", v["archivo"])):
-        return (f'<div class="hero-media hero-hueco pendiente" '
-                f'data-nota="{e(v["nota_falta"])}">{perfil_animado(raiz)}</div>')
+        return (f'<figure class="hero-media hero-video">'
+                f'<div class="hero-hueco pendiente" data-nota="{e(v["nota_falta"])}"'
+                f' role="img" aria-label="{e(v["alt"])}"></div>{texto}</figure>')
 
     poster = ""
     if os.path.exists(os.path.join(RAIZ, "assets", v["poster"])):
@@ -274,9 +278,7 @@ def hero_media(raiz="../"):
   <video src="{raiz}assets/{e(v["archivo"])}"{poster}
          autoplay muted loop playsinline preload="metadata"
          aria-label="{e(v["alt"])}"></video>
-  <figcaption class="hero-video-txt">
-    <b>{e(v["titular"])}</b><span>{e(v["texto"])}</span>
-  </figcaption>
+  {texto}
 </figure>"""
 
 
@@ -392,15 +394,9 @@ def s_carta():
     ella, y hasta ahora la página no daba ni un dato sobre quién es."""
     c = C.CARTA
     t = c["trayectoria"]
-    src = f'https://www.youtube-nocookie.com/embed/{c["video_id"]}?start={c["video_inicio"]}&autoplay=1&rel=0'
-    # Fachada: la miniatura no carga nada de YouTube hasta que se pulsa, así el
-    # visitante no queda expuesto a sus cookies solo por abrir la página.
-    video = f"""<div class="video" data-src="{e(src)}">
-      <button class="video-btn" type="button" aria-label="Reproducir el video de bienvenida">
-        <span class="play" aria-hidden="true">▶</span>
-        <span class="video-t">{e(c["video_titulo"])}</span>
-      </button>
-    </div>"""
+    # El video sale de la carta por decisión del cliente. Los datos siguen en
+    # contenido.py y la fachada que no cargaba nada de YouTube hasta pulsarla
+    # está en el historial: vuelve poniéndola de nuevo aquí y en la hoja.
     # La cita sobre un papel amarillo, no como texto suelto: es una nota suya
     # dentro de la página, y así se lee.
     cita = (f'<blockquote class="cita nota"><span>{e(c["cita"])}</span>'
@@ -451,7 +447,6 @@ def s_carta():
             <div class="carta-cuerpo">{parrafos(c["parrafos"])}</div>
             {retrato}
           </div>
-          {video}
           {cita}
         </div>
       </div>

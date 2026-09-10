@@ -443,10 +443,9 @@ body.v-perfil{
 .v-perfil .sec .btn-pri:hover{ box-shadow:0 16px 34px -14px rgba(241,139,196,.9) }
 .v-perfil .nav-cta{ background:var(--vino); color:var(--crema) }
 
-/* La última línea del titular en rosa: dos tonos, como en su hero. Son las tres
-   últimas palabras —"una carrera profesional"—, no seis: con seis el rosa se
-   comía media frase y dejaba de leerse como un remate. */
-.v-perfil .hero h1 .pal:nth-last-child(-n+3){ --tinta:var(--rosa); --brillo:var(--vino) }
+/* El titular del hero iba a dos tonos, con las tres últimas palabras en rosa.
+   Se retira: el cliente quiere los titulares de un solo color. El brillo que
+   recorre las letras se queda, que es lo que sí pidió. */
 
 /* La pregunta de admisiones sobre trazo rosa: es el momento de decisión de la
    página y con el mismo tratamiento del remate queda señalada sin subir de
@@ -659,3 +658,10 @@ body.v-perfil{
 .v-perfil .cierre-final .claim{ color:var(--amar); opacity:1; font-weight:700 }
 .v-perfil .cierre-final .carnet,.v-perfil .cierre-final .sello-aro{ color:var(--crema) }
 .v-perfil .expediente .carpeta{ border:1px solid rgba(80,7,17,.08) }
+
+/* El cortometraje ocupa la columna donde antes se armaba el perfil. Sin
+   grid-area caía fuera de la retícula y desmontaba el hero entero. */
+.v-perfil .hero .hero-media{ grid-area:perfil; align-self:center }
+@media (max-width:900px){
+  .v-perfil .hero .hero-media{ --alto:min(56vh,440px) }
+}
