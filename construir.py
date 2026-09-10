@@ -589,10 +589,12 @@ def bloque_evaluacion():
     # abierta ocupaba 600px al final del plan.
     # Deja de ir plegado. "No queremos que termines sabiendo más, queremos que
     # termines sabiendo hacer más" es de las frases que mejor separan al Campus
-    # de un curso grabado, y escondida tras un acordeón no la leía nadie. Va a
-    # sangre y en vino: es la única franja oscura de este tramo de la página.
+    # de un curso grabado, y escondida tras un acordeón no la leía nadie.
+    #
+    # Va en azul claro y no en vino: la Tesis, que viene justo después, ya es
+    # vino a sangre, y dos bloques oscuros seguidos se leen como uno solo.
     return f"""</div></section>
-<section class="sec evaluacion-franja" data-num="07"><div class="wrap">
+<section class="sec evaluacion-franja tono tono-azul" data-num="07"><div class="wrap">
       <p class="eyebrow"><span class="dot"></span>{e(v["eyebrow"])}</p>
       <h2 class="ev-titulo">{e(v["titulo"])}</h2>
       {parrafos(v["intro"], "lead")}

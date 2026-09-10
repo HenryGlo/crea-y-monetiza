@@ -1428,19 +1428,10 @@ a{ color:inherit }
    más" es de las frases que mejor separan al Campus de un curso grabado. Estaba
    plegada dentro del plan de estudios, donde no la leía nadie.
 
-   Va a sangre y en vino: es la única franja oscura de este tramo, así que corta
-   la sucesión de secciones claras y obliga a detenerse. */
+   Iba en vino a sangre, pero la Tesis viene justo después y ya es vino: dos
+   bloques oscuros seguidos se leen como uno solo. Va en azul claro, que la
+   separa igual del amarillo del plan que la precede. */
 
-.evaluacion-franja{
-  background:
-    radial-gradient(64% 52% at 18% 0%,var(--vino-2),transparent 64%),
-    radial-gradient(52% 46% at 84% 100%,var(--vino-2),transparent 64%),
-    var(--vino);
-  color:var(--crema);
-  --texto:var(--crema); --acento:var(--rosa);
-}
-.evaluacion-franja .eyebrow{ opacity:.8 }
-.evaluacion-franja p{ color:color-mix(in srgb,var(--crema) 84%,transparent) }
 .evaluacion-franja .ev-titulo{
   max-width:22ch; font-size:clamp(30px,5.2vw,64px);
 }
@@ -1465,7 +1456,7 @@ a{ color:inherit }
   content:""; position:absolute; top:21px; height:2px; pointer-events:none;
   left:calc(var(--nodo) / 2); right:var(--rail-fin);
 }
-.linea::before{ background:rgba(246,237,232,.22) }
+.linea::before{ background:color-mix(in srgb,var(--texto) 16%,transparent) }
 .linea::after{
   background:var(--rosa);
   transform-origin:0 50%; scale:0 1;
@@ -1482,8 +1473,9 @@ a{ color:inherit }
 }
 .hito-nodo{
   width:44px; height:44px; border-radius:50%; display:grid; place-items:center;
-  background:var(--vino); border:2px solid rgba(246,237,232,.3);
-  font-family:var(--display); font-size:15px; color:var(--crema);
+  background:var(--superficie);
+  border:2px solid color-mix(in srgb,var(--texto) 18%,transparent);
+  font-family:var(--display); font-size:15px; color:var(--texto);
   position:relative; z-index:1;
   opacity:0; scale:.4;
   transition:opacity .35s ease, scale .5s cubic-bezier(.3,1.7,.5,1),
@@ -1495,7 +1487,9 @@ a{ color:inherit }
 .linea.dentro .hito:last-child .hito-nodo{ background:var(--rosa); color:var(--vino) }
 
 .hito-caja{
-  background:rgba(246,237,232,.07); border:1px solid rgba(246,237,232,.16);
+  background:var(--superficie);
+  border:1px solid color-mix(in srgb,var(--texto) 9%,transparent);
+  box-shadow:0 14px 30px -22px rgba(80,7,17,.4);
   border-radius:14px; padding:16px 16px 18px; width:100%;
   opacity:0; translate:0 16px;
   transition:opacity .5s ease, translate .5s cubic-bezier(.2,.9,.3,1);
@@ -1504,7 +1498,7 @@ a{ color:inherit }
 .linea.dentro .hito-caja{ opacity:1; translate:0 0 }
 .hito-caja b{
   display:block; font-family:var(--display); text-transform:uppercase;
-  font-size:16px; color:var(--rosa); margin-bottom:6px;
+  font-size:16px; margin-bottom:6px;
 }
 .hito-caja span{ display:block; font-size:14.5px; line-height:1.5 }
 
@@ -1529,7 +1523,6 @@ a{ color:inherit }
 .evaluacion-franja .destacado{
   font-family:var(--display); text-transform:uppercase;
   font-size:clamp(20px,2.8vw,36px); line-height:1.04; max-width:26ch;
-  color:var(--crema);
 }
 
 /* --------------------------------------------------------- lo que te llevas
