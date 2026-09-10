@@ -189,7 +189,10 @@ def decoracion(sid):
         estilo = (f"{lados[i]}:{round(-8 + next(r) * 22)}%;"
                   f"top:{alto}%;"
                   f"width:clamp(200px,{round(26 + next(r) * 20)}vw,{round(360 + next(r) * 300)}px);"
-                  f"--giro:{round(-30 + next(r) * 60)}deg;"
+                  # Sin giro: torcido, el rayo deja de leerse como un rayo y
+                  # la estrella pierde su eje. Lo que cambia entre secciones es
+                  # el sitio y el tamaño, no la inclinación.
+                  f"--giro:0deg;"
                   f"animation-delay:{round(next(r) * -14, 1)}s;"
                   f"animation-duration:{round(14 + next(r) * 12)}s")
         piezas.append(f'<img class="deco deco-fondo" style="{estilo}" '
@@ -1037,11 +1040,17 @@ def s_mercado_unificado():
 
 def sello_aro(texto, ident):
     """Sello circular: el texto gira alrededor del isotipo. El id del arco tiene
-    que ser único por página, así que lo pone quien llama."""
+    que ser único por página, así que lo pone quien llama.
+
+    textLength fuerza al texto a ocupar la circunferencia entera (2·pi·76 = 478):
+    sin él, cada sello dejaba un hueco distinto según lo largo de su frase y el
+    aro se leía como un arco cortado."""
     return f"""<div class="sello-aro" aria-hidden="true">
       <svg viewBox="0 0 200 200">
         <defs><path id="aro-{ident}" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/></defs>
-        <text class="aro-txt"><textPath href="#aro-{ident}" startOffset="0%">{e(texto)}</textPath></text>
+        <text class="aro-txt" textLength="478" lengthAdjust="spacing">
+          <textPath href="#aro-{ident}" startOffset="0%">{e(texto)}</textPath>
+        </text>
       </svg>
       <svg class="aro-iso" viewBox="0 0 265.42 268.17"><use href="#iso"/></svg>
     </div>"""

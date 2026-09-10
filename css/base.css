@@ -1091,6 +1091,13 @@ a{ color:inherit }
 /* La grande de fondo: detrás del contenido y casi transparente. Da profundidad
    sin que compita con el texto, que es lo que pasaría a plena opacidad. */
 .deco-fondo{ z-index:-1; filter:blur(1px) }
+/* Las piezas de fondo flotan en vertical y no basculan: la de los márgenes se
+   mecía porque era una pegatina pegada torcida, pero estas van derechas para
+   que el rayo se lea como un rayo. */
+.sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{
+  transform:none; animation-name:flotar-fondo;
+}
+@keyframes flotar-fondo{ 0%,100%{ translate:0 0 } 50%{ translate:0 -22px } }
 .sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{ opacity:.1 }
 /* Sobre el vino de la Tesis la pieza tenue se pierde; ahí sube. */
 .v-perfil #tesis .deco-fondo{ z-index:0 }
@@ -1962,7 +1969,10 @@ a{ color:inherit }
 /* Dentro del bloque: colgando por encima del borde superior lo tapaba el nav,
    que va fijo. */
 .cierre-final .carnet{ left:clamp(12px,3.5vw,70px); top:96px }
-.cierre-lado .sello-aro{ position:static; width:clamp(120px,10vw,168px); margin-inline:auto }
+/* Relativo y no estático: el isotipo va dentro en posición absoluta y con
+   `static` se colgaba del pie entero, que es lo que lo dejaba enorme y
+   descentrado dentro del aro. */
+.cierre-lado .sello-aro{ position:relative; width:clamp(120px,10vw,168px); margin-inline:auto }
 /* A la misma altura que el carnet del otro lado: descolgado, el sello se leía
    como una pieza suelta. */
 .cierre-lado{
