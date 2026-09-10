@@ -174,12 +174,20 @@ def decoracion(sid):
         familias.reverse()
     colores = ["rosa", "azul", "amar"]
 
+    # Una a cada lado y en mitades distintas de la sección. Con el lado y la
+    # altura al azar las dos caían a veces en el mismo sitio y la estrella se
+    # montaba encima del rayo: son textura de fondo, y dos piezas superpuestas
+    # se leen como una mancha.
+    lados = ["left", "right"]
+    if next(r) > .5:
+        lados.reverse()
+
     piezas = []
     for i, familia in enumerate(familias):
         forma = f"{familia}-{colores[int(next(r) * len(colores))]}"
-        lado = "left" if (i + int(next(r) * 2)) % 2 else "right"
-        estilo = (f"{lado}:{round(-8 + next(r) * 26)}%;"
-                  f"top:{round(-6 + next(r) * 76)}%;"
+        alto = round(-8 + next(r) * 26) if i == 0 else round(48 + next(r) * 26)
+        estilo = (f"{lados[i]}:{round(-8 + next(r) * 22)}%;"
+                  f"top:{alto}%;"
                   f"width:clamp(200px,{round(26 + next(r) * 20)}vw,{round(360 + next(r) * 300)}px);"
                   f"--giro:{round(-30 + next(r) * 60)}deg;"
                   f"animation-delay:{round(next(r) * -14, 1)}s;"
@@ -886,55 +894,62 @@ def s_faq():
 
 
 def s_cierre():
-    """El texto es el que aprobó el cliente y no se toca; lo que cambia es la
-    composición. Centrado en una columna, el cierre era una pila de bloques y
-    todo pesaba lo mismo. Ahora son dos paneles: a la izquierda, en vino, el
-    argumento —titular, las cuatro formas de recorrerlo y el claim—; a la
-    derecha, sobre papel, la decisión: botón, registro y firma.
+    """La última pantalla, como una portada.
 
-    Los dos paneles reparten los papeles: uno cuenta, el otro pide."""
+    El texto es el que aprobó el cliente y no se toca; lo que cambia es la
+    composición. Va centrada sobre el vino, con el arco y el isotipo arriba, el
+    titular a tamaño de cartel, una sola llamada en rosa y el registro debajo
+    como enlace. A los lados, el carnet colgando y el sello.
+
+    Las cuatro formas de recorrerlo bajan al pie en fila, cada una con su ficha
+    de color: son el resumen de lo que hay dentro, no un argumento más que leer
+    antes de decidir. Y el remate cierra la página entre dos filetes.
+
+    Antes fue una columna centrada donde todo pesaba igual, y después dos
+    paneles: el de papel se quedaba vacío al lado del vino."""
     c = C.CIERRE
 
-    # Las cuatro primeras van con su ficha; la última no es una forma más de
-    # hacerlo, es el remate, y va abajo con su filete. Dentro de cada ficha, una
-    # pegatina de la marca: el círculo de color solo era un punto, y cuatro
-    # puntos seguidos no dicen nada.
+    # Las cuatro primeras van al pie con su ficha; la última es el remate.
     piezas = ["estrella-amar", "rayo-azul", "estrella-rosa", "rayo-amar"]
     formas, remate = c["con"][:-1], c["con"][-1]
     marcas = "".join(
         f'<li style="--n:{i}"><span class="con-punto">'
         f'<img src="{RAIZ_WEB}assets/stickers/{piezas[i - 1]}.webp" alt="" '
         f'aria-hidden="true" loading="lazy" decoding="async"></span>'
-        f'{e(x)}</li>' for i, x in enumerate(formas, 1))
+        f'<b>{e(x.rstrip("."))}</b></li>' for i, x in enumerate(formas, 1))
 
     mano = "".join(f"<span>{e(x)}</span>" for x in c["mano"].split("\n"))
 
+    # El arco que abre la composición, con el isotipo en su vértice.
+    arco = f"""<div class="arco" aria-hidden="true">
+      <svg viewBox="0 0 600 90" preserveAspectRatio="none">
+        <path d="M2 88C90 26 240 4 300 4s210 22 298 84" fill="none"
+              stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <svg class="arco-iso" viewBox="0 0 265.42 268.17"><use href="#iso"/></svg>
+    </div>"""
+
     return f"""<footer id="cierre" class="cierre-final">
-  <div class="cierre-panel cierre-argumento">
-    <div class="panel-dentro">
-      {eyebrow(c["eyebrow"])}
-      <h2>{e(c["titulo"])}</h2>
-      {parrafos(c["parrafos"])}
-      <ul class="con-lista">{marcas}</ul>
-      <p class="con-remate">{e(remate)}</p>
-      <p class="claim">{e(c["claim"])}</p>
-    </div>
+  {carnet(c["carnet_rol"], c["carnet_palabras"])}
+  <div class="cierre-lado">
+    {sello_aro(c["sello"], "fin")}
+    <p class="cierre-mano" aria-hidden="true">{mano}</p>
   </div>
 
-  <div class="cierre-panel cierre-decision">
-    {carnet(c["carnet_rol"], c["carnet_palabras"])}
-    <div class="panel-dentro">
-      <svg class="logo-foot" viewBox="0 0 863.98 253.56" role="img" aria-label="{e(c["marca"])}"><use href="#logo-full"/></svg>
-      <!-- La firma como titular del panel. De párrafo pequeño no sostenía el
-           espacio y el papel quedaba vacío al lado del vino. -->
-      <p class="firma entra-entero">{e(c["firma"])}</p>
-      <div class="ctas">
-        {boton(c["cta_1"], "#admisiones", "pri")}
-      </div>
-      <a class="enlace-sub" href="#registro">{e(c["cta_2"])}</a>
-      {sello_aro(c["sello"], "fin")}
-      <p class="cierre-mano" aria-hidden="true">{mano}</p>
-    </div>
+  <div class="wrap cierre-centro">
+    {arco}
+    {eyebrow(c["eyebrow"])}
+    <h2>{e(c["titulo"])}</h2>
+    {parrafos(c["parrafos"])}
+    <div class="ctas">{boton(c["cta_1"], "#admisiones", "pri")}</div>
+    <a class="enlace-sub" href="#registro">{e(c["cta_2"])}</a>
+
+    <ul class="con-lista">{marcas}</ul>
+
+    <p class="firma">{e(c["firma"])}</p>
+    <p class="con-remate"><span>{e(remate)}</span></p>
+    <svg class="logo-foot" viewBox="0 0 863.98 253.56" role="img" aria-label="{e(c["marca"])}"><use href="#logo-full"/></svg>
+    <p class="claim">{e(c["claim"])}</p>
   </div>
 </footer>"""
 

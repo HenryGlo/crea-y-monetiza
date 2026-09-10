@@ -372,72 +372,107 @@ a{ color:inherit }
 
 /* ------------------------------------------------------------------- cierre */
 
-/* El cierre, a dos paneles. Centrado en una columna era una pila de bloques y
-   todo pesaba igual. A la izquierda, en vino, el argumento; a la derecha, sobre
-   papel, la decisión. Uno cuenta, el otro pide. */
-.cierre-final{
-  position:relative; display:grid; grid-template-columns:1.08fr 1fr;
-  align-items:stretch;
-}
-.cierre-panel{ position:relative; padding:clamp(40px,5.5vw,84px) 0 }
-.panel-dentro{ max-width:min(600px,100%) }
+/* El cierre, como portada.
 
-/* El titular arranca en el margen del panel, no en la columna central de la
-   página: pegado al centro parecía empujado contra el corte entre los dos
-   paneles, con medio panel vacío a su izquierda. */
-.cierre-argumento{ display:grid; align-content:center }
-.cierre-argumento .panel-dentro{
-  padding-left:clamp(24px,5.5vw,104px); padding-right:clamp(24px,3vw,48px);
+   Una sola composición centrada sobre el vino: el arco con el isotipo abre, el
+   titular manda, hay una única llamada y el registro va debajo como enlace. A
+   los lados, el carnet colgando y el sello. Las cuatro formas de recorrerlo
+   bajan al pie en fila —resumen de lo que hay dentro, no un argumento más antes
+   de decidir— y el remate cierra entre dos filetes.
+
+   Antes fue una columna donde todo pesaba igual, y después dos paneles: el de
+   papel se quedaba vacío al lado del vino. */
+
+.cierre-final{ position:relative; padding:clamp(56px,7vw,110px) 0 clamp(34px,4vw,56px) }
+.cierre-centro{ text-align:center; display:grid; justify-items:center }
+.cierre-final .eyebrow{ justify-content:center; letter-spacing:.24em }
+/* El punto del eyebrow, también al otro lado: en la referencia la etiqueta va
+   entre dos, centrada. */
+.cierre-final .eyebrow::after{
+  content:""; width:7px; height:7px; border-radius:50%; background:var(--acento);
 }
-.cierre-decision{ display:grid; align-content:center }
-.cierre-decision .panel-dentro{
-  padding-left:clamp(24px,4.4vw,84px); padding-right:clamp(24px,3vw,48px);
+.cierre-final h2{ margin:clamp(14px,1.8vw,22px) 0 0 }
+/* El remate se queda fuera del tope de medida: sus filetes tienen que cruzar
+   la página de lado a lado. */
+.cierre-final .cierre-centro > p:not(.con-remate){ max-width:56ch }
+.cierre-final .ctas{ justify-content:center; margin-top:clamp(22px,3vw,34px) }
+
+/* El arco de apertura, con el isotipo en su vértice. */
+.arco{
+  position:relative; width:min(560px,88%); color:var(--acento);
+  margin-bottom:clamp(16px,2.2vw,28px);
+}
+.arco > svg:first-child{ width:100%; height:clamp(48px,6vw,86px); display:block; opacity:.55 }
+.arco-iso{
+  position:absolute; left:50%; top:-6px; translate:-50% 0;
+  width:clamp(30px,3.2vw,42px); height:auto; fill:currentColor;
 }
 
-/* Las cuatro formas de recorrerlo, cada una con su ficha de color: es el
-   inventario de lo que el Campus pone, y en viñetas era otra lista más. */
-.con-lista{ list-style:none; padding:0; margin:clamp(22px,3vw,34px) 0 0; display:grid; gap:14px }
+/* La única llamada, y el registro debajo como enlace: dos botones a la par
+   competían y ninguno ganaba. */
+.enlace-sub{
+  display:inline-block; margin-top:16px;
+  font-weight:600; font-size:15px;
+  text-decoration:underline; text-underline-offset:6px;
+  text-decoration-thickness:2px; text-decoration-color:currentColor;
+  opacity:.85;
+}
+.enlace-sub:hover{ opacity:1; text-decoration-color:var(--acento) }
+
+/* Las cuatro formas, al pie y en fila, separadas por un filete como en la
+   referencia. */
+.con-lista{
+  list-style:none; padding:0; width:100%;
+  margin:clamp(40px,5.5vw,76px) 0 0;
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+}
 .con-lista li{
-  display:flex; align-items:center; gap:16px;
-  font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(16px,1.9vw,23px); line-height:1.05;
+  display:grid; justify-items:center; gap:14px; padding:0 clamp(8px,1.6vw,22px);
+  border-left:1px solid color-mix(in srgb,var(--texto) 20%,transparent);
 }
+.con-lista li:first-child{ border-left:0 }
 .con-punto{
-  width:clamp(44px,4.2vw,58px); aspect-ratio:1; border-radius:50%; flex:none;
+  width:clamp(54px,5vw,70px); aspect-ratio:1; border-radius:50%;
   display:grid; place-items:center; background:var(--rosa);
 }
 .con-punto img{ width:56%; height:auto; display:block }
 .con-lista li:nth-child(2) .con-punto{ background:var(--azul) }
 .con-lista li:nth-child(3) .con-punto{ background:var(--amar) }
 .con-lista li:nth-child(4) .con-punto{ background:var(--crema) }
+.con-lista li b{
+  font-weight:700; font-size:clamp(11px,1.1vw,13px);
+  letter-spacing:.16em; text-transform:uppercase; line-height:1.4;
+}
 
-/* El remate no es una forma más: va abajo, en pequeño, con su filete. */
+.cierre-final .firma{ margin-top:clamp(34px,4.4vw,58px); max-width:44ch }
+
+/* El remate entre dos filetes, como el pie de la referencia. */
 .con-remate{
-  margin-top:clamp(24px,3vw,36px); padding-top:18px;
-  font-size:12px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
-  opacity:.72; max-width:44ch;
-  border-top:2px solid var(--rosa);
+  width:100%; margin:clamp(26px,3.4vw,44px) 0 0;
+  display:flex; align-items:center; gap:clamp(16px,2.4vw,34px);
 }
-.cierre-final .claim{ margin-top:clamp(20px,2.6vw,32px) }
+.con-remate::before,.con-remate::after{
+  content:""; flex:1; height:1px;
+  background:color-mix(in srgb,var(--texto) 22%,transparent);
+}
+.con-remate span{
+  font-size:11.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  opacity:.78;
+}
 
-/* El enlace secundario, subrayado y sin caja: al lado de la píldora rosa, un
-   segundo botón competía con ella en vez de acompañarla. */
-/* La firma es el titular del panel de papel. Como párrafo pequeño no sostenía
-   el espacio: al lado de un panel vino a sangre, el papel quedaba vacío. En
-   cartel, es el contrapeso del titular de la izquierda. */
-.cierre-decision .firma{
-  font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(30px,3.6vw,54px); line-height:1.06; letter-spacing:-.005em;
-  max-width:13ch; margin:clamp(20px,2.6vw,32px) 0 0;
-  color:var(--texto); opacity:1;
+/* El sello y la nota a mano, juntos en la banda derecha. */
+.cierre-lado{ position:absolute; right:0; top:0; height:100%; pointer-events:none }
+
+@media (max-width:900px){
+  .con-lista{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:26px 0 }
+  .con-lista li:nth-child(odd){ border-left:0 }
 }
-.enlace-sub{
-  display:inline-block; margin-top:18px;
-  font-weight:600; font-size:15px;
-  text-decoration:underline; text-underline-offset:6px;
-  text-decoration-thickness:2px; text-decoration-color:var(--azul);
+@media (max-width:520px){
+  .con-lista{ grid-template-columns:1fr; gap:22px }
+  .con-lista li{ border-left:0 }
 }
-.enlace-sub:hover{ text-decoration-color:var(--acento) }
+
+
 
 @media (max-width:900px){
   .cierre-final{ grid-template-columns:1fr }
@@ -1914,11 +1949,18 @@ a{ color:inherit }
 
 /* En su panel, no contra el ancho de la página: el cierre ya no es una
    columna centrada. */
-/* Dentro del panel y por debajo del nav, que es fijo y se lo comía. */
-.cierre-decision .carnet{ right:clamp(10px,3vw,54px); top:34px }
-.cierre-decision .sello-aro{ right:clamp(8px,2.4vw,46px); bottom:clamp(30px,5vw,86px) }
+/* En las bandas laterales, fuera de la columna de texto: el carnet cuelga a la
+   izquierda y el sello con su nota va a la derecha. */
+/* Dentro del bloque: colgando por encima del borde superior lo tapaba el nav,
+   que va fijo. */
+.cierre-final .carnet{ left:clamp(12px,3.5vw,70px); top:96px }
+.cierre-lado .sello-aro{ position:static; width:clamp(120px,10vw,168px); margin-inline:auto }
+.cierre-lado{
+  right:clamp(12px,3vw,64px); top:clamp(120px,14vw,210px); height:auto;
+  display:grid; justify-items:center; gap:22px; width:clamp(150px,15vw,230px);
+}
 @media (max-width:1279px){
-  .cierre-decision .carnet,.cierre-decision .sello-aro{ display:none }
+  .cierre-final .carnet,.cierre-lado{ display:none }
 }
 
 .cierre-mano{
