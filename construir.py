@@ -417,8 +417,23 @@ def s_carta():
         f'<b>{e(n)}</b><span>{e(txt)}</span></div>'
         for n, txt in t["cifras"])
 
+    def logo_marca(nombre):
+        """El logotipo de la marca si está en assets/marcas/, y su nombre escrito
+        si no. Mismo criterio que el cortometraje y los retratos: el archivo
+        manda, y hasta que llega la página no se rompe ni miente.
+
+        El nombre del archivo sale del de la marca en minúsculas y sin signos,
+        así que basta con dejarlo ahí para que entre."""
+        slug = re.sub(r"[^a-z0-9]+", "-", nombre.lower()).strip("-")
+        for ext in ("svg", "webp", "png"):
+            ruta = os.path.join(RAIZ, "assets", "marcas", f"{slug}.{ext}")
+            if os.path.exists(ruta):
+                return (f'<img src="{RAIZ_WEB}assets/marcas/{slug}.{ext}" '
+                        f'alt="{e(nombre)}" loading="lazy" decoding="async">')
+        return f"<span>{e(nombre)}</span>"
+
     if t["marcas"]:
-        marcas = "".join(f'<li>{e(m)}</li>' for m in t["marcas"])
+        marcas = "".join(f"<li>{logo_marca(m)}</li>" for m in t["marcas"])
         marcas_cls = "marcas"
     else:
         # Seis huecos del tamaño de un logotipo: se ve la forma que tendrá la
