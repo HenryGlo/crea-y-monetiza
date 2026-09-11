@@ -111,15 +111,17 @@ CARTA = {
     # Quién firma. Los datos que faltan llegan de Pierina; hasta entonces van
     # entre corchetes y marcados en pantalla, nunca inventados.
     "trayectoria": {
-        "titulo": "Quién firma esta carta.",
+        # El titular se retira: el bloque va pegado a la firma de la carta y se
+        # entiende solo. Las creadoras acompañadas también, porque son las mismas
+        # +270 que ya cuenta el hero.
         "cifras": [
             ("[años]", "años creando contenido"),
-            ("[nº]", "colaboraciones con marcas"),
-            ("+270", "creadoras acompañadas"),
+            ("+30", "marcas nacionales e internacionales de tecnología, belleza, "
+                    "inteligencia artificial y bienestar."),
         ],
-        "marcas_t": "Marcas con las que ha trabajado",
-        # Los nombres los facilita Pierina, con permiso de uso de cada marca.
-        "marcas": [],
+        "marcas_t": "Entre ellas se encuentran",
+        "marcas": ["DJI", "CapCut", "FlexiSpot", "Higgsfield",
+                   "Lovart.ai", "Pollo AI", "Musso", "Pantene"],
         "marcas_falta": "Faltan los nombres de las marcas",
     },
 }
@@ -722,8 +724,9 @@ CIERRE = {
         "Puedes seguir aprendiendo cada parte por separado.",
         "O puedes construirlas dentro de una ruta.",
     ],
-    "con": ["Con estructura.", "Con formación.", "Con implementación.", "Con acompañamiento.",
-            "Y con otras creadoras recorriendo el mismo camino."],
+    # "Y con otras creadoras recorriendo el mismo camino" se retira del cierre
+    # por decisión del cliente; su sitio lo ocupa el claim.
+    "con": ["Con estructura.", "Con formación.", "Con implementación.", "Con acompañamiento."],
     "marca": "Crea y Monetiza Campus",
     "claim": "Formación integral para la nueva generación de creadoras.",
     "cta_1": "Iniciar mi proceso de admisión",

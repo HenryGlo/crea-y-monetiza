@@ -453,7 +453,6 @@ def s_carta():
     </div>
 
     <div class="trayectoria">
-      <h3>{e(t["titulo"])}</h3>
       <div class="cifras tray-cifras">{cifras}</div>
       <p class="tray-marcas-t">{e(t["marcas_t"])}</p>
       <ul class="{marcas_cls}" data-nota="{e(t["marcas_falta"])}">{marcas}</ul>
@@ -912,9 +911,12 @@ def s_cierre():
     paneles: el de papel se quedaba vacío al lado del vino."""
     c = C.CIERRE
 
-    # Las cuatro primeras van al pie con su ficha; la última es el remate.
+    # Las cuatro van al pie con su ficha. La línea entre filetes que cierra la
+    # página la ocupa el claim: antes llevaba "y con otras creadoras recorriendo
+    # el mismo camino", que sale por decisión del cliente, y el claim estaba
+    # repetido justo debajo del logo.
     piezas = ["estrella-amar", "rayo-azul", "estrella-rosa", "rayo-amar"]
-    formas, remate = c["con"][:-1], c["con"][-1]
+    formas, remate = c["con"], c["claim"]
     # "Con estructura. Con formación. Con implementación. Con acompañamiento."
     # Cuatro etiquetas seguidas empezando por la misma palabra se leen como una
     # repetición, no como cuatro cosas distintas. El "Con" baja de tamaño y el
@@ -961,9 +963,8 @@ def s_cierre():
     <ul class="con-lista">{marcas}</ul>
 
     <p class="firma">{e(c["firma"])}</p>
-    <p class="con-remate"><span>{e(remate)}</span></p>
+    <p class="con-remate claim"><span>{e(remate)}</span></p>
     <svg class="logo-foot" viewBox="0 0 863.98 253.56" role="img" aria-label="{e(c["marca"])}"><use href="#logo-full"/></svg>
-    <p class="claim">{e(c["claim"])}</p>
   </div>
 </footer>"""
 
