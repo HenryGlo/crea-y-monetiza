@@ -276,8 +276,8 @@ def hero_media(raiz="../"):
     # sonido: es una regla del navegador, no una decisión de diseño. El botón lo
     # enciende, que es el gesto de usuario que la regla pide.
     return f"""<figure class="hero-media hero-video">
-  <video src="{raiz}assets/{e(v["archivo"])}"{poster}
-         autoplay muted loop playsinline preload="metadata"
+  <video data-src="{raiz}assets/{e(v["archivo"])}"{poster}
+         muted loop playsinline preload="none"
          aria-label="{e(v["alt"])}"></video>
   <button class="sonido" type="button" aria-pressed="false"
           data-on="{e(v["sonido_on"])}" data-off="{e(v["sonido_off"])}"
@@ -1270,14 +1270,29 @@ def pagina(prop):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(titulo)}</title>
 <meta name="description" content="{e(C.MARCA["descripcion"])}">
-<meta name="robots" content="noindex, follow">
+<!-- La página llevaba noindex desde que era una propuesta a puerta cerrada.
+     Ya es la web pública, así que se indexa. -->
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{C.SITIO}/">
 <meta property="og:title" content="{e(titulo)}">
 <meta property="og:description" content="{e(C.MARCA["descripcion"])}">
 <meta property="og:type" content="website">
+<meta property="og:url" content="{C.SITIO}/">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="{e(C.MARCA["nombre"])}">
+<meta property="og:image" content="{C.SITIO}/assets/compartir.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{e(titulo)}">
+<meta name="twitter:description" content="{e(C.MARCA["descripcion"])}">
+<meta name="twitter:image" content="{C.SITIO}/assets/compartir.png">
+<meta name="theme-color" content="#500711">
 <link rel="icon" href="{raiz}favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{raiz}assets/icono-apple.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@400;600;700;800&family=Caveat:wght@700&display=swap">
 <link rel="stylesheet" href="{raiz}css/base.css?v={v_base}">
 <link rel="stylesheet" href="{raiz}css/{prop["clave"]}.css?v={v_tema}">
 </head>
@@ -1313,7 +1328,7 @@ def indice():
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@400;600;700;800&family=Caveat:wght@700&display=swap">
 <link rel="stylesheet" href="../css/base.css">
 <link rel="stylesheet" href="../css/indice.css">
 </head>

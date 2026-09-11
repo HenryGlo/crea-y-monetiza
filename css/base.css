@@ -2289,3 +2289,16 @@ a{ color:inherit }
   opacity:0; transition:opacity .2s ease;
 }
 .con-sonido .sonido-icono::before{ opacity:1 }
+
+/* En conexión lenta el video no se descarga solo: queda su primera imagen y el
+   botón, que ahí significa reproducir y no silenciar. */
+.hero-video.en-espera .sonido{
+  width:58px; height:58px; right:50%; top:50%; translate:50% -50%;
+  background:rgba(80,7,17,.72);
+}
+.hero-video.en-espera .sonido-icono{
+  clip-path:polygon(14% 4%,14% 96%,94% 50%);
+  width:20px; height:20px;
+}
+.hero-video.en-espera .sonido-icono::after,
+.hero-video.en-espera .sonido-icono::before{ display:none }

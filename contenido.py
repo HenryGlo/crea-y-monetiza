@@ -10,6 +10,10 @@ Todo eso se comunica en privado durante la entrevista de admisión.
 construir.py verifica esto antes de escribir los archivos.
 """
 
+# La dirección pública, que hacen falta la canónica y las etiquetas para
+# compartir en redes. Sin barra final: es como la sirve el dominio.
+SITIO = "https://web-crea-y-monetiza.perfectflow.cloud"
+
 MARCA = {
     "nombre": "Crea y Monetiza Campus",
     "dominio": "web-crea-y-monetiza.perfectflow.cloud",

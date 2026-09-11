@@ -551,6 +551,82 @@
     const btn = fig.querySelector(".sonido");
     if (!video || !btn) return;
 
+    /* El archivo no se pide hasta que el hero está en pantalla. Con autoplay y
+       preload el navegador se bajaba 5,5 MB antes de pintar nada, y en datos
+       móviles eso es lo que hacía que la página tardase. */
+    function arrancar() {
+      if (video.dataset.src) {
+        video.src = video.dataset.src;
+        delete video.dataset.src;
+      }
+      video.play().catch(function () {});
+    }
+
+    if ("IntersectionObserver" in window) {
+      const ojo = new IntersectionObserver(function (es) {
+        es.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          arrancar();
+          ojo.disconnect();
+        });
+      }, { rootMargin: "200px" });
+      ojo.observe(fig);
+    } else {
+      arrancar();
+    }
+
+    /* Cuándo se pide el archivo.
+
+       Con autoplay y preload, el navegador se bajaba los 5,5 MB del
+       cortometraje compitiendo con el CSS y las fuentes, antes de pintar nada.
+       Ahora el video no se toca hasta que la página está cargada y el
+       navegador ocioso, y solo si la conexión da para ello: en datos contados
+       o en una red lenta se queda la primera imagen y un botón para verlo.
+
+       Lo que se ve primero —titular, botones, la imagen del video— pesa 50 kB
+       en total. */
+    function arrancar() {
+      if (video.dataset.src) {
+        video.src = video.dataset.src;
+        delete video.dataset.src;
+      }
+      fig.classList.remove("en-espera");
+      video.play().catch(function () {});
+    }
+
+    function conexionPobre() {
+      const c = navigator.connection;
+      if (!c) return false;
+      if (c.saveData) return true;
+      return /(^|-)(2g|slow-2g)$/.test(c.effectiveType || "");
+    }
+
+    function cuandoSobre(fn) {
+      if ("requestIdleCallback" in window) requestIdleCallback(fn, { timeout: 2500 });
+      else setTimeout(fn, 700);
+    }
+
+    function programar() {
+      if (conexionPobre()) {
+        /* La primera imagen ya está puesta como poster: se queda ella y el
+           botón pasa a ser el de reproducir. */
+        fig.classList.add("en-espera");
+        return;
+      }
+      if (!("IntersectionObserver" in window)) return cuandoSobre(arrancar);
+      const ojo = new IntersectionObserver(function (es) {
+        es.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          ojo.disconnect();
+          cuandoSobre(arrancar);
+        });
+      }, { rootMargin: "300px" });
+      ojo.observe(fig);
+    }
+
+    if (document.readyState === "complete") programar();
+    else window.addEventListener("load", programar);
+
     function hayAudio() {
       if (typeof video.mozHasAudio === "boolean") return video.mozHasAudio;
       if (typeof video.webkitAudioDecodedByteCount === "number") {
@@ -567,6 +643,15 @@
     if (video.readyState >= 2) revisar();
 
     btn.addEventListener("click", function () {
+      /* En espera el botón no silencia: enciende el video. */
+      if (fig.classList.contains("en-espera")) {
+        arrancar();
+        video.muted = false;
+        btn.setAttribute("aria-pressed", "true");
+        btn.setAttribute("aria-label", btn.dataset.off);
+        fig.classList.add("con-sonido");
+        return;
+      }
       video.muted = !video.muted;
       btn.setAttribute("aria-pressed", String(!video.muted));
       btn.setAttribute("aria-label", video.muted ? btn.dataset.on : btn.dataset.off);
