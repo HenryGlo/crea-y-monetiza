@@ -1716,8 +1716,14 @@ a{ color:inherit }
 /* Un check en cada uno: son cosas que sales sabiendo hacer, no un índice
    numerado. La lista se va marcando de arriba abajo al entrar en pantalla,
    como una checklist que alguien va tachando: nueve cosas que ya sabes hacer
-   pesan más vistas cayendo una a una que las nueve de golpe. */
-.activos li b{
+   pesan más vistas cayendo una a una que las nueve de golpe.
+
+   Va en <i> y no en <b>: el check es un icono, no una palabra importante, y
+   como <b> se contaba nueve veces como texto en negrita repetido. */
+.activos li .tic{
+  font-style:normal;
+}
+.activos li .tic{
   width:26px; height:26px; flex:none; border-radius:50%;
   display:grid; place-items:center; font-size:14px; font-weight:800;
   background:var(--vino); color:var(--crema);
@@ -1727,11 +1733,11 @@ a{ color:inherit }
   transition-delay:calc(.24s + var(--n) * .07s);
 }
 /* Sin marcar solo mientras espera su turno, y solo si hay script. */
-.activos.rv li b{
+.activos.rv li .tic{
   background:transparent; color:transparent;
   box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--vino) 35%,transparent);
 }
-.activos.rv.dentro li b{
+.activos.rv.dentro li .tic{
   background:var(--vino); color:var(--crema);
   box-shadow:inset 0 0 0 2px var(--vino); scale:1;
   animation:marcar .45s cubic-bezier(.3,1.7,.5,1) calc(.24s + var(--n) * .07s) both;
@@ -1751,7 +1757,7 @@ a{ color:inherit }
    de tachar, no lo sustituye. */
 @media (prefers-reduced-motion:reduce){
   .activos.rv li{ opacity:1; translate:0 0; transition:none }
-  .activos.rv li b{ background:var(--vino); color:var(--crema); animation:none; transition:none }
+  .activos.rv li .tic{ background:var(--vino); color:var(--crema); animation:none; transition:none }
 }
 
 /* El banco de oportunidades, como matriz de fichas.

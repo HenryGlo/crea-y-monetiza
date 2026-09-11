@@ -9,8 +9,10 @@ la hoja de estilo. Así una corrección de copy se hace en un solo sitio y llega
 las tres, que es justo lo que hace falta mientras se elige dirección.
 """
 
+import datetime
 import hashlib
 import html
+import json
 import os
 import re
 import sys
@@ -1076,7 +1078,8 @@ def s_mercado_unificado():
     m, o = C.MERCADO, C.OPORTUNIDADES
 
     activos = "".join(
-        f'<li style="--n:{i}"><b aria-hidden="true">✓</b><span>{e(x.rstrip("."))}</span></li>'
+        f'<li style="--n:{i}"><i class="tic" aria-hidden="true">✓</i>'
+        f'<span>{e(x.rstrip("."))}</span></li>'
         for i, x in enumerate(m["items"], 1))
 
     recursos = "".join(
@@ -1254,6 +1257,51 @@ def cinta_propuestas(prop):
             f'<a href="../">Ver las {NUM_TXT}</a></div>')
 
 
+def datos_estructurados():
+    """Lo que Google necesita para entender qué es esto, en JSON-LD.
+
+    Van tres cosas: la escuela, la propia página y el cuestionario de la
+    secretaría académica. El último es el que más rinde: las preguntas
+    frecuentes pueden salir desplegadas en el buscador, y aquí son trece
+    respuestas reales ya escritas."""
+    preguntas = [{
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": {"@type": "Answer", "text": " ".join(rs)},
+    } for q, rs in C.FAQ["preguntas"]]
+
+    datos = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "EducationalOrganization",
+                "@id": f"{C.SITIO}/#campus",
+                "name": C.MARCA["nombre"],
+                "description": C.MARCA["descripcion"],
+                "url": f"{C.SITIO}/",
+                "logo": f"{C.SITIO}/assets/icono-apple.png",
+                "image": f"{C.SITIO}/assets/compartir.png",
+                "inLanguage": "es",
+            },
+            {
+                "@type": "WebSite",
+                "@id": f"{C.SITIO}/#sitio",
+                "url": f"{C.SITIO}/",
+                "name": C.MARCA["nombre"],
+                "publisher": {"@id": f"{C.SITIO}/#campus"},
+                "inLanguage": "es",
+            },
+            {"@type": "FAQPage", "mainEntity": preguntas},
+        ],
+    }
+    # ensure_ascii=False para que las tildes viajen como tales, y sin barras
+    # escapadas, que es como lo espera el validador de Google.
+    crudo = json.dumps(datos, ensure_ascii=False, separators=(",", ":"))
+    # Dentro de un <script> no puede aparecer la secuencia que lo cerraría.
+    crudo = crudo.replace("</", "<\\/")
+    return f'<script type="application/ld+json">{crudo}</script>'
+
+
 def pagina(prop):
     raiz = RAIZ_WEB
     v_base = version("css/base.css")
@@ -1290,6 +1338,7 @@ def pagina(prop):
 <meta name="theme-color" content="#500711">
 <link rel="icon" href="{raiz}favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{raiz}assets/icono-apple.png">
+{datos_estructurados()}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@400;600;700;800&family=Caveat:wght@700&display=swap">
@@ -1393,6 +1442,18 @@ def main():
         d = os.path.join(RAIZ, "propuestas")
         if os.path.isdir(d):
             shutil.rmtree(d)
+
+    # Las dos piezas que piden los buscadores y que no son HTML.
+    escribir(os.path.join(RAIZ, "robots.txt"),
+             "User-agent: *\nAllow: /\n\n"
+             f"Sitemap: {C.SITIO}/sitemap.xml\n", "robots")
+    escribir(os.path.join(RAIZ, "sitemap.xml"),
+             '<?xml version="1.0" encoding="UTF-8"?>\n'
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+             f"  <url>\n    <loc>{C.SITIO}/</loc>\n"
+             f"    <lastmod>{datetime.date.today().isoformat()}</lastmod>\n"
+             "    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n"
+             "  </url>\n</urlset>\n", "sitemap")
 
     print(f"Publicada: {publicada['nombre']}. Sin cifras económicas.")
 
