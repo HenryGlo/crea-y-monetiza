@@ -2167,30 +2167,48 @@ a{ color:inherit }
   opacity:.6; margin-bottom:14px;
 }
 /* La etiqueta de lo que falta, encima de la fila y no sobre el último hueco. */
-.marcas.pendiente{ padding-top:38px }
+.marcas.pendiente{ padding-top:44px }
 .marcas.pendiente::after{ top:10px; right:10px }
 /* Cuatro por fila: con auto-fit entraban siete y la octava se quedaba sola en
-   la fila de abajo. Ocho marcas piden dos filas de cuatro. */
+   la fila de abajo. Ocho marcas piden dos filas de cuatro.
+
+   Sin ficha ni fondo bajo cada logotipo: ocho cajas blancas alineadas competían
+   con las tarjetas del resto de la página y convertían una firma discreta en un
+   bloque. Los logotipos se sostienen solos sobre el papel. */
 .marcas{
-  list-style:none; display:grid; gap:12px;
+  list-style:none; display:grid; gap:clamp(22px,3.4vw,44px) clamp(18px,3vw,40px);
   grid-template-columns:repeat(4,minmax(0,1fr));
-  padding:18px; border-radius:var(--r-s);
-  background:color-mix(in srgb,var(--texto) 3%,transparent);
+  padding:clamp(20px,2.6vw,30px) 0 0;
+  align-items:center;
 }
 .marcas li{
-  display:grid; place-items:center; min-height:76px; padding:14px 18px;
-  border-radius:10px;
-  background:var(--superficie); border:1px solid var(--linea);
-  font-family:var(--display); text-transform:uppercase; font-size:16px;
+  display:grid; place-items:center; min-height:46px;
+  font-family:var(--display); text-transform:uppercase;
 }
-/* Los logotipos, todos a la misma altura óptica y no al mismo ancho: un
-   logotipo alargado y uno cuadrado escalados al mismo ancho se ven de tamaños
-   distintos. El tope de ancho evita que los muy largos se coman la ficha. */
+/* La marca escrita, al peso de las que sí traen logotipo: a cuerpo de texto
+   corriente parecía de segunda entre las demás. */
+.marcas li span{ font-size:clamp(19px,2vw,26px); line-height:1; letter-spacing:.01em }
+/* Cada logotipo dentro de la misma caja, no a la misma altura.
+
+   Igualados por altura, un icono cuadrado se ve diminuto al lado de un
+   logotipo con nombre: el ancho ocupa cinco veces más superficie. Con una caja
+   común y `contain`, el ancho la llena a lo largo y el cuadrado a lo alto, y
+   los dos acaban pesando lo mismo. Vale para cualquier logotipo que se añada
+   después, sin medir nada a mano. */
 .marcas li img{
-  max-height:38px; max-width:100%; width:auto; height:auto;
-  display:block; object-fit:contain;
+  width:100%; max-width:clamp(120px,13vw,168px);
+  height:clamp(52px,5.4vw,68px);
+  display:block; object-fit:contain; object-position:center;
 }
-.marcas .marca-hueca{ background:color-mix(in srgb,var(--texto) 5%,transparent); border-style:dashed }
+/* Los que llegan con su forma casi cuadrada pueden estirarse algo más: en una
+   caja apaisada les sobra sitio a los lados. */
+.marcas li img[data-forma="cuadrado"]{ max-width:clamp(64px,7vw,86px) }
+/* Los huecos sí necesitan caja: es lo único que los hace visibles. */
+.marcas .marca-hueca{
+  min-height:62px; border-radius:10px;
+  background:color-mix(in srgb,var(--texto) 5%,transparent);
+  border:1px dashed color-mix(in srgb,var(--texto) 22%,transparent);
+}
 @media (max-width:760px){ .marcas{ grid-template-columns:repeat(2,minmax(0,1fr)) } }
 
 /* ================================================ el cortometraje del hero */

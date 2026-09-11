@@ -391,6 +391,38 @@ def equipo_hero():
             f'<i>{e(nombres)}</i></span></a>')
 
 
+def forma_logo(ruta):
+    """Ancho o cuadrado, según la proporción real del archivo.
+
+    Un icono cuadrado y un logotipo con nombre puestos a la misma altura no
+    pesan lo mismo: el ancho ocupa cinco veces más superficie y el cuadrado se
+    ve diminuto al lado. La clase la decide el archivo, no el ojo, y así entra
+    bien cualquier logotipo que se añada después."""
+    try:
+        if ruta.endswith(".svg"):
+            cab = open(ruta, encoding="utf-8", errors="replace").read(2000)
+            vb = re.search(r'viewBox="[\d.\-]+ [\d.\-]+ ([\d.]+) ([\d.]+)"', cab)
+            if not vb:
+                return "ancho"
+            an, al = float(vb.group(1)), float(vb.group(2))
+        else:
+            from PIL import Image
+            with Image.open(ruta) as im:
+                an, al = im.size
+        if not al:
+            return "ancho"
+    except Exception:
+        # Un logotipo mal medido se enseña igual, solo que al tamaño de siempre.
+        return "ancho"
+
+    razon = an / al
+    if razon < 1.5:
+        return "cuadrado"
+    if razon < 2.6:
+        return "medio"
+    return "ancho"
+
+
 def s_carta():
     """La carta llega cerrada dentro de su sobre y se abre al pulsar.
 
@@ -437,7 +469,8 @@ def s_carta():
             ruta = os.path.join(RAIZ, "assets", "marcas", f"{slug}.{ext}")
             if os.path.exists(ruta):
                 return (f'<img src="{RAIZ_WEB}assets/marcas/{slug}.{ext}" '
-                        f'alt="{e(nombre)}" loading="lazy" decoding="async">')
+                        f'alt="{e(nombre)}" data-forma="{forma_logo(ruta)}" '
+                        f'loading="lazy" decoding="async">')
         return f"<span>{e(nombre)}</span>"
 
     if t["marcas"]:
