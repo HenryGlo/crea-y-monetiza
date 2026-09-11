@@ -119,7 +119,7 @@ CARTA = {
         # entiende solo. Las creadoras acompañadas también, porque son las mismas
         # +270 que ya cuenta el hero.
         "cifras": [
-            ("[años]", "años creando contenido"),
+            ("+6", "años creando contenido"),
             ("+30", "marcas nacionales e internacionales de tecnología, belleza, "
                     "inteligencia artificial y bienestar."),
         ],
