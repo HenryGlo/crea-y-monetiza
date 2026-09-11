@@ -448,6 +448,9 @@ def s_carta():
         # fila sin afirmar ninguna marca que no esté confirmada.
         marcas = "".join('<li class="marca-hueca"></li>' for _ in range(6))
         marcas_cls = "marcas pendiente"
+    # La etiqueta de lo que falta solo se emite cuando falta algo.
+    falta = ("" if t["marcas"]
+             else f' data-nota="{e(t["marcas_falta"])}"')
 
     return seccion("carta", "02", f"""
     {eyebrow(c["eyebrow"])}
@@ -478,7 +481,7 @@ def s_carta():
     <div class="trayectoria">
       <div class="cifras tray-cifras">{cifras}</div>
       <p class="tray-marcas-t">{e(t["marcas_t"])}</p>
-      <ul class="{marcas_cls}" data-nota="{e(t["marcas_falta"])}">{marcas}</ul>
+      <ul class="{marcas_cls}"{falta}>{marcas}</ul>
     </div>
 
     <div class="ctas">{boton(c["cta"], "#campus", "sec")}</div>""", "carta")
