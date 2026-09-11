@@ -2230,3 +2230,44 @@ a{ color:inherit }
       color-mix(in srgb,var(--texto) 4%,transparent) 0 14px,
       transparent 14px 28px);
 }
+
+/* ------------------------------------------- el sonido del cortometraje */
+
+/* El video arranca mudo porque el navegador no deja otra cosa. El botón va
+   encima, en la esquina del video, y desaparece si el archivo no trae audio. */
+.hero-video{ position:relative }
+.sonido{
+  position:absolute; right:12px; top:12px; z-index:2;
+  width:42px; height:42px; border-radius:50%; cursor:pointer;
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(80,7,17,.55); backdrop-filter:blur(8px);
+  display:grid; place-items:center; padding:0;
+  transition:background .25s ease, transform .25s cubic-bezier(.2,.9,.3,1);
+}
+.sonido:hover{ background:rgba(80,7,17,.78); transform:scale(1.06) }
+.sonido:focus-visible{ outline:2px solid var(--acento); outline-offset:3px }
+.hero-video.sin-sonido .sonido{ display:none }
+
+/* El altavoz, dibujado con dos cajas: sin iconos de fuera y sin un SVG más. */
+.sonido-icono{
+  position:relative; width:18px; height:18px; display:block;
+  background:var(--crema);
+  clip-path:polygon(0 32%,32% 32%,62% 6%,62% 94%,32% 68%,0 68%);
+}
+/* La raya del mute, que se retira al encender el sonido. */
+.sonido-icono::after{
+  content:""; position:absolute; right:-7px; top:50%; width:22px; height:2px;
+  translate:0 -50%; rotate:-45deg; background:var(--crema);
+  transition:opacity .2s ease, scale .25s ease;
+  transform-origin:50% 50%;
+}
+.con-sonido .sonido-icono::after{ opacity:0; scale:0 1 }
+/* Y las ondas, que solo salen cuando suena. */
+.sonido-icono::before{
+  content:""; position:absolute; right:-6px; top:50%; translate:0 -50%;
+  width:9px; height:9px; border-radius:50%;
+  border:2px solid var(--crema); border-left-color:transparent;
+  border-bottom-color:transparent; border-top-color:transparent;
+  opacity:0; transition:opacity .2s ease;
+}
+.con-sonido .sonido-icono::before{ opacity:1 }

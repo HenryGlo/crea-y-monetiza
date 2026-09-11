@@ -272,10 +272,18 @@ def hero_media(raiz="../"):
 
     # Silenciado y en bucle: es una pieza atmosférica, no algo que interrumpa a
     # quien llega. playsinline evita que iOS lo abra a pantalla completa solo.
+    # Arranca mudo porque ningún navegador deja que un video empiece solo con
+    # sonido: es una regla del navegador, no una decisión de diseño. El botón lo
+    # enciende, que es el gesto de usuario que la regla pide.
     return f"""<figure class="hero-media hero-video">
   <video src="{raiz}assets/{e(v["archivo"])}"{poster}
          autoplay muted loop playsinline preload="metadata"
          aria-label="{e(v["alt"])}"></video>
+  <button class="sonido" type="button" aria-pressed="false"
+          data-on="{e(v["sonido_on"])}" data-off="{e(v["sonido_off"])}"
+          aria-label="{e(v["sonido_on"])}">
+    <span class="sonido-icono" aria-hidden="true"></span>
+  </button>
   {texto}
 </figure>"""
 

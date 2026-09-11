@@ -136,6 +136,10 @@ HERO_VIDEO = {
     "texto": "Te aseguro que vale la pena creer en ti.",
     "alt": "Cortometraje de Pierina Alves sobre sus inicios como creadora",
     "nota_falta": "Aquí va el cortometraje vertical",
+    # El navegador solo deja arrancar un video solo si va sin sonido, así que
+    # empieza mudo y el sonido se activa desde aquí.
+    "sonido_on": "Activar el sonido",
+    "sonido_off": "Silenciar",
 }
 
 # 03

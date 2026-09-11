@@ -538,10 +538,49 @@
     });
   }
 
+  /* El sonido del cortometraje del hero.
+
+     El video arranca mudo porque ningún navegador deja que empiece solo con
+     sonido; el botón es el gesto de usuario que esa regla pide. Si el archivo
+     no trae pista de audio, el botón no se enseña: un control que no hace nada
+     es peor que no tenerlo. */
+  function sonidoHero() {
+    const fig = document.querySelector(".hero-video");
+    if (!fig) return;
+    const video = fig.querySelector("video");
+    const btn = fig.querySelector(".sonido");
+    if (!video || !btn) return;
+
+    function hayAudio() {
+      if (typeof video.mozHasAudio === "boolean") return video.mozHasAudio;
+      if (typeof video.webkitAudioDecodedByteCount === "number") {
+        return video.webkitAudioDecodedByteCount > 0;
+      }
+      if (video.audioTracks) return video.audioTracks.length > 0;
+      return true; // sin forma de saberlo, se deja el botón
+    }
+
+    function revisar() {
+      fig.classList.toggle("sin-sonido", !hayAudio());
+    }
+    video.addEventListener("loadeddata", revisar);
+    if (video.readyState >= 2) revisar();
+
+    btn.addEventListener("click", function () {
+      video.muted = !video.muted;
+      btn.setAttribute("aria-pressed", String(!video.muted));
+      btn.setAttribute("aria-label", video.muted ? btn.dataset.on : btn.dataset.off);
+      fig.classList.toggle("con-sonido", !video.muted);
+      /* Al quitar el mute, algunos navegadores pausan: se relanza. */
+      if (video.paused) video.play().catch(function () {});
+    });
+  }
+
   function iniciar() {
     prepararEntradas();
     ruta();
     titularesPorPalabra();
+    sonidoHero();
     carta();
     montajePerfil();
     imanes();
