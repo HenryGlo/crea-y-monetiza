@@ -1,0 +1,33 @@
+/* ============================================================================
+   fuentes.css — GENERADO por herramientas/traer-fuentes.py. No editar a mano.
+
+   Las tipografías se sirven desde este mismo dominio en vez de pedírselas a
+   Google: así no hay que resolver dos dominios ajenos ni abrir dos conexiones
+   TLS antes de poder pintar el primer titular.
+
+   Solo el subconjunto latino, que es el que cubre el español entero.
+   `font-display:swap` para que el texto se lea desde el primer momento con la
+   tipografía del sistema y cambie al cargar la de marca.
+   ========================================================================== */
+
+@font-face{
+  font-family:'Anton';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url('../assets/fuentes/anton.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Caveat';
+  font-style:normal;
+  font-weight:600 700;
+  font-display:swap;
+  src:url('../assets/fuentes/caveat.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Outfit';
+  font-style:normal;
+  font-weight:400 800;
+  font-display:swap;
+  src:url('../assets/fuentes/outfit.woff2') format('woff2');
+}

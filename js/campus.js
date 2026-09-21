@@ -1,197 +1,531 @@
-/* Comportamiento común de la landing.
+/* ============================================================================
+   campus.js — comportamiento de la propuesta 2.
 
-   Regla que se aplica a todo lo de aquí: si el JS no llega a ejecutarse, o si el
-   sistema pide movimiento reducido, la página se lee entera igual. Nada de lo
-   que hay debajo decide si el contenido es visible; solo cómo aparece. */
+   Orden: telón · navegación · entradas al hacer scroll · cifras · cinta ·
+   video · carta · carriles · formulario.
 
+   Todo lo que se mueve comprueba antes prefers-reduced-motion. El formulario
+   es el de la primera versión, copiado sin cambios.
+   ========================================================================== */
 (function () {
   "use strict";
 
-  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var quieto = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var movil  = window.matchMedia("(max-width: 699px)");
 
-  /* ------------------------------------------------- entradas al hacer scroll */
+  /* ==================================================================== telón */
 
-  function prepararEntradas() {
-    if (quieto) return;
-    /* Se marcan desde JS y no en el HTML a propósito: si el script falla, el
-       marcado no lleva la clase que lo dejaría invisible. */
-    const bloques = document.querySelectorAll(
-      ".sec > .wrap > *, .cierre-final > .wrap > *, .card, .paso, .faq-item"
-    );
-    bloques.forEach(function (el) {
-      if (el.closest(".hero")) return;
-      el.classList.add("rv");
-    });
+  /* La portada no depende del scroll real de la página: la página está
+     bloqueada mientras el telón está puesto. Lo que hace avanzar el telón es
+     el gesto —rueda, dedo o tecla—, y eso lo deja funcionar igual en móvil y
+     en escritorio, donde el scroll fantasma de las barras de navegación de
+     iOS habría descuadrado cualquier cálculo basado en scrollY. */
+  function telon() {
+    var el = document.getElementById("telon");
+    var raiz = document.documentElement;
+    if (!el || !raiz.classList.contains("telon-activo")) {
+      if (el) el.remove();
+      return;
+    }
 
-    /* Los hijos de una misma retícula entran escalonados, no todos de golpe. */
-    document.querySelectorAll(".grid, .pasos-grid").forEach(function (g) {
-      Array.prototype.slice.call(g.children, 0, 5).forEach(function (hijo, i) {
-        hijo.classList.add("rv-d" + (i + 1));
-      });
-    });
+    var p = 0;
+    var fuera = false;
+    var umbral = Math.max(window.innerHeight * 0.85, 420);
+    var y0 = 0;
 
-    const obs = new IntersectionObserver(
-      function (entradas) {
-        entradas.forEach(function (en) {
-          if (!en.isIntersecting) return;
-          en.target.classList.add("dentro");
-          obs.unobserve(en.target);
-        });
-      },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.05 }
-    );
-    document.querySelectorAll(".rv").forEach(function (el) { obs.observe(el); });
-  }
+    function pinta() {
+      el.style.setProperty("--p", p.toFixed(4));
+    }
 
-  /* ------------------------------------------------ sección activa en el menú */
+    /* Al soltarse el telón, la cola del gesto sigue llegando: en un trackpad la
+       inercia manda eventos hasta más de un segundo después de levantar los
+       dedos. Para entonces el telón ya ha quitado sus oyentes y la página
+       vuelve a poder desplazarse, así que esa cola la baja de varias pantallas
+       de golpe y el recorrido empieza por la mitad en vez de por el hero.
 
-  function navActiva() {
-    const enlaces = {};
-    document.querySelectorAll(".nav-links a").forEach(function (a) {
-      enlaces[a.getAttribute("href").slice(1)] = a;
-    });
-    const objetivos = Object.keys(enlaces)
-      .map(function (id) { return document.getElementById(id); })
-      .filter(Boolean);
-    if (!objetivos.length) return;
+       Se bloquea el desplazamiento en vez de cancelar los eventos: un scroll
+       que viene del compositor no siempre se puede cancelar desde aquí, pero
+       con la página bloqueada no hay nada que desplazar.
 
-    /* Gana la sección más alta de las que están en pantalla; con umbral único
-       el resaltado parpadea al cruzar dos secciones a la vez. */
-    const visibles = new Set();
-    const obs = new IntersectionObserver(
-      function (ents) {
-        ents.forEach(function (en) {
-          if (en.isIntersecting) visibles.add(en.target.id);
-          else visibles.delete(en.target.id);
-        });
-        let arriba = null;
-        objetivos.forEach(function (s) {
-          if (visibles.has(s.id) && !arriba) arriba = s.id;
-        });
-        Object.keys(enlaces).forEach(function (id) {
-          enlaces[id].classList.toggle("en-vista", id === arriba);
-        });
-      },
-      { rootMargin: "-84px 0px -55% 0px" }
-    );
-    objetivos.forEach(function (s) { obs.observe(s); });
-  }
+       Se suelta en cuanto el gesto para —150ms sin un solo evento— y nunca se
+       queda enganchado: hay tope duro, y un empujón nuevo lo libera en el acto,
+       porque la inercia solo decae y un evento más fuerte que el anterior ya no
+       es inercia. */
+    function amortiguaInercia() {
+      var TOPE = 900;
+      var QUIETO = 150;
+      var arranque = Date.now();
+      var ultimo = Infinity;
+      var t = 0;
+      var raizEl = document.documentElement;
 
-  /* -------------------------------------------------- progreso y CTA flotante */
+      raizEl.classList.add("scroll-quieto");
 
-  function progresoYCta() {
-    const nav = document.querySelector(".nav");
-    const cta = document.querySelector(".cta-fijo");
-    if (!nav) return;
-    const barra = document.createElement("div");
-    barra.className = "progreso";
-    nav.appendChild(barra);
+      function suelta() {
+        window.clearTimeout(t);
+        raizEl.classList.remove("scroll-quieto");
+        window.removeEventListener("wheel", vigila);
+        window.removeEventListener("touchstart", suelta);
+        window.removeEventListener("keydown", suelta);
+      }
 
-    const hero = document.querySelector(".hero");
-    let pendiente = false;
+      function vigila(ev) {
+        var d = Math.abs(ev.deltaY);
+        if (d > ultimo + 1 || Date.now() - arranque > TOPE) { suelta(); return; }
+        ultimo = d;
+        window.clearTimeout(t);
+        t = window.setTimeout(suelta, QUIETO);
+      }
 
-    function pintar() {
-      pendiente = false;
-      const alto = document.documentElement.scrollHeight - innerHeight;
-      const pct = alto > 0 ? (scrollY / alto) * 100 : 0;
-      barra.style.width = pct + "%";
-      if (cta && hero) {
-        /* El botón flotante aparece recién cuando el hero (que ya tiene sus dos
-           CTA) sale de pantalla, para no duplicar la misma llamada dos veces. */
-        cta.classList.toggle("visible", scrollY > hero.offsetHeight * 0.85);
+      window.addEventListener("wheel", vigila, { passive: true });
+      /* Un dedo o una tecla son intención nueva: ahí sobra el amortiguador. */
+      window.addEventListener("touchstart", suelta, { passive: true });
+      window.addEventListener("keydown", suelta);
+      t = window.setTimeout(suelta, QUIETO);
+    }
+
+    function retirar() {
+      if (fuera) return;
+      fuera = true;
+      p = 1;
+      pinta();
+      raiz.classList.remove("telon-activo");
+      el.classList.add("fuera");
+      quita();
+      window.scrollTo(0, 0);
+      amortiguaInercia();
+      /* El foco baja al contenido: quien navega con teclado no se queda
+         atrapado en un botón que ya no está en pantalla. */
+      var inicio = document.getElementById("inicio");
+      if (inicio) {
+        inicio.setAttribute("tabindex", "-1");
+        inicio.focus({ preventScroll: true });
+      }
+      window.setTimeout(function () { el.remove(); }, 900);
+    }
+
+    function avanza(delta) {
+      if (fuera) return;
+      p = Math.min(1, Math.max(0, p + delta / umbral));
+      pinta();
+      if (p >= 0.995) retirar();
+    }
+
+    /* Si el gesto se queda a medias, el telón decide: pasado un tercio se va,
+       antes vuelve a su sitio. Nunca se queda en un estado intermedio. */
+    var vuelta;
+    function resuelve() {
+      window.clearTimeout(vuelta);
+      vuelta = window.setTimeout(function () {
+        if (fuera) return;
+        if (p > 0.3) { retirar(); return; }
+        el.style.transition = "transform .5s cubic-bezier(.22,.8,.28,1), opacity .5s, filter .5s";
+        p = 0; pinta();
+        window.setTimeout(function () { el.style.transition = ""; }, 520);
+      }, 140);
+    }
+
+    function enRueda(ev) {
+      ev.preventDefault();
+      avanza(ev.deltaY);
+      resuelve();
+    }
+    function enToque(ev) { y0 = ev.touches[0].clientY; }
+    function enArrastre(ev) {
+      var y = ev.touches[0].clientY;
+      ev.preventDefault();
+      avanza(y0 - y);
+      y0 = y;
+    }
+    function enTecla(ev) {
+      if (["ArrowDown", "PageDown", " ", "Enter", "Escape", "Tab"].indexOf(ev.key) > -1) {
+        if (ev.key !== "Tab") ev.preventDefault();
+        retirar();
       }
     }
-    addEventListener("scroll", function () {
+    function quita() {
+      window.removeEventListener("wheel", enRueda);
+      window.removeEventListener("touchstart", enToque);
+      window.removeEventListener("touchmove", enArrastre);
+      window.removeEventListener("touchend", resuelve);
+      window.removeEventListener("keydown", enTecla);
+    }
+
+    if (quieto) {
+      /* Sin movimiento el telón no se levanta: se quita al primer gesto. */
+      ["wheel", "touchstart", "keydown", "click"].forEach(function (e) {
+        window.addEventListener(e, retirar, { once: true });
+      });
+    } else {
+      window.addEventListener("wheel", enRueda, { passive: false });
+      window.addEventListener("touchstart", enToque, { passive: true });
+      window.addEventListener("touchmove", enArrastre, { passive: false });
+      window.addEventListener("touchend", resuelve, { passive: true });
+      window.addEventListener("keydown", enTecla);
+    }
+
+    var btn = document.getElementById("telon-saltar");
+    if (btn) btn.addEventListener("click", retirar);
+
+    /* Un ancla de la propia página (#registro desde el cierre, por ejemplo) no
+       tiene sentido con el telón puesto. */
+    window.addEventListener("hashchange", retirar);
+  }
+
+  /* =============================================================== navegación */
+
+  function navegacion() {
+    var nav = document.getElementById("nav");
+    var avance = document.getElementById("avance");
+    var cta = document.getElementById("cta-movil");
+    var hero = document.getElementById("inicio");
+    /* El botón flotante estorba justo donde ya hay una acción en pantalla:
+       encima del formulario y encima del cierre. */
+    var zonas = ["registro", "cierre"].map(function (id) {
+      return document.getElementById(id);
+    }).filter(Boolean);
+    if (!nav) return;
+
+    /* Arranca desde donde esté la página y no desde 0: al entrar por un ancla,
+       con 0 el primer cálculo leía «ha bajado mucho» y escondía la barra antes
+       de que nadie hubiera tocado nada. */
+    var ultimo = window.scrollY;
+    var pendiente = false;
+
+    function pinta() {
+      var y = window.scrollY;
+      var alto = document.documentElement.scrollHeight - window.innerHeight;
+
+      if (avance) avance.style.setProperty("--avance", (alto > 0 ? (y / alto) * 100 : 0) + "%");
+
+      /* En móvil la barra se aparta al bajar y vuelve al subir. */
+      if (movil.matches) {
+        nav.classList.toggle("oculta", y > ultimo && y > 220);
+      } else {
+        nav.classList.remove("oculta");
+      }
+      ultimo = y;
+
+      if (cta && hero) {
+        var pasadoHero = y > hero.offsetHeight * 0.75;
+        var estorba = zonas.some(function (z) {
+          var r = z.getBoundingClientRect();
+          return r.top < window.innerHeight && r.bottom > 0;
+        });
+        cta.classList.toggle("dentro", pasadoHero && !estorba);
+      }
+      pendiente = false;
+    }
+
+    window.addEventListener("scroll", function () {
       if (pendiente) return;
       pendiente = true;
-      requestAnimationFrame(pintar);
+      window.requestAnimationFrame(pinta);
     }, { passive: true });
-    pintar();
-  }
+    pinta();
 
-  /* --------------------------------------------------------- cifras del hero */
-
-  function contadores() {
-    if (quieto) return;
-    const nodos = document.querySelectorAll(".cifra b");
-    const obs = new IntersectionObserver(function (ents) {
-      ents.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        obs.unobserve(en.target);
-        const el = en.target;
-        const original = el.textContent;
-        const m = original.match(/^(\D*)(\d+)(\D*)$/);
-        /* "1:1" no es una cantidad que se pueda contar: se deja tal cual. */
-        if (!m) return;
-        const destino = parseInt(m[2], 10);
-        const t0 = performance.now();
-        /* 2,2s en vez de 0,9s. A novecientos milisegundos el número saltaba de
-           cero a doscientos setenta antes de que diera tiempo a mirarlo: se
-           veía un parpadeo, no un conteo. */
-        const DURACION = 2200;
-        (function paso(t) {
-          const k = Math.min((t - t0) / DURACION, 1);
-          const suave = 1 - Math.pow(1 - k, 3);
-          el.textContent = m[1] + Math.round(destino * suave) + m[3];
-          if (k < 1) requestAnimationFrame(paso);
-          else el.textContent = original;
-        })(t0);
-      });
-    }, { threshold: 0.6 });
-    nodos.forEach(function (n) { obs.observe(n); });
-  }
-
-  /* ----------------------------------------------------------- video de YouTube */
-
-  function video() {
-    document.querySelectorAll(".video").forEach(function (caja) {
-      const btn = caja.querySelector(".video-btn");
-      if (!btn) return;
-      btn.addEventListener("click", function () {
-        const marco = document.createElement("iframe");
-        marco.src = caja.dataset.src;
-        marco.title = "Video de bienvenida de Pierina Alves";
-        marco.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-        marco.allowFullscreen = true;
-        caja.appendChild(marco);
-        btn.remove();
-      });
+    /* Enlace activo. */
+    var enlaces = Array.prototype.slice.call(nav.querySelectorAll(".nav-links a"));
+    var mapa = {};
+    enlaces.forEach(function (a) {
+      var s = document.querySelector(a.getAttribute("href"));
+      if (s) mapa[s.id] = a;
     });
+    var obs = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        enlaces.forEach(function (a) { a.classList.remove("activo"); });
+        if (mapa[e.target.id]) mapa[e.target.id].classList.add("activo");
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    Object.keys(mapa).forEach(function (id) { obs.observe(document.getElementById(id)); });
   }
 
-  /* ------------------------------------------------------- parallax del hero */
+  /* ================================================== entradas al hacer scroll */
+
+  /* Un solo motor y un solo ritmo para todo lo que entra, que es lo que hace
+     que la página se lea como una pieza sincronizada y no como diez efectos
+     sueltos. Tres trabajos, un mismo observador:
+
+       1 · `.entra` → `.visible`, la entrada suelta de siempre.
+       2 · el escalonado: a los hijos de cada retícula se les reparte
+           `entra-d1..5` (70ms de paso) si no traen retardo propio.
+       3 · los grupos con estado —el raíl que se traza, la checklist que se
+           marca, los chips que encajan— llevan `.rv` puesta por el script y
+           reciben `.dentro` al asomar.
+
+     La regla que no se rompe: el estado escondido cuelga siempre de `.rv`, y
+     `.rv` la pone este archivo. Si el script no carga, no hay `.rv`, no hay
+     nada escondido y la página se lee entera. */
+
+  var GRUPOS = ".linea, .activos, .vivo-rail, .tesis-piezas";
+
+  function entradas() {
+    var piezas = document.querySelectorAll(".entra");
+    var grupos = document.querySelectorAll(GRUPOS);
+
+    /* El escalonado se reparte antes de observar nada: así el retardo ya está
+       puesto cuando la pieza entra. Solo a quien no traiga el suyo en el
+       marcado, para no pisar los `--d` escritos a mano. */
+    document.querySelectorAll(".rejilla, .etapas, .casos, .grad, .pasos, .si-no, .voz-rejilla, .videos-alumnas")
+      .forEach(function (rejilla) {
+        var hijos = rejilla.children, n = 0;
+        for (var i = 0; i < hijos.length; i++) {
+          var h = hijos[i];
+          if (!h.classList.contains("entra") || h.style.getPropertyValue("--d")) continue;
+          n++;
+          h.classList.add("entra-d" + (n > 5 ? 5 : n));
+        }
+      });
+
+    if (quieto || !("IntersectionObserver" in window)) {
+      piezas.forEach(function (p) { p.classList.add("visible"); });
+      return;
+    }
+
+    /* Los grupos arrancan escondidos solo ahora, con el script ya corriendo. */
+    grupos.forEach(function (g) { g.classList.add("rv"); });
+
+    var obs = new IntersectionObserver(function (lista) {
+      lista.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add(e.target.matches(GRUPOS) ? "dentro" : "visible");
+        obs.unobserve(e.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+
+    piezas.forEach(function (p) { obs.observe(p); });
+    grupos.forEach(function (g) { obs.observe(g); });
+  }
+
+  /* ================================================== parallax de los parches */
+
+  /* Los parches cosidos se mueven un poco menos que la página, solo en la
+     primera pantalla y media: más abajo no se percibe y solo cuesta trabajo.
+     Un rAF por gesto de scroll y el oyente pasivo, para no pelearse con el
+     desplazamiento del navegador. */
 
   function parallax() {
     if (quieto) return;
-    const capas = document.querySelectorAll(".sticker");
+
+    /* Solo los parches de la primera pantalla y media. El desfase se calcula
+       contra `scrollY` absoluto, así que aplicado a un parche que vive a
+       12.000px de scroll le metía 140px de desplazamiento y lo sacaba de su
+       esquina: el de la Tesis y el de graduación acababan encima del texto. */
+    var capas = [];
+    document.querySelectorAll(".parche").forEach(function (p) {
+      if (p.getBoundingClientRect().top + window.scrollY < window.innerHeight * 1.5) {
+        capas.push(p);
+      }
+    });
     if (!capas.length) return;
-    let pendiente = false;
-    addEventListener("scroll", function () {
+
+    var pendiente = false;
+    var fuera = false;
+    window.addEventListener("scroll", function () {
       if (pendiente) return;
       pendiente = true;
-      requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
         pendiente = false;
-        if (scrollY > innerHeight * 1.2) return;
-        capas.forEach(function (c, i) {
-          c.style.transform = "translate3d(0," + scrollY * (0.12 + i * 0.08) + "px,0)";
-        });
+        /* Pasado el tramo no basta con no pintar: hay que soltar el último
+           valor, o el parche se queda congelado donde lo dejó el scroll. */
+        if (window.scrollY > window.innerHeight * 1.5) {
+          if (!fuera) {
+            fuera = true;
+            capas.forEach(function (c) { c.style.transform = ""; });
+          }
+          return;
+        }
+        fuera = false;
+        for (var i = 0; i < capas.length; i++) {
+          capas[i].style.transform =
+            "translate3d(0," + window.scrollY * (0.04 + (i % 4) * 0.02) + "px,0)";
+        }
       });
     }, { passive: true });
   }
 
-  /* ------------------------------------------------------------- formulario */
+  /* ===================================================================== cifras */
 
-  /* TODO — pendiente del cliente: aquí va la URL del webhook (Activepieces,
-     Mailjet o lo que use el Campus) que recibe el registro prioritario.
-     Mientras esté vacío el formulario valida y avisa, pero no envía nada:
-     preferible a que un lead real se pierda en silencio. */
-  const ENDPOINT_REGISTRO = "";
+  function cifras() {
+    var nums = document.querySelectorAll("[data-cuenta]");
+    if (!nums.length || quieto || !("IntersectionObserver" in window)) return;
+
+    var obs = new IntersectionObserver(function (lista) {
+      lista.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        obs.unobserve(el);
+        var fin = parseInt(el.dataset.cuenta, 10);
+        var pre = el.dataset.pre || "";
+        var t0 = performance.now();
+        (function paso(t) {
+          var k = Math.min(1, (t - t0) / 1100);
+          var suave = 1 - Math.pow(1 - k, 3);
+          el.textContent = pre + Math.round(fin * suave);
+          if (k < 1) requestAnimationFrame(paso);
+        })(t0);
+      });
+    }, { threshold: 0.5 });
+    nums.forEach(function (n) { obs.observe(n); });
+  }
+
+  /* ====================================================================== cinta */
+
+  /* Las seis materias, repetidas lo justo para que la cinta dé la vuelta sin
+     costura: la animación desplaza exactamente la mitad de la pista. */
+  var MATERIAS = [
+    "Marca personal.",
+    "Creación de contenido.",
+    "UGC profesional.",
+    "Negocio.",
+    "Organización y productividad.",
+    "Monetización."
+  ];
+
+  function cinta() {
+    var pista = document.getElementById("cinta-pista");
+    if (!pista) return;
+    var mitad = "";
+    for (var v = 0; v < 3; v++) {
+      MATERIAS.forEach(function (m) {
+        mitad += "<span>" + m + "</span><i aria-hidden=\"true\"></i>";
+      });
+    }
+    pista.innerHTML = mitad + mitad;
+  }
+
+  /* ============================================================ el cortometraje */
+
+  function video() {
+    var fig = document.getElementById("cortometraje");
+    if (!fig) return;
+    var v = fig.querySelector("video");
+    var btn = fig.querySelector(".sonido");
+    if (!v) return;
+
+    function arranca() {
+      if (!v.src && v.dataset.src) v.src = v.dataset.src;
+      var pr = v.play();
+      if (pr && pr.catch) pr.catch(function () {});
+    }
+
+    /* El archivo pesa: no se descarga hasta que el hero está en pantalla. */
+    var obs = new IntersectionObserver(function (lista) {
+      lista.forEach(function (e) {
+        if (e.isIntersecting) {
+          arranca();
+        } else if (!v.paused) {
+          v.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+    obs.observe(fig);
+
+    /* Algunos navegadores rechazan el primer play() porque el archivo todavía
+       no tiene datos, o porque la pestaña aún no ha recibido una interacción.
+       Se reintenta cuando ya se puede pintar y al primer toque de la persona,
+       en vez de dejar el video congelado en su primer fotograma. */
+    v.addEventListener("canplay", function () {
+      if (v.paused) arranca();
+    });
+    ["pointerdown", "keydown"].forEach(function (ev) {
+      window.addEventListener(ev, function reintenta() {
+        window.removeEventListener(ev, reintenta);
+        if (v.paused && v.getBoundingClientRect().bottom > 0) arranca();
+      }, { once: true });
+    });
+
+    if (btn) {
+      btn.addEventListener("click", function () {
+        v.muted = !v.muted;
+        btn.setAttribute("aria-pressed", String(!v.muted));
+        btn.setAttribute("aria-label", v.muted ? "Activar el sonido" : "Silenciar");
+        if (!v.muted) {
+          var pr = v.play();
+          if (pr && pr.catch) pr.catch(function () {});
+        }
+      });
+    }
+  }
+
+  /* ====================================================================== carta */
+
+  /* El sobre llega cerrado, así que el estado que cuelga de una clase es el
+     cerrado y no el abierto: sin script la carta se lee entera, que es lo que
+     tiene que pasar si el archivo no carga.
+
+     `sin-anim` se quita tras el primer pintado. Si no, el navegador anima el
+     cierre inicial al cargar y se ve el gesto al revés. */
+  function carta() {
+    var sobre = document.getElementById("sobre");
+    if (!sobre) return;
+    var btn = sobre.querySelector(".sobre-btn");
+    var cta = sobre.querySelector(".sobre-cta");
+
+    /* rAF no se dispara en una pestaña oculta, y entonces el sobre se quedaba
+       para siempre sin transiciones. El temporizador es el respaldo: quien
+       llegue primero lo quita, y quitarlo dos veces no hace nada. */
+    var suelta = function () { sobre.classList.remove("sin-anim"); };
+    requestAnimationFrame(function () { requestAnimationFrame(suelta); });
+    setTimeout(suelta, 120);
+
+    btn.addEventListener("click", function () {
+      var abierto = !sobre.classList.toggle("cerrada");
+      btn.setAttribute("aria-expanded", String(abierto));
+      cta.textContent = abierto ? cta.dataset.cerrar : cta.dataset.abrir;
+    });
+  }
+
+  /* =================================================================== carriles */
+
+  /* En móvil las tarjetas van en carril horizontal. Los puntos dicen cuántas
+     hay y por cuál vas: sin ellos no se ve que haya más a la derecha. */
+  function carriles() {
+    document.querySelectorAll(".carril-pista[data-para]").forEach(function (pista) {
+      var carril = document.getElementById(pista.dataset.para);
+      if (!carril) return;
+      var n = carril.children.length;
+      pista.innerHTML = new Array(n + 1).join("<i></i>");
+      var puntos = pista.querySelectorAll("i");
+      puntos[0].classList.add("on");
+
+      /* Si no hay nada que desplazar, los puntos mienten: dicen que hay más
+         cuando ya se ve todo. Se comprueba al cargar y al cambiar el ancho,
+         porque el carril deja de desplazarse justo al ensanchar la ventana. */
+      var ajusta = function () {
+        pista.hidden = carril.scrollWidth <= carril.clientWidth + 4;
+      };
+      ajusta();
+      window.addEventListener("resize", ajusta, { passive: true });
+
+      var pendiente = false;
+      carril.addEventListener("scroll", function () {
+        if (pendiente) return;
+        pendiente = true;
+        window.requestAnimationFrame(function () {
+          var paso = carril.scrollWidth / n;
+          var i = Math.min(n - 1, Math.round(carril.scrollLeft / paso));
+          puntos.forEach(function (p, k) { p.classList.toggle("on", k === i); });
+          pendiente = false;
+        });
+      }, { passive: true });
+    });
+  }
+
+  /* ================================================================ formulario */
+
+  /* Copiado sin cambios de la primera versión. Sigue pendiente la URL del
+     webhook que recibe el registro prioritario: mientras esté vacía el
+     formulario valida y avisa, pero no envía nada —preferible a que un lead
+     real se pierda en silencio. */
+  var ENDPOINT_REGISTRO = "";
 
   function formulario() {
-    const form = document.getElementById("form-registro");
+    var form = document.getElementById("form-registro");
     if (!form) return;
-    const msg = form.querySelector(".form-msg");
-    const btn = form.querySelector("button[type=submit]");
+    var msg = form.querySelector(".form-msg");
+    var btn = form.querySelector("button[type=submit]");
 
     form.addEventListener("submit", async function (ev) {
       ev.preventDefault();
@@ -203,7 +537,7 @@
         return;
       }
 
-      const datos = Object.fromEntries(new FormData(form).entries());
+      var datos = Object.fromEntries(new FormData(form).entries());
       datos.origen = location.href;
       datos.enviado = new Date().toISOString();
 
@@ -216,11 +550,11 @@
         return;
       }
 
-      const textoBtn = btn.textContent;
+      var textoBtn = btn.textContent;
       btn.disabled = true;
       btn.textContent = "Enviando…";
       try {
-        const res = await fetch(ENDPOINT_REGISTRO, {
+        var res = await fetch(ENDPOINT_REGISTRO, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(datos)
@@ -229,7 +563,6 @@
         form.reset();
         msg.className = "form-msg ok";
         msg.textContent = msg.dataset.ok;
-        confeti(btn);
       } catch (err) {
         msg.className = "form-msg err";
         msg.textContent = "No pudimos enviar tu registro. Vuelve a intentarlo en un momento.";
@@ -240,448 +573,189 @@
     });
   }
 
-  /* ------------------------------------------------- titulares palabra a palabra */
+  /* ====================================================== visor de capturas */
 
-  function titularesPorPalabra() {
-    if (quieto) return;
-    /* Se parte por palabras y no por letras: por letras el lector de pantalla
-       deletrea, y `text-wrap:balance` deja de funcionar al perder los espacios. */
-    /* Todos los titulares de sección, no solo el hero: son los "textos
-       principales" de la página y sin esto quedaban planos frente al primero.
-       Los h3 de tarjeta quedan fuera a propósito — son sesenta y pico, y a ese
-       tamaño el reflejo no se aprecia pero sí se paga. */
-    document.querySelectorAll(".hero h1, .sec h2, .cierre-final h2, .tesis-nombre").forEach(function (h) {
-      if (h.querySelector(".pal")) return;
+  /* Las capturas de resultados son anchas y con letra pequeña: en la página
+     hacen de cartel y se leen de verdad aquí, ampliadas.
 
-      /* Los titulares con degradado recortado (background-clip:text) no se
-         pueden partir: el color real lo pinta el fondo del propio elemento, y
-         al meter cada palabra en su caja el degradado deja de alcanzarlas — el
-         titular desaparece entero. Se les deja la entrada completa, sin
-         escalonar, que sobre ese tratamiento se ve igual de bien. */
-      var est = getComputedStyle(h);
-      if ((est.webkitBackgroundClip || est.backgroundClip) === "text") {
-        h.classList.add("entra-entero");
-        return;
-      }
+     Va sobre <dialog>, que ya trae el foco atrapado, el cierre con Esc y el
+     fondo inerte. Lo que añade este código es la navegación entre las tres y
+     devolver el foco al botón que abrió el visor. */
 
-      const palabras = h.textContent.trim().split(/\s+/);
-      h.setAttribute("aria-label", h.textContent.trim());
-      h.textContent = "";
+  function visorCapturas() {
+    var dlg = document.getElementById("visor");
+    if (!dlg || typeof dlg.showModal !== "function") return;
 
-      /* Lo que va entre comillas angulares se marca aparte: son frases que el
-         titular cita para rechazarlas —«una chica que hace videos»— y en la
-         página se escriben a mano y tachadas. Se detecta aquí, sobre las
-         palabras ya partidas, en vez de con marcado propio: así cualquier
-         titular que use « » recibe el tratamiento sin tocar el generador. */
-      /* La frase citada va en su propio contenedor y en su propia línea. Suelta
-         entre las demás palabras se partía por la mitad —"una" al final de una
-         línea y "chica que hace videos" al principio de la siguiente— y perdía
-         todo el gesto. En bloque cae entera y el tachado la cruza de una vez. */
-      let cita = null;
+    /* Cada grupo se navega por separado: las dos capturas de una alumna son un
+       grupo y las tres de la galería de resultados son otro. Mezclarlas en una
+       sola lista dejaría las flechas saltando de un caso a otro sin sentido. */
+    var grupos = Array.prototype.slice.call(
+      document.querySelectorAll(".galeria, .ficha-capturas"));
+    if (!grupos.length) return;
 
-      palabras.forEach(function (p, i) {
-        const abre = p.indexOf("«") !== -1;
-        const cierra = p.indexOf("»") !== -1;
+    var img = document.getElementById("visor-img");
+    var pie = document.getElementById("visor-pie");
+    var cuenta = document.getElementById("visor-cuenta");
+    var lienzo = document.getElementById("visor-lienzo");
+    var prev = dlg.querySelector('[data-visor="prev"]');
+    var sig = dlg.querySelector('[data-visor="sig"]');
 
-        if (abre && !cita) {
-          cita = document.createElement("span");
-          cita.className = "mano";
-          cita.setAttribute("aria-hidden", "true");
-          h.appendChild(cita);
-        }
+    var piezas = [];   // el grupo abierto ahora mismo
+    var actual = 0;
+    var abridor = null;
 
-        /* La puntuación que va detrás del cierre pertenece a la frase de
-           fuera, no a la cita: en «…hace videos». el punto es del titular. Sin
-           separarlo quedaba dentro del tachado, que es un error de lectura. */
-        const limpio = p.replace(/[«»]/g, "");
-        let dentro = limpio, fuera = "";
-        if (cierra) {
-          const corte = p.indexOf("»");
-          dentro = p.slice(0, corte).replace(/«/g, "");
-          fuera = p.slice(corte + 1);
-        }
-
-        const s = document.createElement("span");
-        s.className = "pal" + (cita ? " pal-mano" : "");
-        s.setAttribute("aria-hidden", "true");
-        s.style.setProperty("--i", i);
-        s.textContent = dentro;
-
-        (cita || h).appendChild(s);
-        (cita || h).appendChild(document.createTextNode(" "));
-
-        if (cierra) {
-          cita = null;
-          /* Si detrás del cierre solo queda puntuación, se descarta: la cita va
-             en su propia línea, así que el punto caía suelto al principio de la
-             línea siguiente. El salto de línea ya cierra la frase. */
-          if (fuera && !/^[.,;:!?]+$/.test(fuera)) {
-            const post = document.createElement("span");
-            post.className = "pal";
-            post.setAttribute("aria-hidden", "true");
-            post.style.setProperty("--i", i);
-            post.textContent = fuera;
-            h.appendChild(post);
-            h.appendChild(document.createTextNode(" "));
-          }
-        }
-      });
-      h.classList.add("por-palabra");
-    });
-
-    const obs = new IntersectionObserver(function (ents) {
-      ents.forEach(function (en) {
-        if (en.isIntersecting) en.target.classList.add("entra");
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll(".por-palabra").forEach(function (h) {
-      /* El del hero se anima solo desde CSS (ver .hero .por-palabra en
-         base.css): ya está en pantalla al cargar y no debe depender de que
-         una clase llegue a tiempo. */
-      if (!h.closest(".hero")) obs.observe(h);
-    });
-
-    /* Antes se pausaba el reflejo en los titulares fuera de pantalla para no
-       tener 188 palabras repintándose a la vez. Se quitó: el cliente pidió
-       expresamente que no se detenga nunca, y era el único mecanismo capaz de
-       detenerlo. Si el consumo llega a notarse en móvil, la vía correcta es
-       reducir el número de titulares con reflejo, no pausarlos. */
-  }
-
-  /* --------------------------------------------- el perfil espera a estar a la vista */
-
-  function montajePerfil() {
-    const pf = document.querySelector(".pf");
-    if (!pf || quieto) return;
-
-    /* El montaje es CSS y arranca al cargar la página. En escritorio eso está
-       bien porque la tarjeta ya se ve; en móvil quedó por debajo del pliegue y
-       la escena terminaba antes de que nadie llegase a mirarla.
-
-       Se pausa desde JS y se reanuda al entrar en pantalla. La pausa se añade
-       desde aquí y no en el CSS a propósito: si el script no llega a
-       ejecutarse, la animación corre como antes en vez de quedarse congelada e
-       invisible. */
-    /* Si ya se ve al cargar —el caso de escritorio— no se pausa nada: pausar
-       para reanudar en el mismo instante solo añade una forma de fallar. */
-    const caja = pf.getBoundingClientRect();
-    if (caja.top < innerHeight * 0.8) return;
-
-    pf.classList.add("pf-espera");
-
-    function arrancar() {
-      pf.classList.remove("pf-espera");
-      clearTimeout(seguro);
-      obs.disconnect();
+    function lee(boton) {
+      var i = boton.querySelector("img");
+      var f = boton.closest("figure");
+      var cap = f && f.querySelector("figcaption");
+      return {
+        /* En la página va una versión ligera; el visor pide la grande, que es
+           la única que se lee ampliada. */
+        src: i.dataset.grande || i.getAttribute("src"),
+        alt: i.getAttribute("alt") || "",
+        pie: cap ? cap.innerHTML : ""
+      };
     }
 
-    const obs = new IntersectionObserver(function (ents) {
-      if (ents[0].isIntersecting) arrancar();
-    }, { threshold: 0.2 });
-    obs.observe(pf);
-
-    /* Red de seguridad. Una escena pausada que nunca arranca deja la tarjeta
-       invisible, que es peor que la animación que se pierde: si en 6s el
-       observador no ha avisado, se arranca igual. */
-    const seguro = setTimeout(arrancar, 6000);
-  }
-
-  /* ------------------------------------------------------------ botones imantados */
-
-  function imanes() {
-    if (quieto || matchMedia("(pointer: coarse)").matches) return;
-    document.querySelectorAll(".btn, .nav-cta, .cta-fijo").forEach(function (b) {
-      b.addEventListener("pointermove", function (ev) {
-        const r = b.getBoundingClientRect();
-        /* Desplazamiento corto y proporcional: si el botón se va demasiado
-           lejos del cursor, se vuelve difícil de pulsar. */
-        const x = (ev.clientX - r.left - r.width / 2) * 0.22;
-        const y = (ev.clientY - r.top - r.height / 2) * 0.3;
-        b.style.transform = "translate(" + x + "px," + y + "px)";
-      });
-      b.addEventListener("pointerleave", function () { b.style.transform = ""; });
-    });
-  }
-
-  /* ------------------------------------------------------------ tarjetas con relieve */
-
-  function relieve() {
-    if (quieto || matchMedia("(pointer: coarse)").matches) return;
-    document.querySelectorAll(".card").forEach(function (c) {
-      c.addEventListener("pointermove", function (ev) {
-        const r = c.getBoundingClientRect();
-        const px = (ev.clientX - r.left) / r.width - 0.5;
-        const py = (ev.clientY - r.top) / r.height - 0.5;
-        c.style.setProperty("--rx", (-py * 5).toFixed(2) + "deg");
-        c.style.setProperty("--ry", (px * 5).toFixed(2) + "deg");
-        /* Posición del brillo, para que la luz siga al cursor. */
-        c.style.setProperty("--mx", ((px + 0.5) * 100).toFixed(1) + "%");
-        c.style.setProperty("--my", ((py + 0.5) * 100).toFixed(1) + "%");
-      });
-      c.addEventListener("pointerleave", function () {
-        c.style.removeProperty("--rx");
-        c.style.removeProperty("--ry");
-      });
-    });
-  }
-
-  /* ------------------------------------------------------------- foco del cursor */
-
-  function focoCursor() {
-    if (quieto || matchMedia("(pointer: coarse)").matches) return;
-    const hero = document.querySelector(".v-nocturno .hero, .v-perfil .hero");
-    if (!hero) return;
-    hero.addEventListener("pointermove", function (ev) {
-      const r = hero.getBoundingClientRect();
-      hero.style.setProperty("--fx", (((ev.clientX - r.left) / r.width) * 100).toFixed(1) + "%");
-      hero.style.setProperty("--fy", (((ev.clientY - r.top) / r.height) * 100).toFixed(1) + "%");
-    });
-  }
-
-  /* ------------------------------------------------------------------- confeti */
-
-  function confeti(origen) {
-    if (quieto) return;
-    const colores = ["#F18BC4", "#98B7FD", "#F9FF80", "#500711"];
-    const r = origen.getBoundingClientRect();
-    const capa = document.createElement("div");
-    capa.className = "confeti";
-    for (let i = 0; i < 34; i++) {
-      const p = document.createElement("i");
-      p.style.setProperty("--c", colores[i % colores.length]);
-      p.style.setProperty("--x", (Math.random() * 2 - 1).toFixed(2));
-      p.style.setProperty("--r", Math.round(Math.random() * 360) + "deg");
-      p.style.setProperty("--d", (Math.random() * 0.25).toFixed(2) + "s");
-      capa.appendChild(p);
-    }
-    capa.style.left = r.left + r.width / 2 + "px";
-    capa.style.top = r.top + scrollY + "px";
-    document.body.appendChild(capa);
-    setTimeout(function () { capa.remove(); }, 2200);
-  }
-
-  /* -------------------------------------------------- la vía del plan de estudios */
-
-  function ruta() {
-    const via = document.querySelector(".ruta");
-    if (!via) return;
-    if (quieto) { via.style.setProperty("--avance", 1); return; }
-
-    const pasos = via.querySelectorAll(".ruta-paso");
-
-    /* Cada materia enciende su nodo al entrar en pantalla. Se marca el paso
-       entero y no la tarjeta, porque el nodo y la flecha son hermanos suyos. */
-    const obsPaso = new IntersectionObserver(function (ents) {
-      ents.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        en.target.classList.add("dentro");
-        obsPaso.unobserve(en.target);
-      });
-    }, { rootMargin: "0px 0px -45% 0px" });
-    pasos.forEach(function (p) { obsPaso.observe(p); });
-
-    /* El trazo avanza con el scroll: 0 cuando el primer nodo llega al centro de
-       la pantalla, 1 cuando lo alcanza el último. Referenciarlo a los nodos y no
-       a la caja entera evita que el trazo vaya adelantado respecto a ellos. */
-    let pendiente = false;
-    function pintar() {
-      pendiente = false;
-      if (!pasos.length) return;
-      const centro = scrollY + innerHeight / 2;
-      const primero = pasos[0].getBoundingClientRect();
-      const ultimo = pasos[pasos.length - 1].getBoundingClientRect();
-      const y0 = primero.top + scrollY + primero.height / 2;
-      const y1 = ultimo.top + scrollY + ultimo.height / 2;
-      const k = y1 > y0 ? (centro - y0) / (y1 - y0) : 1;
-      via.style.setProperty("--avance", Math.min(1, Math.max(0, k)).toFixed(3));
-    }
-    addEventListener("scroll", function () {
-      if (pendiente) return;
-      pendiente = true;
-      requestAnimationFrame(pintar);
-    }, { passive: true });
-    addEventListener("resize", pintar, { passive: true });
-    pintar();
-  }
-
-  /* La carta de la rectora.
-
-     El HTML se emite abierto para que se lea sin JS; aquí la cerramos y
-     conectamos el botón. Si este script no llega, la carta sigue completa en
-     pantalla: lo que se pierde es el gesto, no el contenido. */
-  function carta() {
-    const sobre = document.querySelector(".sobre");
-    if (!sobre) return;
-    const btn = sobre.querySelector(".sobre-btn");
-    const cta = sobre.querySelector(".sobre-cta");
-    const hoja = sobre.querySelector(".carta-hoja");
-    if (!btn || !hoja) return;
-
-    function pintar(abierta) {
-      sobre.classList.toggle("cerrada", !abierta);
-      btn.setAttribute("aria-expanded", String(abierta));
-      if (cta) cta.textContent = abierta ? cta.dataset.cerrar : cta.dataset.abrir;
-      hoja.toggleAttribute("inert", !abierta);
+    function pinta(i) {
+      actual = i;
+      var p = piezas[i];
+      img.src = p.src;
+      img.alt = p.alt;
+      pie.innerHTML = p.pie;
+      cuenta.textContent = (i + 1) + " / " + piezas.length;
+      prev.disabled = i === 0;
+      sig.disabled = i === piezas.length - 1;
+      /* Al cambiar de captura se vuelve al principio: si no, la siguiente
+         aparecería empezada por la mitad allí donde se quedó la anterior. */
+      lienzo.scrollLeft = 0;
+      lienzo.scrollTop = 0;
     }
 
-    // El primer cierre es instantáneo: si se anima, quien llega ve la carta
-    // abierta cerrándose sola, que parece un fallo y no un gesto.
-    sobre.classList.add("sin-anim");
-    pintar(false);
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { sobre.classList.remove("sin-anim"); });
-    });
+    grupos.forEach(function (grupo) {
+      var botones = Array.prototype.slice.call(
+        grupo.querySelectorAll(".prueba-abrir, .captura-abrir"));
+      if (!botones.length) return;
 
-    btn.addEventListener("click", function () {
-      pintar(sobre.classList.contains("cerrada"));
-    });
-  }
-
-  /* El sonido del cortometraje del hero.
-
-     El video arranca mudo porque ningún navegador deja que empiece solo con
-     sonido; el botón es el gesto de usuario que esa regla pide. Si el archivo
-     no trae pista de audio, el botón no se enseña: un control que no hace nada
-     es peor que no tenerlo. */
-  function sonidoHero() {
-    const fig = document.querySelector(".hero-video");
-    if (!fig) return;
-    const video = fig.querySelector("video");
-    const btn = fig.querySelector(".sonido");
-    if (!video || !btn) return;
-
-    /* El archivo no se pide hasta que el hero está en pantalla. Con autoplay y
-       preload el navegador se bajaba 5,5 MB antes de pintar nada, y en datos
-       móviles eso es lo que hacía que la página tardase. */
-    function arrancar() {
-      if (video.dataset.src) {
-        video.src = video.dataset.src;
-        delete video.dataset.src;
-      }
-      video.play().catch(function () {});
-    }
-
-    if ("IntersectionObserver" in window) {
-      const ojo = new IntersectionObserver(function (es) {
-        es.forEach(function (en) {
-          if (!en.isIntersecting) return;
-          arrancar();
-          ojo.disconnect();
+      botones.forEach(function (b, i) {
+        var f = b.closest("figure");
+        var cap = f && f.querySelector("figcaption");
+        b.setAttribute("aria-label",
+          "Ampliar la captura" + (cap ? ": " + cap.textContent.trim() : ""));
+        b.addEventListener("click", function () {
+          piezas = botones.map(lee);
+          abridor = b;
+          pinta(i);
+          dlg.showModal();
         });
-      }, { rootMargin: "200px" });
-      ojo.observe(fig);
-    } else {
-      arrancar();
-    }
+      });
+    });
 
-    /* Cuándo se pide el archivo.
-
-       Con autoplay y preload, el navegador se bajaba los 5,5 MB del
-       cortometraje compitiendo con el CSS y las fuentes, antes de pintar nada.
-       Ahora el video no se toca hasta que la página está cargada y el
-       navegador ocioso, y solo si la conexión da para ello: en datos contados
-       o en una red lenta se queda la primera imagen y un botón para verlo.
-
-       Lo que se ve primero —titular, botones, la imagen del video— pesa 50 kB
-       en total. */
-    function arrancar() {
-      if (video.dataset.src) {
-        video.src = video.dataset.src;
-        delete video.dataset.src;
-      }
-      fig.classList.remove("en-espera");
-      video.play().catch(function () {});
-    }
-
-    function conexionPobre() {
-      const c = navigator.connection;
-      if (!c) return false;
-      if (c.saveData) return true;
-      return /(^|-)(2g|slow-2g)$/.test(c.effectiveType || "");
-    }
-
-    function cuandoSobre(fn) {
-      if ("requestIdleCallback" in window) requestIdleCallback(fn, { timeout: 2500 });
-      else setTimeout(fn, 700);
-    }
-
-    function programar() {
-      if (conexionPobre()) {
-        /* La primera imagen ya está puesta como poster: se queda ella y el
-           botón pasa a ser el de reproducir. */
-        fig.classList.add("en-espera");
+    dlg.addEventListener("click", function (e) {
+      var accion = e.target.closest("[data-visor]");
+      if (accion) {
+        var q = accion.dataset.visor;
+        if (q === "cerrar") dlg.close();
+        if (q === "prev" && actual > 0) pinta(actual - 1);
+        if (q === "sig" && actual < piezas.length - 1) pinta(actual + 1);
         return;
       }
-      if (!("IntersectionObserver" in window)) return cuandoSobre(arrancar);
-      const ojo = new IntersectionObserver(function (es) {
-        es.forEach(function (en) {
-          if (!en.isIntersecting) return;
-          ojo.disconnect();
-          cuandoSobre(arrancar);
-        });
-      }, { rootMargin: "300px" });
-      ojo.observe(fig);
-    }
+      /* Pulsar fuera cierra. El <dialog> ocupa toda la pantalla, así que
+         «fuera» es el lienzo alrededor de la imagen, no el ::backdrop. */
+      if (e.target === dlg || e.target === lienzo) dlg.close();
+    });
 
-    if (document.readyState === "complete") programar();
-    else window.addEventListener("load", programar);
+    dlg.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft" && actual > 0) pinta(actual - 1);
+      if (e.key === "ArrowRight" && actual < piezas.length - 1) pinta(actual + 1);
+    });
 
-    function hayAudio() {
-      if (typeof video.mozHasAudio === "boolean") return video.mozHasAudio;
-      if (typeof video.webkitAudioDecodedByteCount === "number") {
-        return video.webkitAudioDecodedByteCount > 0;
-      }
-      if (video.audioTracks) return video.audioTracks.length > 0;
-      return true; // sin forma de saberlo, se deja el botón
-    }
-
-    function revisar() {
-      fig.classList.toggle("sin-sonido", !hayAudio());
-    }
-    video.addEventListener("loadeddata", revisar);
-    if (video.readyState >= 2) revisar();
-
-    btn.addEventListener("click", function () {
-      /* En espera el botón no silencia: enciende el video. */
-      if (fig.classList.contains("en-espera")) {
-        arrancar();
-        video.muted = false;
-        btn.setAttribute("aria-pressed", "true");
-        btn.setAttribute("aria-label", btn.dataset.off);
-        fig.classList.add("con-sonido");
-        return;
-      }
-      video.muted = !video.muted;
-      btn.setAttribute("aria-pressed", String(!video.muted));
-      btn.setAttribute("aria-label", video.muted ? btn.dataset.on : btn.dataset.off);
-      fig.classList.toggle("con-sonido", !video.muted);
-      /* Al quitar el mute, algunos navegadores pausan: se relanza. */
-      if (video.paused) video.play().catch(function () {});
+    /* Esc lo cierra el navegador por su cuenta, así que devolver el foco va en
+       `close` y no en cada salida. */
+    dlg.addEventListener("close", function () {
+      if (abridor) { abridor.focus(); abridor = null; }
     });
   }
 
-  function iniciar() {
-    prepararEntradas();
-    ruta();
-    titularesPorPalabra();
-    sonidoHero();
-    carta();
-    montajePerfil();
-    imanes();
-    relieve();
-    focoCursor();
-    navActiva();
-    progresoYCta();
-    contadores();
+  /* ================================================== la baraja de los casos */
+
+  /* Las tres fichas se apilan al hacer scroll, pero solo si de verdad caben:
+     una ficha clavada más alta que el hueco disponible nunca llega a enseñar su
+     pie, y en el pie está la cita de la alumna, que es lo que mejor se lee de
+     toda la ficha.
+
+     Así que el tope de cada una se calcula: se la pega lo más arriba posible
+     sin que se meta debajo de la barra, y si aun así no cabe entera, la baraja
+     no se activa y las fichas se quedan en columna. Vale más leerlas seguidas
+     que apiladas y a medias. */
+
+  function baraja() {
+    var caja = document.querySelector(".fichas");
+    if (!caja) return;
+    var fichas = Array.prototype.slice.call(caja.querySelectorAll(".ficha"));
+    if (fichas.length < 2) return;
+
+    /* La barra mide 67px; 70 le deja un respiro y además se esconde sola al
+       bajar. Con 76 y 20 de margen, la baraja se apagaba por nueve píxeles en
+       una ventana de 760 de alto, que es la de un portátil corriente. */
+    var ALTO_BARRA = 70;
+    var RESPIRO = 12;      // lo que se deja por debajo de la ficha
+
+    function mide() {
+      /* Por debajo de 900 no hay baraja: ahí las fichas son más altas que la
+         pantalla y apilarlas solo taparía texto. */
+      if (window.innerWidth < 900 || quieto) {
+        caja.classList.remove("fichas--baraja");
+        return;
+      }
+
+      /* Se mide con la baraja apagada: con las fichas clavadas, lo que devuelve
+         getBoundingClientRect es la posición pegada, no la del flujo. */
+      caja.classList.remove("fichas--baraja");
+
+      var hueco = window.innerHeight - RESPIRO;
+      var caben = true;
+      var topes = fichas.map(function (f, i) {
+        var alto = f.getBoundingClientRect().height;
+        if (alto + ALTO_BARRA > hueco) caben = false;
+        /* Lo más abajo que puede ir sin que se salga, con un escalón por ficha
+           para que asome el canto de la anterior. */
+        var tope = Math.min(ALTO_BARRA + 18 + i * 18, hueco - alto);
+        return Math.max(ALTO_BARRA, Math.round(tope));
+      });
+
+      if (!caben) return;
+
+      fichas.forEach(function (f, i) { f.style.setProperty("--tope", topes[i] + "px"); });
+      caja.classList.add("fichas--baraja");
+    }
+
+    mide();
+    /* Las fichas cambian de alto con el ancho y al cargar las capturas. */
+    window.addEventListener("resize", mide, { passive: true });
+    window.addEventListener("load", mide);
+  }
+
+  /* ====================================================================== arranque */
+
+  function arranca() {
+    telon();
+    navegacion();
+    entradas();
+    cifras();
+    cinta();
     video();
+    carta();
     parallax();
+    carriles();
+    visorCapturas();
+    baraja();
     formulario();
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", iniciar);
+    document.addEventListener("DOMContentLoaded", arranca);
   } else {
-    iniciar();
+    arranca();
   }
 })();

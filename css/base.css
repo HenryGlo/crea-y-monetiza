@@ -1,12 +1,17 @@
-/* Base común a las tres propuestas.
-   Aquí vive solo el esqueleto: tokens de marca, retícula, escala tipográfica y
-   el motor de las animaciones. La dirección visual de cada propuesta va entera
-   en p1/p2/p3.css, que pueden repintar cualquiera de estos tokens.
+/* ============================================================================
+   CREA Y MONETIZA CAMPUS — propuesta 2 · "El cuaderno del Campus"
+   base.css — tokens de marca, retícula, tipografía y componentes comunes.
 
-   Los colores salen de las piezas que ya existen (carpeta y pensum), no de una
-   interpretación: son los mismos valores exactos. */
+   Dirección: la web es un cuaderno. Cada sección es una hoja con su lengüeta
+   —el mismo objeto que ya usa el expediente del registro prioritario—, sobre
+   papel con grano real de la marca. Los parches bordados no flotan: van
+   cosidos a un borde, a una tarjeta o a una lengüeta, siempre anclados.
+
+   Mobile first: todo se escribe primero para 390px y se ensancha después.
+   ========================================================================== */
 
 :root{
+  /* --- paleta exacta de marca (Paleta de Color - Campus.png) --- */
   --vino:#500711;
   --vino-2:#6e0f1d;
   --rosa:#F18BC4;
@@ -15,2296 +20,442 @@
   --azul-soft:#c2d4fe;
   --amar:#F9FF80;
   --amar-soft:#fdffc4;
-  /* Verde de la casa. Sale del amarillo de marca girando hacia el verde, para
-     que no parezca un color de otro sitio: sobre el vino es lo que más brilla y
-     por eso lo lleva el claim del cierre. */
-  --verde:#7CEFA4;
   --crema:#F8F3EF;
-  --ink:#3a0810;
+  --crema-2:#EDE6E0;
 
   --fondo:var(--crema);
   --texto:var(--vino);
   --superficie:#fff;
-  --linea:rgba(80,7,17,.10);
+  --linea:rgba(80,7,17,.12);
+  --linea-fuerte:rgba(80,7,17,.28);
   --acento:var(--rosa);
 
-  --r:26px;
-  --r-s:16px;
-  --shadow:0 18px 45px -18px rgba(80,7,17,.45);
-  --shadow-alta:0 40px 90px -40px rgba(80,7,17,.55);
+  --r:24px;
+  --r-s:14px;
+  --r-hoja:34px;
+
+  --sombra:0 14px 34px -18px rgba(80,7,17,.42);
+  --sombra-alta:0 34px 70px -34px rgba(80,7,17,.55);
+  /* Alias con el nombre que usaban las reglas del registro prioritario, que se
+     copian intactas desde la primera versión. */
+  --shadow:var(--sombra);
+  --shadow-alta:var(--sombra-alta);
 
   --display:'Anton',Impact,sans-serif;
   --texto-f:'Outfit',system-ui,-apple-system,sans-serif;
   --mano:'Caveat',cursive;
 
-  /* Interlineado de titulares. Medido, no elegido a ojo: en Anton la tilde de
-     la Ñ sube a 1.07em sobre la línea base y el acento de la Ó a 1.10em, contra
-     0.86em de una mayúscula sin acento. Por debajo de 1.10 el acento de una
-     línea pisa la tinta de la anterior, y este contenido está lleno de
-     GRADUACIÓN, MONETIZACIÓN y ADMISIÓN en titular. */
-  --lh-display:1.12;
+  /* Anton sube la tilde a 1.10em sobre la línea base: por debajo de 1.10 el
+     acento de MONETIZACIÓN pisa la línea anterior. */
+  --lh-display:1.1;
 
-  --wrap:1180px;
-  /* Con 13 secciones, 150px arriba y abajo son casi 4.000px de la página solo
-     en aire. A 104 se sigue leyendo cada bloque como un bloque. */
-  --sec-y:clamp(52px,6.5vw,104px);
+  --wrap:1140px;
+  --gutter:clamp(20px,5vw,34px);
+  /* El aire de una hoja va repartido: arriba poco, porque encima está la
+     lengüeta y el titular tiene que quedar pegado a ella; abajo el normal.
 
-  /* Escala fluida: una sola fuente de verdad para los tamaños de titular. */
-  /* El titular del hero se mide contra el pliegue, no contra el gusto: a 96px
-     ocupaba 538px de los 936 de un portátil y empujaba fuera CTA, materias y
-     cifras. A 72px sigue siendo con diferencia el elemento dominante de la
-     página y deja entrar el resto del hero. */
-  --t-hero:clamp(34px,4.6vw,62px);
-  --t-h2:clamp(30px,5.2vw,68px);
-  --t-h3:clamp(19px,2.1vw,26px);
-  --t-cuerpo:clamp(16px,1.15vw,18px);
+     El suelo de 80px abajo no es decorativo: la hoja siguiente sube 34px
+     (`--r-hoja`) y su lengüeta mide 32 y sobresale por encima, así que con
+     menos de 80 la pestaña se comía la última línea de la sección anterior.
+     Pasaba en seis secciones a 375px. */
+  --sec-y:clamp(80px,8vw,100px);
+  --sec-y-top:clamp(34px,5vw,60px);
+
+  --t-hero:clamp(38px,9.4vw,74px);
+  --t-h2:clamp(30px,7.2vw,58px);
+  --t-h3:clamp(19px,4.4vw,25px);
+  --t-cuerpo:clamp(16px,4.1vw,18px);
+
+  --curva:cubic-bezier(.22,.8,.28,1);
 }
 
 *,*::before,*::after{ box-sizing:border-box }
 
-html{ scroll-behavior:smooth; scroll-padding-top:84px; -webkit-text-size-adjust:100% }
+html{
+  scroll-behavior:smooth;
+  /* 76px del menú fijo más el alto de la lengüeta: al saltar a un ancla, la
+     pestaña de la sección tiene que quedar debajo de la barra, no tapada. */
+  scroll-padding-top:118px;
+  -webkit-text-size-adjust:100%;
+}
 
 body{
   margin:0;
   font-family:var(--texto-f);
   font-size:var(--t-cuerpo);
-  line-height:1.65;
+  line-height:1.62;
   color:var(--texto);
-  background:var(--fondo);
+  background:var(--vino);
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
 }
 
-img,svg{ max-width:100% }
-/* Los SVG son inline por defecto y se colocan en la línea de texto: sin esto el
-   logo del hero arrastra a la píldora que va debajo. */
-.logo,.logo-foot{ display:block }
+/* Mientras el telón está puesto la página no se puede recorrer con el dedo:
+   el único gesto válido es el que lo retira. */
+html.telon-activo,
+html.telon-activo body{ overflow:hidden; height:100% }
 
-/* --------------------------------------------------------------- tipografía */
+/* Los milisegundos justos después de levantarse el telón. La cola de inercia
+   del mismo gesto sigue llegando —en un trackpad, hasta más de un segundo
+   después de levantar los dedos— y, con la página ya desbloqueada, la bajaba
+   de varias pantallas de golpe: el recorrido empezaba por la mitad.
+
+   Se bloquea el desplazamiento, no se cancelan los eventos: un scroll que
+   venga del compositor no siempre se puede cancelar desde el hilo principal,
+   pero con `overflow:hidden` no hay nada que desplazar. El script lo suelta en
+   cuanto el gesto para (ver amortiguaInercia en js/campus.js). */
+html.scroll-quieto,
+html.scroll-quieto body{ overflow:hidden; height:100% }
+
+img,svg,video{ max-width:100%; display:block }
+
+/* ------------------------------------------------------------- tipografía */
 
 h1,h2,h3{
   font-family:var(--display);
   font-weight:400;
   text-transform:uppercase;
   line-height:var(--lh-display);
-  letter-spacing:-.015em;
+  letter-spacing:-.01em;
   margin:0 0 .5em;
-  /* Anton no trae versalitas reales; el balance evita viudas en los titulares
-     largos de esta landing, que son casi todos. */
   text-wrap:balance;
 }
 h1{ font-size:var(--t-hero) }
-h2{ font-size:var(--t-h2) }
-h3{ font-size:var(--t-h3); line-height:1.05 }
+h2{ font-size:var(--t-h2); max-width:18ch }
+h3{ font-size:var(--t-h3); line-height:1.08 }
 
-p{ margin:0 0 1.1em; text-wrap:pretty }
-/* Medida de lectura. El contenedor llega a 1180px y a ese ancho una línea de
-   texto pasa de 110 caracteres: el ojo pierde el renglón al volver. */
-.carta-cuerpo,.sec > .wrap > p{ max-width:68ch }
-h2{ max-width:22ch }
+p{ margin:0 0 1.05em; text-wrap:pretty; max-width:62ch }
 p:last-child{ margin-bottom:0 }
 
 a{ color:inherit }
 
-.wrap{ max-width:var(--wrap); margin:0 auto; padding:0 clamp(20px,4vw,32px) }
+.wrap{ max-width:var(--wrap); margin:0 auto; padding-inline:var(--gutter) }
+.wrap-estrecho{ max-width:760px }
 
+/* Eyebrow y lead: la voz baja y la voz media de cada sección. */
 .eyebrow{
-  display:inline-flex; align-items:center; gap:10px;
-  font-weight:700; font-size:12.5px; letter-spacing:.18em; text-transform:uppercase;
-  opacity:.72; margin:0 0 22px;
-}
-.eyebrow .dot{ width:8px; height:8px; border-radius:50%; background:var(--acento); flex:none }
-
-.lead{ font-size:clamp(18px,1.6vw,22px); font-weight:500; max-width:60ch }
-.lead-min{ font-weight:700; letter-spacing:.02em; margin-bottom:.6em }
-.cierre{ font-size:clamp(17px,1.4vw,20px); font-weight:500; max-width:62ch; margin-top:1.6em }
-.remate{ font-family:var(--mano); font-size:clamp(22px,2.4vw,30px); color:var(--acento); line-height:1.2 }
-.entrada{ font-size:clamp(17px,1.35vw,20px); max-width:62ch }
-
-/* ------------------------------------------------------------------ listas */
-
-.lista{ list-style:none; padding:0; margin:0 0 1.4em; display:grid; gap:9px }
-.lista li{ position:relative; padding-left:22px }
-.lista li::before{
-  content:""; position:absolute; left:0; top:.62em;
-  width:8px; height:8px; border-radius:50%; background:var(--acento);
-}
-.dos-col{ grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); column-gap:32px }
-
-.chips{ display:flex; flex-wrap:wrap; gap:10px }
-.chips li{ padding:9px 17px; border:1.5px solid var(--linea); border-radius:999px; font-weight:600; font-size:14.5px }
-.chips li::before{ display:none }
-
-.check li::before,.cruz li::before{
-  content:"✓"; background:none; width:auto; height:auto; top:0;
-  font-weight:800; color:var(--acento);
-}
-.cruz li::before{ content:"✕"; opacity:.5 }
-
-.temas{ list-style:none; padding:0; margin:14px 0 0; display:flex; flex-wrap:wrap; gap:7px }
-.temas li{ font-size:13px; font-weight:600; padding:5px 12px; border-radius:999px; background:rgba(80,7,17,.06) }
-
-.pasos{ margin:0 0 1.2em; padding-left:0; list-style:none; counter-reset:p; display:grid; gap:10px }
-.pasos li{ counter-increment:p; position:relative; padding-left:38px }
-.pasos li::before{
-  content:counter(p,decimal-leading-zero);
-  position:absolute; left:0; top:.05em;
-  font-family:var(--display); font-size:15px; color:var(--acento);
-}
-
-/* ------------------------------------------------------------------ retícula */
-
-.grid{ display:grid; gap:clamp(14px,1.6vw,22px) }
-.grid-2{ grid-template-columns:repeat(auto-fit,minmax(320px,1fr)) }
-.grid-3{ grid-template-columns:repeat(auto-fit,minmax(270px,1fr)) }
-.grid-4{ grid-template-columns:repeat(auto-fit,minmax(230px,1fr)) }
-.grid-materias{ grid-template-columns:repeat(auto-fit,minmax(290px,1fr)) }
-
-.card{
-  background:var(--superficie);
-  border:1.5px solid var(--linea);
-  border-radius:var(--r);
-  padding:clamp(22px,2.4vw,32px);
-  transition:transform .35s cubic-bezier(.2,.7,.3,1),border-color .3s,box-shadow .35s;
-}
-
-.sec{ padding:var(--sec-y) 0; position:relative }
-
-/* ------------------------------------------------------------------ botones */
-
-.btn{
-  display:inline-flex; align-items:center; gap:10px;
-  font-family:var(--texto-f); font-weight:800;
-  font-size:13.5px; letter-spacing:.12em; text-transform:uppercase;
-  padding:17px 30px; border-radius:999px; border:2px solid var(--texto);
-  text-decoration:none; cursor:pointer;
-  transition:transform .25s cubic-bezier(.2,.7,.3,1),background .25s,color .25s,box-shadow .25s;
-}
-.btn span{ transition:transform .25s }
-.btn:hover span{ transform:translateX(4px) }
-.btn-pri{ background:var(--texto); color:var(--fondo) }
-.btn-pri:hover{ box-shadow:var(--shadow); transform:translateY(-2px) }
-.btn-sec{ background:transparent; color:var(--texto) }
-.btn-sec:hover{ background:var(--texto); color:var(--fondo) }
-.btn-sec:hover span{ transform:translateY(3px) }
-
-.ctas{ display:flex; flex-wrap:wrap; gap:13px; margin:32px 0 }
-
-/* ---------------------------------------------------------------- navegación */
-
-.saltar{
-  position:absolute; left:-9999px; top:0; z-index:200;
-  background:var(--texto); color:var(--fondo); padding:12px 20px; border-radius:0 0 12px 0;
-  font-weight:700; text-decoration:none;
-}
-.saltar:focus{ left:0 }
-
-.nav{
-  position:sticky; top:0; z-index:80;
-  background:color-mix(in srgb,var(--fondo) 86%,transparent);
-  backdrop-filter:blur(14px) saturate(1.4);
-  border-bottom:1px solid var(--linea);
-}
-.nav-in{ display:flex; align-items:center; gap:16px; padding:11px clamp(18px,4vw,26px); max-width:var(--wrap); margin:0 auto }
-.nav .iso{ width:28px; height:28px; flex:none; color:var(--texto) }
-.nav .brand{ font-family:var(--display); font-size:15px; letter-spacing:.04em; text-transform:uppercase }
-.nav-links{ display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; flex:1; justify-content:flex-end }
-.nav-links::-webkit-scrollbar{ display:none }
-/* 36px de alto se quedaba corto para el dedo, y en móvil el menú es una barra
-   que se arrastra: cuesta acertar. 42 entra dentro de lo cómodo sin subir la
-   altura de la barra, porque el CTA de al lado ya mide eso. */
-.nav-links a{
-  font-size:12.5px; font-weight:600; text-decoration:none; white-space:nowrap;
-  padding:11px 13px; border-radius:999px; opacity:.6; transition:.2s;
-  display:flex; align-items:center;
-}
-.nav-links a:hover{ opacity:1; background:color-mix(in srgb,var(--acento) 22%,transparent) }
-.nav-links a.en-vista{ opacity:1; background:var(--texto); color:var(--fondo) }
-.nav-cta{
-  flex:none; font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
-  padding:11px 19px; border-radius:999px; background:var(--acento); color:var(--vino);
-  text-decoration:none; transition:transform .2s;
-}
-.nav-cta:hover{ transform:translateY(-2px) }
-
-/* Barra de progreso de lectura: en una página de 22 secciones da una noción de
-   cuánto queda, que si no se pierde por completo. */
-.progreso{
-  position:absolute; left:0; bottom:-1px; height:2px; width:0;
-  background:var(--acento); transition:width .1s linear;
-}
-
-.cta-fijo{
-  position:fixed; right:clamp(14px,3vw,26px); bottom:clamp(14px,3vw,26px); z-index:70;
   display:inline-flex; align-items:center; gap:9px;
-  padding:16px 26px; border-radius:999px;
-  background:var(--texto); color:var(--fondo);
-  font-weight:800; font-size:13px; letter-spacing:.11em; text-transform:uppercase;
-  text-decoration:none; box-shadow:var(--shadow-alta);
-  opacity:0; transform:translateY(18px) scale(.96); pointer-events:none;
-  transition:opacity .35s,transform .35s cubic-bezier(.2,.7,.3,1);
-}
-.cta-fijo.visible{ opacity:1; transform:none; pointer-events:auto }
-.cta-fijo:hover{ transform:translateY(-3px) }
-
-/* Cinta para saltar entre propuestas mientras se decide. No forma parte de la
-   landing: se quita al elegir dirección. */
-.cambiar{
-  position:fixed; left:clamp(14px,3vw,26px); bottom:clamp(14px,3vw,26px); z-index:70;
-  display:flex; align-items:center; gap:12px;
-  padding:10px 16px; border-radius:999px;
-  background:rgba(58,8,16,.9); color:#F8F3EF; backdrop-filter:blur(8px);
-  font-size:12px; font-weight:600;
-}
-.cambiar a{ color:var(--rosa); font-weight:800; text-decoration:none; white-space:nowrap }
-.cambiar a:hover{ text-decoration:underline }
-
-/* ------------------------------------------------------------------- video */
-
-.video{
-  position:relative; aspect-ratio:16/9; border-radius:var(--r); overflow:hidden;
-  margin:30px 0; background:var(--vino); box-shadow:var(--shadow-alta);
-  /* A ancho completo el vídeo mide 660px de alto y empuja media sección. */
-  max-width:880px;
-}
-.video iframe{ position:absolute; inset:0; width:100%; height:100%; border:0 }
-.video-btn{
-  position:absolute; inset:0; width:100%; height:100%;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
-  border:0; cursor:pointer; color:#F8F3EF; font-family:inherit;
-  background:
-    radial-gradient(120% 100% at 50% 0%,rgba(241,139,196,.35),transparent 60%),
-    linear-gradient(180deg,var(--vino-2),var(--vino));
-}
-.video-btn .play{
-  width:82px; height:82px; border-radius:50%;
-  display:grid; place-items:center; font-size:24px; padding-left:6px;
-  background:var(--rosa); color:var(--vino);
-  transition:transform .3s cubic-bezier(.2,.7,.3,1);
-  box-shadow:0 0 0 0 rgba(241,139,196,.5);
-  animation:pulso 2.8s infinite;
-}
-.video-btn:hover .play{ transform:scale(1.09) }
-@keyframes pulso{
-  0%{ box-shadow:0 0 0 0 rgba(241,139,196,.45) }
-  70%{ box-shadow:0 0 0 26px rgba(241,139,196,0) }
-  100%{ box-shadow:0 0 0 0 rgba(241,139,196,0) }
-}
-.video-t{
-  font-family:var(--display); text-transform:uppercase; font-size:clamp(17px,2.4vw,30px);
-  max-width:16ch; text-align:center; line-height:1.02;
-}
-
-.cita{
-  margin:0; padding:26px 0 26px 28px; border-left:3px solid var(--acento);
-  font-family:var(--mano); font-size:clamp(23px,3vw,38px); line-height:1.25;
-}
-.cita cite{ display:block; margin-top:12px; font-family:var(--texto-f); font-style:normal; font-size:14px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; opacity:.6 }
-
-/* --------------------------------------------------------------- marcadores */
-
-/* Todo lo que espera material real del cliente se marca en pantalla, para que
-   nadie confunda un hueco con una decisión de diseño. */
-.ph{
-  margin-top:20px; border:2px dashed color-mix(in srgb,var(--texto) 28%,transparent);
-  border-radius:var(--r-s); min-height:104px;
-  display:grid; place-items:center; text-align:center; padding:20px;
-  background:color-mix(in srgb,var(--texto) 4%,transparent);
-}
-.ph span{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; opacity:.5 }
-.pendiente{ position:relative }
-/* Un hueco puede decir qué le falta: con data-nota la etiqueta lo explica en
-   vez de repetir la frase genérica. */
-/* La etiqueta no puede ser más ancha que lo que marca: en el hueco vertical
-   del hero, a 360px, se salía por la izquierda del propio marco. */
-.pendiente::after{ max-width:calc(100% - 28px); text-align:center }
-.pendiente[data-nota]::after{ content:attr(data-nota) }
-.pendiente::after{
-  content:"Pendiente de contenido real";
-  position:absolute; top:14px; right:14px;
-  font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
-  padding:5px 10px; border-radius:999px; background:var(--amar); color:var(--vino);
-}
-
-.retrato{
-  aspect-ratio:1; border-radius:var(--r-s); margin-bottom:20px;
-  display:grid; place-items:center;
-  background:linear-gradient(140deg,var(--rosa-soft),var(--azul-soft));
-  color:var(--vino); font-family:var(--display); font-size:clamp(26px,3vw,40px);
-  text-transform:uppercase;
-}
-.rol{ font-size:13.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; opacity:.62; margin-bottom:1em }
-
-/* ------------------------------------------------------------------ formulario */
-
-.form{ margin-top:36px; max-width:760px }
-.form-t{ font-family:var(--display); text-transform:uppercase; font-size:clamp(20px,2.4vw,30px); margin-bottom:22px }
-.campos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:16px }
-.campo-f{ display:block; margin-bottom:16px }
-.campo-f>span{ display:block; font-size:13px; font-weight:700; letter-spacing:.04em; margin-bottom:8px }
-.campo-f input,.campo-f select,.campo-f textarea{
-  width:100%; font-family:inherit; font-size:16px; color:var(--texto);
-  background:var(--superficie); border:1.5px solid var(--linea); border-radius:14px;
-  padding:14px 16px; transition:border-color .2s,box-shadow .2s;
-}
-.campo-f textarea{ resize:vertical; min-height:110px }
-.campo-f :focus-visible{ outline:none }
-.campo-f input:focus,.campo-f select:focus,.campo-f textarea:focus{
-  border-color:var(--acento); box-shadow:0 0 0 4px color-mix(in srgb,var(--acento) 25%,transparent);
-}
-.campo-f input:user-invalid,.campo-f select:user-invalid{ border-color:#c0392b }
-.form-msg{ margin-top:18px; font-weight:700; min-height:1.5em }
-.form-msg.ok{ color:var(--acento) }
-.form-msg.err{ color:#c0392b }
-
-/* ---------------------------------------------------------------------- faq */
-
-.faq-lista{ max-width:900px; border-top:1px solid var(--linea) }
-.faq-item{ border-bottom:1px solid var(--linea) }
-.faq-item summary{
-  cursor:pointer; list-style:none; padding:24px 44px 24px 0; position:relative;
-  font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(16px,1.7vw,22px); line-height:1.15;
-}
-.faq-item summary::-webkit-details-marker{ display:none }
-.faq-item summary::after{
-  content:"+"; position:absolute; right:8px; top:50%; transform:translateY(-50%);
-  font-family:var(--texto-f); font-size:26px; font-weight:300; color:var(--acento);
-  transition:transform .3s;
-}
-.faq-item[open] summary::after{ transform:translateY(-50%) rotate(45deg) }
-.faq-item summary:hover{ color:var(--acento) }
-.faq-cuerpo{ padding:0 44px 26px 0; max-width:70ch }
-
-/* ------------------------------------------------------------------- cierre */
-
-/* El cierre, como portada.
-
-   Una sola composición centrada sobre el vino: el arco con el isotipo abre, el
-   titular manda, hay una única llamada y el registro va debajo como enlace. A
-   los lados, el carnet colgando y el sello. Las cuatro formas de recorrerlo
-   bajan al pie en fila —resumen de lo que hay dentro, no un argumento más antes
-   de decidir— y el remate cierra entre dos filetes.
-
-   Antes fue una columna donde todo pesaba igual, y después dos paneles: el de
-   papel se quedaba vacío al lado del vino. */
-
-.cierre-final{ position:relative; padding:clamp(56px,7vw,110px) 0 clamp(34px,4vw,56px) }
-.cierre-centro{ text-align:center; display:grid; justify-items:center }
-.cierre-final .eyebrow{ justify-content:center; letter-spacing:.24em }
-/* El punto del eyebrow, también al otro lado: en la referencia la etiqueta va
-   entre dos, centrada. */
-.cierre-final .eyebrow::after{
-  content:""; width:7px; height:7px; border-radius:50%; background:var(--acento);
-}
-.cierre-final h2{ margin:clamp(14px,1.8vw,22px) 0 clamp(18px,2.4vw,30px) }
-.cierre-final .cierre-centro > p + p{ margin-top:0 }
-/* El remate se queda fuera del tope de medida: sus filetes tienen que cruzar
-   la página de lado a lado. */
-.cierre-final .cierre-centro > p:not(.con-remate){ max-width:56ch }
-.cierre-final .ctas{ justify-content:center; margin-top:clamp(22px,3vw,34px) }
-
-/* El arco de apertura, con el isotipo en su vértice. */
-.arco{
-  position:relative; width:min(560px,88%); color:var(--acento);
-  margin-bottom:clamp(16px,2.2vw,28px);
-}
-.arco > svg:first-child{ width:100%; height:clamp(48px,6vw,86px); display:block; opacity:.55 }
-.arco-iso{
-  position:absolute; left:50%; top:-6px; translate:-50% 0;
-  width:clamp(30px,3.2vw,42px); height:auto; fill:currentColor;
-}
-
-/* La única llamada, y el registro debajo como enlace: dos botones a la par
-   competían y ninguno ganaba. */
-.enlace-sub{
-  display:inline-block; margin-top:16px;
-  font-weight:600; font-size:15px;
-  text-decoration:underline; text-underline-offset:6px;
-  text-decoration-thickness:2px; text-decoration-color:currentColor;
-  opacity:.85;
-}
-.enlace-sub:hover{ opacity:1; text-decoration-color:var(--acento) }
-
-/* Las cuatro formas, al pie y en fila, separadas por un filete como en la
-   referencia. */
-.con-lista{
-  list-style:none; padding:0; width:100%;
-  margin:clamp(40px,5.5vw,76px) 0 0;
-  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
-}
-.con-lista li{
-  display:grid; justify-items:center; gap:14px; padding:0 clamp(8px,1.6vw,22px);
-  border-left:1px solid color-mix(in srgb,var(--texto) 20%,transparent);
-}
-.con-lista li:first-child{ border-left:0 }
-.con-punto{
-  width:clamp(54px,5vw,70px); aspect-ratio:1; border-radius:50%;
-  display:grid; place-items:center; background:var(--rosa);
-}
-.con-punto img{ width:56%; height:auto; display:block }
-.con-lista li:nth-child(2) .con-punto{ background:var(--azul) }
-.con-lista li:nth-child(3) .con-punto{ background:var(--amar) }
-.con-lista li:nth-child(4) .con-punto{ background:var(--crema) }
-.con-lista li b{
-  display:grid; gap:5px; font-weight:400;
-  font-family:var(--display); text-transform:uppercase; line-height:1.02;
-  font-size:clamp(15px,1.7vw,21px); letter-spacing:.01em;
-}
-/* El "Con" de cada etiqueta, en pequeño y a media luz: está, se lee, y deja
-   que el sustantivo mande. */
-.con-lista li b i{
-  font-style:normal; font-family:var(--texto-f);
-  font-size:10.5px; font-weight:700; letter-spacing:.22em; opacity:.55;
-}
-
-.cierre-final .firma{ margin-top:clamp(34px,4.4vw,58px); max-width:44ch }
-
-/* El remate entre dos filetes, como el pie de la referencia. */
-.con-remate{
-  width:100%; margin:clamp(26px,3.4vw,44px) 0 0;
-  display:flex; align-items:center; gap:clamp(16px,2.4vw,34px);
-}
-.con-remate::before,.con-remate::after{
-  content:""; flex:1; height:1px;
-  background:color-mix(in srgb,var(--texto) 22%,transparent);
-}
-.con-remate span{
-  font-size:11.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
-  opacity:.78;
-}
-
-/* El sello y la nota a mano, juntos en la banda derecha. */
-.cierre-lado{ position:absolute; right:0; top:0; height:100%; pointer-events:none }
-
-@media (max-width:999px){
-  .con-lista{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:26px 0 }
-  .con-lista li:nth-child(odd){ border-left:0 }
-}
-@media (max-width:520px){
-  .con-lista{ grid-template-columns:1fr; gap:22px }
-  .con-lista li{ border-left:0 }
-}
-
-
-
-@media (max-width:900px){
-  .cierre-final{ grid-template-columns:1fr }
-  .cierre-argumento .panel-dentro,.cierre-decision .panel-dentro{
-    margin-inline:auto; padding-inline:clamp(22px,5vw,40px);
-  }
-  .cierre-panel{ padding:clamp(34px,7vw,64px) 0 }
-}
-.logo-foot{ width:min(420px,74%); height:auto; margin:40px auto 18px; display:block; color:currentColor }
-.claim{ font-weight:600; opacity:.75 }
-.firma{ font-family:var(--mano); font-size:clamp(20px,2.4vw,30px); color:var(--acento); margin-top:34px }
-
-/* ------------------------------------------------------- motor de animación */
-
-/* Cada bloque entra una sola vez al aparecer en pantalla. Sin JS (o con el
-   movimiento reducido) todo queda visible: la animación nunca es la que decide
-   si el contenido se puede leer. */
-.rv{ opacity:0; transform:translateY(26px); transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1) }
-.rv.dentro{ opacity:1; transform:none }
-.rv-d1{ transition-delay:.08s } .rv-d2{ transition-delay:.16s } .rv-d3{ transition-delay:.24s }
-.rv-d4{ transition-delay:.32s } .rv-d5{ transition-delay:.4s }
-
-@media (prefers-reduced-motion:reduce){
-  html{ scroll-behavior:auto }
-  *,*::before,*::after{ animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important }
-  .rv{ opacity:1; transform:none }
-}
-
-:focus-visible{ outline:3px solid var(--acento); outline-offset:3px; border-radius:6px }
-
-@media (max-width:720px){
-  .nav .brand{ display:none }
-  .nav-cta{ display:none }
-  .cambiar{ font-size:11px; padding:8px 12px }
-  .cta-fijo{ left:clamp(14px,3vw,26px); right:clamp(14px,3vw,26px); justify-content:center }
-  .cambiar{ display:none }
-}
-
-@media print{
-  .nav,.cta-fijo,.cambiar,.saltar{ display:none }
-  .rv{ opacity:1; transform:none }
-}
-
-/* ================================================================= movimiento
-   Capa de animación. Todo lo de aquí queda anulado por el bloque de
-   prefers-reduced-motion que hay más abajo en este mismo archivo. */
-
-/* ------------------------------------------------------- cinta rodante */
-
-.cinta{
-  overflow:hidden; padding:18px 0; border-block:2px solid currentColor;
-  background:var(--acento); color:var(--vino);
-  display:flex; user-select:none;
-}
-.cinta-pista{
-  display:flex; align-items:center; gap:26px; flex:none;
-  font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(18px,2.4vw,32px); white-space:nowrap;
-  /* La pista lleva la tira duplicada, así que desplazarla un 50% exacto la deja
-     idéntica al punto de partida y el bucle no tiene salto. */
-  animation:rodar 34s linear infinite;
-  will-change:transform;
-}
-.cinta:hover .cinta-pista{ animation-play-state:paused }
-.cinta-sep{ color:var(--vino); opacity:.45; font-size:.7em }
-@keyframes rodar{ to{ transform:translateX(-50%) } }
-
-/* --------------------------------------------------- titular palabra a palabra */
-
-.por-palabra .pal{
-  display:inline-block;
-  opacity:0; transform:translateY(.5em) rotate(2deg);
-  transition:opacity .5s ease,transform .55s cubic-bezier(.2,.8,.3,1);
-  transition-delay:calc(var(--i) * 45ms);
-}
-.por-palabra.entra .pal{ opacity:1; transform:none }
-
-/* El titular del hero no espera a nadie: se anima solo, con una animación CSS
-   que no necesita que ninguna clase llegue a tiempo. Depender de una clase
-   añadida por JS deja el elemento más importante de la página en blanco si el
-   script tarda, falla o el navegador congela los temporizadores. */
-.hero .por-palabra .pal{
-  opacity:1; transform:none; transition:none;
-  animation:pal-entra .6s cubic-bezier(.2,.8,.3,1) calc(var(--i) * 50ms) both;
-}
-@keyframes pal-entra{
-  from{ opacity:0; transform:translateY(.5em) rotate(2deg) }
-  to{ opacity:1; transform:none }
-}
-
-/* ------------------------------------------------------- relieve de tarjeta */
-
-.card{
-  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
-  transform-style:preserve-3d;
-}
-.card:hover{
-  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-5px);
-}
-
-/* --------------------------------------------------------- stickers flotando */
-
-/* Tamaño y posición viven aquí y no en cada propuesta: sin esto el SVG interior
-   no tiene caja que lo limite y crece hasta ocupar la pantalla entera. Cada
-   propuesta cambia el color; ninguna necesita redefinir la geometría.
-
-   Se colocan contra el borde de la columna de texto, no contra el borde de la
-   pantalla. Posicionadas en porcentaje del viewport se metían encima del texto
-   en cuanto la ventana bajaba de 1600px — medido: solapaban desde 901 hasta
-   1440, es decir en casi cualquier portátil.
-
-   Ahora viven en la banda lateral que queda fuera de la columna, encogen si esa
-   banda es estrecha y desaparecen cuando ya no cabe ni la más pequeña. Una
-   pegatina decorativa nunca debe taparle una palabra a nadie. */
-
-/* Lo que sobra a cada lado de la columna de contenido. */
-:root{ --banda:max(0px,(100vw - var(--wrap)) / 2) }
-
-.sticker{
-  position:absolute; z-index:1; pointer-events:none;
-  animation:flotar 6s ease-in-out infinite;
-  /* Nunca más ancha que la banda, descontando un poco de aire. */
-  width:min(84px,calc(var(--banda) - 16px));
-  height:auto; display:block;
-}
-.sticker svg{ width:100%; height:auto; display:block }
-.sticker path{ fill:var(--acento) }
-
-/* El borde interior de cada banda: la mitad de la columna desde el centro. */
-.s1{ right:calc(50% + var(--wrap) / 2 + 10px); top:20% }
-.s2{ left:calc(50% + var(--wrap) / 2 + 10px); top:28% }
-.s3{ right:calc(50% + var(--wrap) / 2 + 10px); top:56% }
-.s4{ left:calc(50% + var(--wrap) / 2 + 10px); top:64% }
-
-/* Por debajo de este ancho la banda no llega ni a 50px: no hay dónde ponerlas
-   sin invadir el texto, así que no se ponen. */
-@media (max-width:1279px){ .sticker{ display:none } }
-
-.sticker.s2{ animation-duration:7.5s; animation-delay:-2s }
-@keyframes flotar{
-  0%,100%{ rotate:-6deg; translate:0 0 }
-  50%{ rotate:6deg; translate:0 -14px }
-}
-
-/* --------------------------------------------------------------- subrayado */
-
-/* El remate manuscrito se subraya solo al entrar en pantalla. */
-.remate{ position:relative; display:inline-block }
-.remate::after{
-  content:""; position:absolute; left:0; right:0; bottom:.05em; height:.12em;
-  border-radius:99px; background:currentColor; opacity:.35;
-  transform:scaleX(0); transform-origin:left;
-  transition:transform .8s cubic-bezier(.2,.8,.3,1) .3s;
-}
-.rv.dentro .remate::after,.hero .remate::after{ transform:scaleX(1) }
-
-/* --------------------------------------------------------------- botones */
-
-.btn,.nav-cta,.cta-fijo{ will-change:transform }
-
-/* Barrido de luz al pasar por encima del botón principal. */
-.btn-pri{ position:relative; overflow:hidden }
-.btn-pri::after{
-  content:""; position:absolute; top:0; bottom:0; left:-60%; width:40%;
-  background:linear-gradient(100deg,transparent,rgba(255,255,255,.42),transparent);
-  transform:skewX(-18deg); transition:left .6s cubic-bezier(.3,.8,.3,1);
-}
-.btn-pri:hover::after{ left:130% }
-
-/* ---------------------------------------------------------------- confeti */
-
-.confeti{ position:absolute; z-index:90; pointer-events:none }
-.confeti i{
-  position:absolute; width:9px; height:14px; border-radius:2px;
-  background:var(--c); rotate:var(--r);
-  animation:saltar 1.6s cubic-bezier(.15,.7,.4,1) var(--d) forwards;
-}
-@keyframes saltar{
-  0%{ opacity:1; translate:0 0; scale:1 }
-  100%{ opacity:0; translate:calc(var(--x) * 190px) -230px; scale:.6; rotate:calc(var(--r) + 540deg) }
-}
-
-@media (prefers-reduced-motion:reduce){
-  .cinta-pista,.sticker{ animation:none }
-  .por-palabra .pal,.hero .por-palabra .pal{ opacity:1; transform:none; animation:none }
-  .card{ transform:none }
-  .remate::after{ transform:scaleX(1) }
-}
-
-/* ============================================================ plan de estudios
-
-   Las materias van encadenadas por una vía que se dibuja al bajar, con nodos
-   numerados que se encienden al llegar. Es lo que convierte "diez materias" en
-   "una ruta", que es exactamente lo que el Campus dice vender.
-
-   Van en una sola columna y no alternando lados: alternando, cada materia
-   ocupaba una fila entera y el bloque medía 1.800px para diez títulos. En
-   columna, cada materia cerrada es una fila de 70px y el plan entero cabe casi
-   en una pantalla — que es como se explora un plan de estudios. */
-
-.ruta{
-  list-style:none; padding:0; margin:36px 0 0; position:relative;
-  display:grid; gap:10px;
-}
-
-/* La vía: un carril tenue (::before) con el trazo de avance encima (::after).
-   Van como pseudo-elementos del <ol> y no como un <span> dentro: ahí serían
-   HTML inválido y desplazarían el nth-child de las materias.
-
-   La altura del trazo la escribe campus.js en --avance, de 0 a 1. Sin JS se
-   queda al 100%: la ruta completa, simplemente sin dibujarse. */
-.ruta::before,.ruta::after{
-  content:""; position:absolute; top:0; left:25px;
-  width:3px; border-radius:99px;
-}
-.ruta::before{
-  bottom:0; background:color-mix(in srgb,var(--texto) 14%,transparent);
-}
-.ruta::after{
-  height:calc(var(--avance,1) * 100%);
-  background:linear-gradient(180deg,var(--rosa),var(--azul) 55%,var(--rosa));
-  box-shadow:0 0 16px -2px var(--rosa);
-}
-
-.ruta-paso{
-  display:grid; grid-template-columns:52px 1fr; align-items:start;
-  gap:16px; position:relative;
-}
-
-.ruta-nodo{
-  width:52px; height:52px; flex:none; z-index:2;
-  display:grid; place-items:center; border-radius:50%;
-  font-family:var(--display); font-size:16px;
-  background:var(--fondo); color:var(--texto);
-  border:3px solid color-mix(in srgb,var(--texto) 22%,transparent);
-  transition:border-color .35s,background .35s,color .35s,transform .35s cubic-bezier(.2,.8,.3,1);
-}
-.ruta-paso.dentro > .ruta-nodo,
-.ruta-paso:has(.dentro) > .ruta-nodo{
-  border-color:var(--rosa); background:var(--rosa); color:var(--vino);
-  transform:scale(1.06);
-}
-
-@media (max-width:600px){
-  .ruta::before,.ruta::after{ left:21px }
-  .ruta-paso{ grid-template-columns:44px 1fr; gap:12px }
-  .ruta-nodo{ width:44px; height:44px; font-size:14px }
-}
-
-/* ================================================================== teléfonos
-   Medido en iPhone SE, 15, 15 Pro Max e iPad mini: el botón de admisión caía
-   entre 300 y 630px por debajo del pliegue. En una landing cuyo único trabajo
-   es abrir una admisión, eso es el fallo más caro que puede tener.
-
-   Se corrige por estructura, no encogiendo tipografía hasta que entre: el
-   titular sigue teniendo escala de titular. */
-
-@media (max-width:600px){
-  :root{
-    /* El titular manda igual en un móvil, pero a 34px de mínimo ocupaba cinco
-       líneas de las pocas que hay. */
-    --t-hero:clamp(30px,8.4vw,42px);
-    --sec-y:clamp(52px,13vw,78px);
-  }
-
-  /* El logo del hero es la única marca completa que se ve —en el nav estrecho
-     solo queda el isotipo— así que se conserva, pero al tamaño justo. */
-  .hero .logo{ width:min(190px,56%)!important }
-
-  /* Botones a ancho completo: mejor zona de toque y una decisión por fila, que
-     es como se leen en un móvil. */
-  .hero .ctas{ display:grid; gap:10px; width:100%; margin:18px 0 }
-  .hero .ctas .btn{ width:100%; justify-content:center; padding:16px 20px }
-
-  .cifras{ grid-template-columns:repeat(2,1fr)!important }
-
-  /* La cinta rueda más rápido: en pantalla estrecha caben pocas palabras y a la
-     velocidad de escritorio parece detenida. */
-  .cinta-pista{ animation-duration:18s }
-  .cinta{ padding:12px 0 }
-
-  /* Con una sola columna, el escalonado de entrada retrasa demasiado lo último
-     en aparecer. */
-  .rv-d3,.rv-d4,.rv-d5{ transition-delay:.16s }
-
-  .video{ margin:24px 0 }
-  .form{ margin-top:26px }
-  .campos{ grid-template-columns:1fr }
-
-  /* El botón flotante y el nav pesan sobre una pantalla corta: el flotante solo
-     aparece cuando de verdad se está leyendo, no al primer desplazamiento. */
-  .cta-fijo{ bottom:14px; padding:15px 20px; font-size:12px }
-
-  /* El menú se alineaba a la derecha, y como en móvil desborda y es
-     desplazable, arrancaba mostrando el final: la primera entrada visible era
-     "…encia" en vez de "Inicio". */
-  .nav-links{ justify-content:flex-start; gap:0 }
-  .nav-links a{ padding:11px 11px; font-size:12px }
-  .nav-in{ gap:10px }
-
-  /* La píldora del hero parte en dos líneas y queda como un bloque pesado justo
-     encima del titular. */
-  .hero .pill{ font-size:10.5px!important; letter-spacing:.1em!important; padding:8px 14px!important }
-}
-
-/* Tablets: el punto donde una retícula de tres columnas deja cada tarjeta
-   demasiado estrecha para su texto, pero una sola desperdicia el ancho. */
-@media (min-width:601px) and (max-width:1024px){
-  .grid-3,.grid-4,.grid-materias{ grid-template-columns:repeat(2,1fr) }
-  .cifras{ grid-template-columns:repeat(4,1fr) }
-  :root{ --t-hero:clamp(38px,6vw,58px) }
-}
-
-/* Titulares con degradado recortado: entran enteros en vez de palabra a
-   palabra (ver titularesPorPalabra en campus.js). En el hero arrancan solos. */
-.entra-entero{
-  animation:pal-entra .7s cubic-bezier(.2,.8,.3,1) both;
-}
-.sec .entra-entero,.cierre-final .entra-entero{ animation:none }
-.sec .entra-entero{ opacity:1 }
-@media (prefers-reduced-motion:reduce){ .entra-entero{ animation:none } }
-
-/* ================================================================== reflejo
-   Un brillo que cruza los titulares: los saca de la sensación de tinta plana
-   sin recurrir a sombras ni relieves, que en Anton a esta escala ensucian.
-
-   Va sobre cada palabra y no sobre el titular entero a propósito. El brillo se
-   pinta con un degradado recortado al texto (background-clip:text), y ese
-   recorte no alcanza a los hijos que forman su propia caja — que es justo lo
-   que son las palabras de la animación de entrada. Puesto en cada una, el
-   reflejo viaja de palabra en palabra, que además se lee mejor que un barrido
-   uniforme.
-
-   El fondo se repite en horizontal por una razón concreta: sin repetir, al
-   desplazar el degradado se sale de la caja y deja parte del texto sin nada que
-   lo pinte — es decir, invisible. Con repetición la cobertura está garantizada
-   en cualquier posición, y como el patrón mide el doble que la palabra nunca se
-   ven dos brillos a la vez. */
-
-/* --tinta y --brillo NO se declaran en :root, a propósito.
-
-   Una variable de :root se resuelve una sola vez, con los valores que :root
-   tenga. `--tinta:var(--texto)` quedaba congelada en el vino del tema claro, y
-   en las secciones oscuras —el cierre, la Tesis— el titular salía vino sobre
-   vino: prácticamente ilegible.
-
-   Se resuelven en el propio .pal contra var(--texto) y var(--acento), que sí
-   heredan el valor de cada sección. Cualquier bloque puede fijar --tinta o
-   --brillo para sobrescribirlos. */
-
-.por-palabra .pal{
-  /* Banda estrecha: con el reflejo más ancho la palabra entera se teñía y se
-     leía como un degradado fijo en vez de como un destello que pasa. */
-  /* Onda continua, no un destello sobre color plano: el degradado va de tinta a
-     brillo y vuelve, sin tramos planos. Con una banda estrecha sobre fondo
-     liso, el brillo quedaba fuera de la palabra media vuelta y eso es lo que se
-     leía como que se paraba. Así siempre hay variación en movimiento. */
-  background-image:linear-gradient(100deg,
-    var(--tinta,var(--texto)) 0%,
-    /* Al 62% el reflejo metía tanto acento que el titular se leía a dos colores,
-       que es justo lo que el cliente no quiere. Al 24% sigue siendo un brillo
-       que recorre las letras, pero el titular es de un solo color. */
-    var(--brillo,color-mix(in srgb,var(--acento) 24%,var(--texto))) 50%,
-    var(--tinta,var(--texto)) 100%);
-  /* Baldosa fija de 190px, no relativa a la palabra: así todas fluyen a la
-     misma velocidad, sean cortas o largas, y la onda cruza una palabra corta
-     igual de rápido que una larga. */
-  background-size:190px 100%;
-  background-repeat:repeat-x;
-  background-position:0 0;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-
-/* El reflejo no para nunca ni se queda esperando: recorre el patrón de forma
-   continua y a velocidad constante. Un ciclo son 200%, que es exactamente el
-   ancho del patrón, así que el bucle empalma sin salto.
-
-   Antes cruzaba en el 14% del ciclo y esperaba el 86% restante. Se leía como un
-   destello que se enciende y se apaga, no como un reflejo. */
-/* Un ciclo desplaza exactamente una baldosa, así que el bucle empalma sin
-   salto visible: el reflejo no se detiene nunca, corre como el agua. */
-@keyframes reflejo{
-  from{ background-position:0 0 }
-  to{ background-position:-190px 0 }
-}
-
-/* El reflejo no se detiene: vuelve cada 6s en todos los titulares. Cruza en el
-   primer 14% del ciclo y el resto es espera — así el titular se mantiene vivo
-   sin que el movimiento compita con la lectura.
-
-   El desfase por palabra (--i) es lo que hace que el brillo recorra la frase en
-   vez de encenderse toda a la vez. */
-
-.por-palabra .pal{
-  animation:reflejo 3.2s linear calc(var(--i) * -190ms) infinite;
-  /* background-position no se compone en GPU: hay que repintar el texto en cada
-     fotograma. Avisarlo evita que el navegador se quede atrás y el reflejo dé
-     tirones o parezca detenido. */
-  will-change:background-position;
-}
-
-/* En el hero se suma a la entrada: son propiedades distintas, así que conviven. */
-.hero .por-palabra .pal{
-  animation:
-    pal-entra .6s cubic-bezier(.2,.8,.3,1) calc(var(--i) * 50ms) both,
-    reflejo 3.2s linear calc(var(--i) * -190ms) infinite;
-}
-
-/* El reflejo no se pausa nunca, tampoco fuera de pantalla: es un requisito
-   explícito del cliente y cualquier pausa acaba viéndose. Si el consumo llega
-   a notarse en móvil, la vía correcta es reducir el número de titulares con
-   reflejo, no pausarlos. */
-
-@media (prefers-reduced-motion:reduce){
-  .por-palabra .pal,.hero .por-palabra .pal{
-    animation:none; background-image:none; color:var(--tinta);
-  }
-}
-
-/* ============================================ piezas del lenguaje de Nathaly
-   Recursos y recursos de composición traídos de su propuesta, que resuelven
-   mejor que los míos la parte de "creatividad": las pegatinas con volumen, las
-   teclas, el cuaderno de espiral y la nota amarilla. */
-
-/* Las pegatinas pasan de silueta plana a PNG con volumen. La sombra ya viene
-   en la imagen, así que aquí solo se colocan y se hacen flotar. */
-/* Ojo con la especificidad: `img.sticker` (0,1,1) gana a `.s1` (0,1,0), así que
-   fijar ahí el ancho anula el de cada pegatina y la imagen crece hasta llenar
-   el hero. El ancho lo pone solo la clase de posición. */
-/* La geometría —ancho, posición contra la banda lateral y el display:none por
-   debajo de 1280— está más arriba, en el bloque de stickers. Redeclarar aquí
-   `display:block` anulaba ese display:none, porque este bloque va después: las
-   pegatinas seguían activas en móvil y solo quedaban fuera de vista porque el
-   overflow del hero las recortaba. Funcionaba por accidente y se descargaban
-   cuatro imágenes para nada. Aquí solo van los ritmos. */
-.s3{ animation-duration:8s; animation-delay:-3s }
-.s4{ animation-duration:9s; animation-delay:-5s }
-
-/* -------------------------------------------------------------------- teclas */
-
-/* Cada eje sobre una tecla de teclado. Es el recurso más táctil de la
-   propuesta de Nathaly y el que más "campus" aporta: convierte una lista de
-   competencias en algo que dan ganas de pulsar. */
-.tecla{
-  position:relative; display:block; width:82px; margin-bottom:16px;
-  transition:transform .3s cubic-bezier(.2,1.4,.4,1);
-}
-.tecla img{ display:block; width:100%; height:auto }
-.tecla i{
-  position:absolute; inset:0 0 26% 0;
-  display:grid; place-items:center;
-  font-style:normal; font-size:20px; color:#fff;
-  text-shadow:0 1px 3px rgba(0,0,0,.35);
-}
-.card:hover .tecla{ transform:translateY(-4px) scale(1.05) }
-/* La tecla ya marca el bloque; la barra de color sobraría encima. */
-.eje::before{ display:none!important }
-
-/* -------------------------------------------------------------------- franja */
-
-/* Franja a sangre para rematar un bloque. Rompe la sucesión de secciones sobre
-   crema y da un respiro fuerte antes de la siguiente. */
-/* La franja no es un rectángulo: entra y sale en onda, y la onda se mueve
-   despacio. Un bloque plano de color partía la página en dos con un corte
-   recto; en onda el vino parece derramarse sobre la sección.
-
-   Las ondas son dos SVG del color del fondo que muerden la franja por arriba y
-   por abajo. Miden el doble de ancho y se desplazan un 50%: como el trazo se
-   repite, el bucle empalma sin salto visible. */
-.franja{
-  background:
-    radial-gradient(60% 120% at 20% 0%,var(--vino-2),transparent 60%),
-    radial-gradient(50% 100% at 85% 100%,var(--vino-2),transparent 60%),
-    var(--vino);
-  color:var(--crema);
-  padding:clamp(58px,8vw,104px) 0 clamp(62px,8.5vw,112px);
-  margin-top:clamp(30px,4vw,56px);
-  position:relative; overflow:hidden;
-}
-.onda{
-  position:absolute; left:0; height:clamp(38px,5vw,74px);
-  display:block; fill:var(--fondo); pointer-events:none;
-  /* El reset global limita svg a max-width:100%, así que el 200% se quedaba en
-     100% y al desplazarse la onda dejaba media franja con el borde recto. */
-  width:200%; max-width:none;
-}
-.onda-arriba{ top:-1px; transform:scaleY(-1); animation:ondear 16s linear infinite }
-.onda-abajo{ bottom:-1px; animation:ondear 21s linear infinite reverse }
-@keyframes ondear{ to{ transform:translateX(-50%) } }
-/* La de arriba está volteada, así que su animación tiene que conservar el giro. */
-@keyframes ondear-invertida{ from{ transform:scaleY(-1) translateX(0) } to{ transform:scaleY(-1) translateX(-50%) } }
-.onda-arriba{ animation-name:ondear-invertida }
-
-@media (prefers-reduced-motion:reduce){
-  .onda{ animation:none }
-}
-.franja .wrap{ display:flex; align-items:center; gap:26px; justify-content:center }
-.franja p{
-  font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(19px,2.8vw,38px); line-height:var(--lh-display);
-  max-width:24ch; margin:0; text-align:center;
-}
-.franja-sticker{ width:clamp(38px,4vw,62px); height:auto; flex:none }
-
-/* ------------------------------------------------------------------ cuaderno */
-
-/* El retrato dentro de un cuaderno de espiral con su etiqueta: es lo que
-   convierte una foto de equipo en una pieza de campus. */
-.cuaderno{
-  position:relative; margin-bottom:22px;
-  aspect-ratio:1100/1337;
-  background:url("../assets/stickers/cuaderno.webp") center/contain no-repeat;
-  display:grid; place-items:center;
-}
-.cuaderno-foto{
-  /* Encajada dentro del papel, dejando fuera la espiral y los márgenes. */
-  position:absolute; left:9%; right:5%; top:5%; bottom:5%;
-  width:86%; height:90%; object-fit:cover; border-radius:6px;
-}
-.etiqueta{
-  position:absolute; left:8%; bottom:9%; z-index:2;
-  background:var(--amar); color:var(--vino);
-  padding:9px 14px; border-radius:10px;
-  box-shadow:0 6px 14px -6px rgba(80,7,17,.5);
-  transform:rotate(-1.5deg);
-}
-.etiqueta b{ display:block; font-family:var(--display); text-transform:uppercase; font-size:15px; line-height:1 }
-.etiqueta i{ display:block; font-style:normal; font-size:11px; font-weight:700; margin-top:3px }
-
-/* ---------------------------------------------------------------------- nota */
-
-/* La cita sobre papel amarillo: es una nota suya dentro de la página. */
-/* La nota de Pierina es de lo más importante de la página: es su voz, en su
-   letra, diciendo por qué existe el Campus. Al tamaño de una cita normal se
-   perdía entre los párrafos que la rodean. */
-.cita.nota{
-  background:var(--amar); color:var(--vino);
-  border-left:0; border-radius:16px;
-  padding:clamp(30px,4vw,46px) clamp(28px,3.5vw,44px) clamp(26px,3vw,38px);
-  margin:clamp(36px,5vw,56px) 0;
-  box-shadow:0 20px 42px -22px rgba(80,7,17,.6);
-  transform:rotate(-.6deg);
-  max-width:52ch;
-  font-size:clamp(30px,4.4vw,58px); line-height:1.18;
-}
-.cita.nota span{ display:block }
-.cita.nota cite{
-  opacity:.7; margin-top:18px; font-size:13px; letter-spacing:.16em;
-}
-
-/* Dentro de la hoja la nota rompe los márgenes del papel: es la frase que
-   resume la carta entera y tiene que mandar sobre los párrafos, no convivir
-   con ellos. La cinta de arriba la fija al papel. */
-.hoja-interior .cita.nota{
-  margin:clamp(30px,4vw,48px) calc(clamp(24px,3.4vw,44px) * -1) calc(clamp(24px,3.4vw,44px) * -1);
-  max-width:none; border-radius:0 0 var(--r-s) var(--r-s);
-  transform:none; text-align:center;
-  /* Caveat a este tamaño y en su peso normal queda demasiado fina sobre el
-     amarillo: al 700 la frase pesa lo que tiene que pesar. */
-  font-size:clamp(32px,5.2vw,68px); line-height:1.12; font-weight:700;
-  padding:clamp(44px,5vw,62px) clamp(26px,4vw,56px) clamp(30px,3.4vw,44px);
-}
-.hoja-interior .cita.nota::before{
-  content:""; position:absolute; left:50%; top:-13px; translate:-50% 0;
-  width:clamp(90px,14vw,150px); height:26px; rotate:-1.6deg;
-  background:color-mix(in srgb,var(--rosa) 55%,#fff);
-  box-shadow:0 3px 8px -3px rgba(80,7,17,.35);
-}
-.hoja-interior .cita.nota{ position:relative }
-.hoja-interior .cita.nota cite{ margin-top:22px; font-size:14px; opacity:.75 }
-
-@media (max-width:600px){
-  .tecla{ width:70px }
-  .franja .wrap{ gap:16px }
-  .cita.nota{ transform:none; padding:22px 20px 18px }
-  .hoja-interior .cita.nota{ padding:40px 20px 24px }
-}
-
-/* -------------------------------------------------- pegatinas de las secciones
-
-   Las mismas piezas con volumen del hero, sembradas por toda la página. Van en
-   dos planos: las de los márgenes, nítidas y a tamaño de pegatina, y una grande
-   y muy tenue por sección detrás del contenido, que es la que da fondo sin
-   estorbar la lectura.
-
-   Posición, tamaño y giro los calcula construir.py con un generador
-   determinista: siempre las mismas, para que dos revisiones de diseño sean
-   comparables. */
-
-.deco{
-  position:absolute; z-index:0; pointer-events:none; height:auto;
-  opacity:0; transform:scale(.4) rotate(var(--giro,-18deg));
-  transition:opacity .6s ease,transform .8s cubic-bezier(.2,1.4,.4,1);
-}
-.sec.dentro .deco,.sec:has(.dentro) .deco{
-  opacity:.92; transform:rotate(var(--giro,0deg));
-  animation:flotar-deco 9s ease-in-out infinite;
-}
-/* El giro propio de cada pegatina se conserva durante el flotado: sin él, al
-   arrancar la animación todas volvían a cero de golpe. */
-@keyframes flotar-deco{
-  0%,100%{ rotate:calc(var(--giro,0deg) - 5deg); translate:0 0 }
-  50%{ rotate:calc(var(--giro,0deg) + 5deg); translate:0 -12px }
-}
-
-/* La grande de fondo: detrás del contenido y casi transparente. Da profundidad
-   sin que compita con el texto, que es lo que pasaría a plena opacidad. */
-.deco-fondo{ z-index:-1; filter:blur(1px) }
-/* Las piezas de fondo flotan en vertical y no basculan: la de los márgenes se
-   mecía porque era una pegatina pegada torcida, pero estas van derechas para
-   que el rayo se lea como un rayo. */
-.sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{
-  transform:none; animation-name:flotar-fondo;
-}
-@keyframes flotar-fondo{ 0%,100%{ translate:0 0 } 50%{ translate:0 -22px } }
-.sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{ opacity:.1 }
-/* Sobre el vino de la Tesis la pieza tenue se pierde; ahí sube. */
-.v-perfil #tesis .deco-fondo{ z-index:0 }
-.v-perfil #tesis.sec:has(.dentro) .deco-fondo{ opacity:.13 }
-
-/* Las secciones necesitan recortar: una pegatina al 95% de la altura se sale
-   por abajo e invade la siguiente. */
-.sec{ overflow:hidden }
-
-/* Antes se ocultaban por debajo de 1100px porque eran pegatinas nítidas en la
-   banda lateral y caían sobre el texto. Ahora son textura de fondo, van detrás
-   y a un décimo de opacidad: se quedan, algo más tenues. */
-@media (max-width:1100px){
-  .sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{ opacity:.07 }
-}
-
-/* Tablets: el punto donde una retícula de tres columnas deja cada tarjeta
-   demasiado estrecha para su texto, pero una sola desperdicia el ancho. */
-@media (min-width:601px) and (max-width:1024px){
-  .grid-3,.grid-4,.grid-materias{ grid-template-columns:repeat(2,1fr) }
-  .cifras{ grid-template-columns:repeat(4,1fr) }
-  :root{ --t-hero:clamp(38px,6vw,58px) }
-}
-
-/* Titulares con degradado recortado: entran enteros en vez de palabra a
-   palabra (ver titularesPorPalabra en campus.js). En el hero arrancan solos. */
-.entra-entero{
-  animation:pal-entra .7s cubic-bezier(.2,.8,.3,1) both;
-}
-.sec .entra-entero,.cierre-final .entra-entero{ animation:none }
-.sec .entra-entero{ opacity:1 }
-@media (prefers-reduced-motion:reduce){ .entra-entero{ animation:none } }
-
-/* ------------------------------------------------------------- comparación
-
-   Lo habitual frente al Campus. La columna de la izquierda queda apagada y la
-   del Campus en vino a plena intensidad: la comparación se lee antes por el
-   contraste que por el texto. */
-
-.comparar{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:clamp(16px,2vw,26px); margin:clamp(32px,4vw,54px) 0 0;
-}
-.comp{ border-radius:var(--r); padding:clamp(24px,2.6vw,34px) }
-.comp .kicker{
-  font-size:11.5px; font-weight:800; letter-spacing:.2em;
-  text-transform:uppercase; opacity:.6; margin-bottom:8px;
-}
-.comp h3{ margin-bottom:20px }
-.comp ul{ list-style:none; padding:0; margin:0; display:grid }
-.comp li{
-  position:relative; padding:13px 0 13px 34px;
-  border-top:1px solid color-mix(in srgb,currentColor 14%,transparent);
-  font-size:15.5px; line-height:1.5;
-}
-.comp li:first-child{ border-top:0; padding-top:0 }
-.comp li::before{
-  position:absolute; left:0; top:13px;
-  width:21px; height:21px; border-radius:50%;
-  display:grid; place-items:center; font-size:12px; font-weight:800;
-}
-.comp li:first-child::before{ top:0 }
-
-.comp-antes{
-  background:color-mix(in srgb,var(--vino) 6%,transparent);
-  border:1px dashed color-mix(in srgb,var(--vino) 22%,transparent);
-  color:var(--vino);
-}
-.comp-antes li{ opacity:.72 }
-.comp-antes li::before{
-  content:"·"; background:color-mix(in srgb,var(--vino) 10%,transparent);
-  color:var(--vino); font-size:17px; line-height:1;
-}
-
-.comp-campus{
-  background:var(--vino); color:var(--crema); border:1px solid var(--vino);
-  box-shadow:var(--shadow);
-}
-.comp-campus h3{ color:var(--crema) }
-.comp-campus .kicker{ color:var(--rosa); opacity:1 }
-.comp-campus li::before{ content:"✓"; background:var(--rosa); color:var(--vino) }
-
-/* ================================================ reestructuración de bloques
-
-   La página pasó de 22 secciones a 15: se fusionaron las que respondían la
-   misma pregunta y se plegó lo secundario. Estas son las piezas que hicieron
-   falta para esa consolidación. */
-
-/* Sub-bloque dentro de una sección fusionada. Marca un cambio de tema sin
-   necesidad de abrir una sección nueva, que es lo que hinchaba la página. */
-.sub{
-  margin-top:clamp(44px,6vw,80px);
-  padding-top:clamp(28px,3.5vw,44px);
-  border-top:2px solid color-mix(in srgb,var(--texto) 12%,transparent);
-}
-.sub > h3{
-  font-size:clamp(22px,3vw,34px); margin-bottom:.5em;
-}
-
-/* --------------------------------------------------- plan de estudios plegado */
-
-/* Diez tarjetas abiertas eran 2.800px de scroll para leer diez títulos. Cerradas
-   caben en pantalla y el plan se explora en vez de leerse en vertical. */
-.materia{ padding:0!important; overflow:hidden }
-.materia summary{
-  cursor:pointer; list-style:none; position:relative;
-  padding:clamp(18px,2vw,24px) 56px clamp(18px,2vw,24px) clamp(20px,2.2vw,28px);
-  display:block;
-}
-.materia summary::-webkit-details-marker{ display:none }
-.materia summary::after{
-  content:"+"; position:absolute; right:22px; top:50%; transform:translateY(-50%);
-  font-family:var(--texto-f); font-size:26px; font-weight:300; color:var(--acento);
-  transition:transform .3s;
-}
-.materia[open] summary::after{ transform:translateY(-50%) rotate(45deg) }
-.materia summary h3{ margin:0 }
-.materia summary:hover h3{ color:var(--acento) }
-.materia-dur{
-  display:inline-block; margin-top:8px;
-  font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-  opacity:.55;
-}
-.materia-cuerpo{
-  padding:0 clamp(20px,2.2vw,28px) clamp(20px,2.2vw,28px);
-}
-.materia[open]{ border-color:var(--acento) }
-
-/* --------------------------------------------------------- evaluación plegada */
-
-.evaluacion-bloque{
-  margin-top:clamp(36px,4.5vw,56px); padding-top:clamp(22px,2.6vw,32px);
-  border-top:2px solid color-mix(in srgb,var(--texto) 12%,transparent);
-}
-.evaluacion-bloque summary{
-  cursor:pointer; list-style:none; position:relative; padding-right:48px;
-}
-.evaluacion-bloque summary::-webkit-details-marker{ display:none }
-.evaluacion-bloque summary h3{ margin:0 0 .25em }
-.evaluacion-bloque summary > span{
-  display:block; font-weight:600; font-size:15.5px; opacity:.72; max-width:60ch;
-}
-.evaluacion-bloque summary::after{
-  content:"+"; position:absolute; right:8px; top:2px;
-  font-size:28px; font-weight:300; color:var(--acento); transition:transform .3s;
-}
-.evaluacion-bloque[open] summary::after{ transform:rotate(45deg) }
-.evaluacion-bloque summary:hover h3{ color:var(--acento) }
-.ev-cuerpo{ padding-top:20px }
-.ev-grid{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-  gap:2px; background:color-mix(in srgb,var(--texto) 12%,transparent);
-  border:1px solid color-mix(in srgb,var(--texto) 12%,transparent);
-  border-radius:var(--r-s); overflow:hidden; margin:22px 0;
-}
-.ev{ background:var(--fondo); padding:18px 20px }
-.ev b{ display:block; font-family:var(--display); text-transform:uppercase; font-size:15px; margin-bottom:5px }
-.ev span{ font-size:14px; line-height:1.5; opacity:.8 }
-
-/* ------------------------------------------------------- lo que incluye */
-
-/* Quince tarjetas pasan a lista de dos columnas: es un temario de lo incluido,
-   no quince ideas que merezcan una tarjeta cada una. */
-.incluye-lista{
-  list-style:none; padding:0; margin:22px 0 0;
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
-  column-gap:34px;
-}
-.incluye-lista li{
-  padding:13px 0; border-bottom:1px solid color-mix(in srgb,var(--texto) 12%,transparent);
-}
-.incluye-lista b{
-  display:block; font-family:var(--display); text-transform:uppercase;
-  font-size:15px; letter-spacing:.01em;
-}
-.incluye-lista span{ font-size:14.5px; line-height:1.5; opacity:.78 }
-
-/* ------------------------------------------------------------ equipo del hero */
-
-.equipo{
-  display:inline-flex; align-items:center; gap:12px; margin-top:20px;
-  padding:9px 18px 9px 10px; border-radius:999px;
-  border:1.5px solid color-mix(in srgb,var(--texto) 18%,transparent);
-  text-decoration:none; transition:border-color .25s,transform .25s;
-}
-.equipo:hover{ border-color:var(--acento); transform:translateY(-2px) }
-.caras{ display:flex }
-.cara{
-  width:30px; height:30px; border-radius:50%; margin-right:-10px;
-  flex:none; background:linear-gradient(140deg,var(--rosa-soft),var(--azul-soft));
-  box-shadow:0 0 0 2px var(--fondo);
-}
-.cara:nth-child(2){ background:linear-gradient(140deg,var(--azul-soft),var(--amar-soft)) }
-.cara:nth-child(3){ background:linear-gradient(140deg,var(--amar-soft),var(--rosa-soft)) }
-.equipo-txt b{
-  display:block; font-size:11px; font-weight:800;
-  letter-spacing:.16em; text-transform:uppercase; opacity:.55;
-}
-.equipo-txt i{ display:block; font-style:normal; font-size:13.5px; font-weight:600 }
-
-@media (max-width:600px){
-  .sub{ margin-top:36px; padding-top:24px }
-  .incluye-lista{ grid-template-columns:1fr }
-  .equipo{ margin-top:14px }
-}
-
-/* ------------------------------------------------- la frase que se rechaza
-
-   Lo que el titular cita para negarlo va manuscrito y tachado, en su propia
-   línea: "no estás aquí para convertirte en «una chica que hace videos»".
-   Verlo tachado lo niega antes de leerlo. */
-
-.mano{
-  /* En bloque para que caiga en su propia línea, pero ajustado al texto: a
-     ancho completo el tachado cruzaba media pantalla vacía. */
-  display:block; width:fit-content; max-width:100%;
+  font-weight:700; font-size:11.5px; letter-spacing:.2em; text-transform:uppercase;
+  opacity:.62; margin:0 0 18px;
+}
+.eyebrow::before{
+  content:""; width:7px; height:7px; border-radius:50%;
+  background:var(--acento); flex:none;
+}
+
+.lead{
+  font-size:clamp(18px,4.8vw,22px);
+  font-weight:500; line-height:1.5; max-width:46ch;
+}
+.lead-min{
+  font-weight:700; font-size:13px; letter-spacing:.14em;
+  text-transform:uppercase; opacity:.6; margin-bottom:.9em;
+}
+.cierre{ font-weight:600 }
+.nota{ font-size:13.5px; font-style:italic; opacity:.6 }
+.mano{ font-family:var(--mano); font-size:clamp(24px,6vw,32px); line-height:1.2 }
+
+/* ------------------------------------------------------ la cabecera de sección
+
+   Titular y bajada centrados, como un encabezado de capítulo. El resto de la
+   sección —listas, tarjetas, carriles— sigue alineado a la izquierda: una lista
+   de diez puntos centrada se lee mucho peor, porque el ojo pierde el punto de
+   partida de cada renglón. */
+
+.cabecera{
+  text-align:center;
+  margin-inline:auto;
+  max-width:min(880px,100%);
+  margin-bottom:clamp(26px,5vw,40px);
+}
+.cabecera > *{ margin-inline:auto }
+/* El renglón largo es lo que mantiene el titular en dos o tres líneas. A 18ch
+   —el tope que heredan todos los h2— «Antes de entrar, quiero contarte por qué
+   existe este Campus» caía en cuatro renglones cortos y se leía como una
+   escalera. Ensanchado, parte por donde parte la frase. */
+.cabecera h2{ margin-bottom:.32em; max-width:28ch }
+.cabecera .lead{ text-align:center }
+.cabecera > :last-child{ margin-bottom:0 }
+
+/* Los titulares largos bajan un escalón de cuerpo y ensanchan el renglón: es
+   la combinación que los deja en tres líneas sin que ninguno se parta en
+   cuatro. Ver la comprobación de líneas en el README §9. */
+/* Con `.cabecera` delante: `.cabecera h2` y `.h2-largo` empatarían en peso y
+   ganaría el primero por orden, dejando los dos titulares más largos en el
+   ancho corto —y en cuatro renglones— justo donde hacía falta lo contrario. */
+.h2-largo,
+.cabecera .h2-largo{ font-size:clamp(25px,5.4vw,42px); max-width:40ch }
+
+/* -------------------------------------------------------------- las hojas */
+
+/* Cada sección es una hoja del cuaderno, apilada sobre la anterior. El solape
+   negativo y el radio superior son lo que hace que se lean como papel puesto
+   encima de papel y no como bandas de color pegadas. */
+.hoja{
   position:relative;
-  /* Caveat arranca con más margen lateral que Anton; sin compensarlo la línea
-     manuscrita se ve desalineada respecto a las de arriba y abajo. */
-  margin:.04em 0 .04em -.03em;
+  z-index:1;
+  background:var(--crema);
+  border-radius:var(--r-hoja) var(--r-hoja) 0 0;
+  padding:var(--sec-y-top) 0 var(--sec-y);
+  margin-top:calc(var(--r-hoja) * -1);
 }
+.hoja:first-of-type{ margin-top:0 }
 
-.pal-mano{
-  font-family:var(--mano); text-transform:none;
-  /* Caveat tiene la altura de x muy baja y necesita más cuerpo para igualar a
-     Anton, pero conserva el interlineado del titular: por debajo se saldría de
-     su línea y pisaría la de abajo. */
-  font-size:1.18em; line-height:inherit;
-  letter-spacing:.005em;
-  /* Rosa de marca oscurecido: el --rosa puro sobre crema queda lavado y la
-     frase se perdía justo cuando tiene que leerse para poder negarla. */
-  background:none!important; color:#c0578f!important;
-  /* La declaración va completa a propósito. Sobrescribir solo animation-name
-     dejaba la duración, el retardo y las iteraciones de la regla del reflejo:
-     las palabras hacían pal-entra durante 5s y en bucle infinito, es decir
-     aparecían y desaparecían para siempre. */
-  animation:pal-entra .6s cubic-bezier(.2,.8,.3,1) calc(var(--i) * 50ms) both!important;
+/* Grano de papel real, extraído de los fondos de la marca. Multiplica sobre el
+   color, así una sola textura sirve para las cinco hojas. */
+.hoja::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:url("../assets/texturas/grano.webp") 0 0/260px 260px repeat;
+  /* overlay y no multiply: el grano está centrado en gris medio, que en
+     overlay es neutro — solo añade la variación del papel, sin apagar el
+     color. Con multiply la crema se iba a gris. */
+  mix-blend-mode:overlay; opacity:.6;
+  border-radius:inherit;
 }
+.hoja > *{ position:relative; z-index:1 }
 
-/* El tachado es un trazo dibujado, no un borde: irregular, con grosor variable
-   y remates redondos. Una línea recta de CSS se leía como un subrayado mal
-   colocado, que es exactamente lo que parecía. */
-.mano::after{
-  content:""; position:absolute; z-index:2;
-  left:-.05em; right:-.05em;
-  /* A media altura de la equis de Caveat, no de la caja: la caja incluye los
-     ascendentes y la raya salía cruzando por encima de las letras. */
-  top:58%; height:.34em; transform:translateY(-50%);
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 12' preserveAspectRatio='none'%3E%3Cpath d='M2 7.4C46 4.2 92 8.6 138 5.8s92-3.4 160 1.2' fill='none' stroke='%23500711' stroke-width='4.2' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
-  /* Se dibuja de izquierda a derecha al entrar, como si se tachara. */
-  clip-path:inset(0 100% 0 0);
-  transition:clip-path .55s cubic-bezier(.3,.7,.4,1) .55s;
-}
-.por-palabra.entra .mano::after,
-.hero .por-palabra .mano::after{ clip-path:inset(0 0 0 0) }
+/* --- la hoja con degradado ---
 
-@media (prefers-reduced-motion:reduce){
-  .mano::after{ clip-path:inset(0 0 0 0); transition:none }
-}
+   Es el fondo de la primera versión, que el cliente echaba de menos: una base
+   clarísima con dos manchas de color en las esquinas opuestas.
 
-/* ------------------------------------------------------ el lanzamiento de birretes
+   Va combinado con el grano de papel de la propuesta 2 —el degradado debajo,
+   el papel encima—, que es lo que pidió el cliente: ni solo papel ni solo
+   degradado.
 
-   Al llegar a la graduación se lanzan birretes al aire. Salen desde abajo, en
-   arco, girando sobre sí mismos, y se apagan al caer.
-
-   El arco se consigue con dos transformaciones encadenadas: la vertical la pone
-   el keyframe con un easing de salida y la horizontal va lineal. Con una sola
-   translate3d salían en línea recta, que parece un cohete, no un lanzamiento. */
-
-.birretes{
-  /* Anclado a la parte alta de la sección, no a toda: lanzados desde el borde
-     inferior de una sección de 1.300px, los birretes volaban por la mitad de
-     abajo y no se veían al llegar. Aquí cruzan por donde está el titular. */
-  position:absolute; inset:0 0 auto 0; height:min(76%,660px);
-  overflow:hidden; pointer-events:none; z-index:0;
-}
-/* El texto por delante de los birretes. Un elemento posicionado pinta por
-   encima del contenido en flujo aunque tenga z-index 0, así que hay que
-   levantar el contenido, no bajar los birretes: bajarlos los metería detrás del
-   fondo de la sección y desaparecerían. */
-#graduacion .wrap > *:not(.birretes){ position:relative; z-index:2 }
-.birrete{
-  position:absolute; bottom:-70px;
-  width:clamp(46px,5vw,84px); aspect-ratio:64/48;
-  /* Ciclo de 5s con los seis birretes escalonados a lo largo de 2.5s: siempre
-     hay alguno en el aire. Con salidas juntas, la sección pasaba segundos sin
-     nada volando y eso se lee como que la animación se rompió.
-
-     Sin easing en la animación: cada tramo lleva el suyo dentro del keyframe,
-     porque subir y caer no se mueven igual. */
-  animation:lanzar 5s linear infinite;
-  opacity:0;
-  will-change:translate,scale;
-}
-.birrete svg{ width:100%; height:100%; display:block; overflow:visible }
-
-/* Semitransparentes: son fondo, no contenido. A plena opacidad competían con el
-   titular y las tarjetas de la sección. */
-.b-tabla{ fill:var(--vino); opacity:.5 }
-.b-copa{ fill:var(--vino-2); opacity:.5 }
-.b-borla{ stroke:var(--amar); opacity:.75 }
-.b-nudo{ fill:var(--amar); opacity:.75 }
-
-/* Parábola de verdad: sube frenando y cae acelerando, como cualquier cosa que
-   se lanza. Antes subía y se desvanecía sin caer nunca, y eso es lo que no se
-   sentía fluido. El easing va por tramo, no en la declaración. */
-@keyframes lanzar{
-  0%{
-    opacity:0; translate:0 40px; scale:.78;
-    animation-timing-function:cubic-bezier(.12,.62,.38,1);
-  }
-  6%{ opacity:1 }
-  48%{
-    translate:calc(var(--deriva) * .58) calc(var(--alto) * -1); scale:1;
-    animation-timing-function:cubic-bezier(.52,0,.78,.42);
-  }
-  88%{ opacity:1 }
-  96%{ translate:var(--deriva) 70px; scale:.9; opacity:0 }
-  100%{ opacity:0; translate:0 40px; scale:.78 }
-}
-
-/* El giro va aparte y a velocidad constante: metido dentro del vuelo, el
-   birrete frenaba de girar justo en la cima y se veía mecánico. */
-.birrete svg{ animation:girar-birrete 5s linear infinite; animation-delay:inherit }
-@keyframes girar-birrete{
-  from{ rotate:0deg }
-  to{ rotate:var(--giro-b) }
-}
-
-/* Sobre el vino del cierre los birretes en vino desaparecen. */
-.cierre-final .b-tabla{ fill:var(--crema) }
-.cierre-final .b-copa{ fill:var(--rosa-soft) }
-
-@media (max-width:700px){
-  .birrete{ width:30px }
-}
-@media (prefers-reduced-motion:reduce){
-  .birretes{ display:none }
-}
-
-/* ---------------------------------------------- correcciones de la pasada final */
-
-/* Los kickers de las tarjetas ("La plataforma", "Seguimiento", "Comunidad")
-   salían en minúscula y sin estilo, como texto suelto encima del título. En el
-   resto de la página los rótulos van en versalita espaciada; aquí faltaba. */
-.kicker{
-  font-size:11.5px; font-weight:800; letter-spacing:.2em;
-  text-transform:uppercase; opacity:.55; margin-bottom:8px;
-}
-
-/* Seis palabras sueltas ocupaban seis líneas con su punto cada una. En fila se
-   leen de un vistazo, que es lo que son: un listado rápido de lo que incluye. */
-.piezas{ display:flex; flex-wrap:wrap; gap:8px 10px; margin-bottom:1em }
-.piezas li{ padding-left:0 }
-.piezas li::before{ display:none }
-.piezas li{
-  padding:7px 15px; border-radius:999px;
-  border:1.5px solid color-mix(in srgb,var(--texto) 16%,transparent);
-  font-weight:600; font-size:14.5px;
-}
-
-/* La columna de "probablemente no es para ti" tiene la mitad de puntos que la
-   otra: estirada para igualar alturas dejaba un bloque vacío enorme. */
-.para-ti .grid-2 > .no,
-#admisiones .grid-2 > .no{ align-self:start }
-
-/* ==================================================== tonos de fondo por sección
-
-   Una sucesión de quince bloques sobre el mismo crema se lee plana, y el cambio
-   de tono marca dónde empieza cada tema sin necesidad de meter un divisor.
-
-   Es la misma malla del hero —dos manchas suaves en diagonal— pero teñida. Muy
-   diluida a propósito: tiene que notarse que cambió la sección, no que cambió
-   de página. */
-
-/* El color de cada sección no se pinta sobre la sección: vive en una capa
-   propia por detrás. Así se le puede recortar el borde sin tocar el texto.
-
-   El corte entre dos secciones de color era una línea recta a lo ancho de la
-   pantalla, que es lo que hace que el cambio se lea plano. Ahora la capa entra
-   en onda por arriba —la misma onda de la franja en vino— y sale disolviéndose
-   por abajo: el color de la sección siguiente muerde al de la anterior en vez
-   de sustituirlo de golpe. */
-.tono{ position:relative }
-.tono::before{
-  content:""; position:absolute; inset:0; z-index:-2; pointer-events:none;
-  background-color:var(--t-base);
+   La v1 mordía el borde superior en onda para que el color entrara en la
+   sección anterior. Aquí no: el cliente quiere el degradado sin esa línea
+   curva. El color arranca en el borde de la hoja y se desvanece hacia abajo,
+   así que la transición sigue siendo suave pero sin dibujar ningún filo. */
+.hoja--degradado{ background:var(--t-base) }
+.hoja--degradado::after{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
   background-image:
     radial-gradient(58% 46% at 12% 0%,var(--t-a),transparent 62%),
     radial-gradient(48% 42% at 88% 100%,var(--t-b),transparent 62%);
-
-  --onda-alto:clamp(34px,4.5vw,72px);
-  /* Rectángulo negro con la onda recortada en hueco (fill-rule evenodd): lo
-     que queda en negro es lo que se ve de la capa de color. El trazo es el
-     mismo de la franja en vino, volteado —está dibujado para morder por abajo
-     y aquí tiene que morder por arriba—. */
-  --onda-mascara:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cg transform='translate(0,90) scale(1,-1)'%3E%3Cpath fill='black' fill-rule='evenodd' d='M0 0h1200v90H0z M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 155-32 265-40v62z'/%3E%3C/g%3E%3C/svg%3E");
-
-  -webkit-mask-image:var(--onda-mascara),linear-gradient(180deg,#000 55%,transparent 100%);
-  mask-image:var(--onda-mascara),linear-gradient(180deg,#000 55%,transparent 100%);
-  -webkit-mask-size:100% var(--onda-alto),100% calc(100% - var(--onda-alto) + 1px);
-  mask-size:100% var(--onda-alto),100% calc(100% - var(--onda-alto) + 1px);
-  -webkit-mask-position:top,bottom;
-  mask-position:top,bottom;
-  -webkit-mask-repeat:no-repeat,no-repeat;
-  mask-repeat:no-repeat,no-repeat;
+  border-radius:inherit;
 }
-.tono-amar{ --t-base:#FDFBF2; --t-a:var(--amar-soft); --t-b:var(--rosa-soft) }
-.tono-rosa{ --t-base:#FDF6F6; --t-a:var(--rosa-soft); --t-b:var(--azul-soft) }
-.tono-azul{ --t-base:#F6F8FD; --t-a:var(--azul-soft); --t-b:var(--amar-soft) }
+/* El grano queda por encima del degradado, y el contenido por encima de todo. */
+.hoja--degradado::before{ z-index:1 }
+.hoja--degradado > *{ z-index:2 }
 
-/* La onda de arriba se come parte del aire de la sección: se le devuelve, o el
-   primer titular queda dentro de la curva. */
-.tono{ padding-top:calc(var(--sec-y) + clamp(20px,2.6vw,44px)) }
+.deg-amar{ --t-base:#FDFBF2; --t-a:var(--amar-soft); --t-b:var(--rosa-soft) }
+.deg-rosa{ --t-base:#FDF6F6; --t-a:var(--rosa-soft); --t-b:var(--azul-soft) }
+.deg-azul{ --t-base:#F6F8FD; --t-a:var(--azul-soft); --t-b:var(--amar-soft) }
 
-/* Las tarjetas sobre un fondo teñido necesitan blanco pleno para despegarse;
-   sobre crema bastaba el crema claro. */
-.tono .card{ background:#fff }
+.hoja--vino{ background:var(--vino); color:var(--crema); --linea:rgba(248,243,239,.18); --acento:var(--rosa) }
+.hoja--vino::before{ mix-blend-mode:overlay; opacity:.3 }
+.hoja--rosa{ background:var(--rosa) ; --acento:var(--vino) }
+.hoja--azul{ background:var(--azul); --acento:var(--vino) }
+.hoja--amar{ background:var(--amar); --acento:var(--vino) }
+.hoja--blanca{ background:#fff }
 
-/* La pieza grande del fondo sube de tamaño y baja de opacidad: es textura de la
-   sección, no un adorno encima del texto. */
-.deco-fondo{ z-index:-1; filter:blur(.5px) }
-.sec.dentro .deco-fondo,.sec:has(.dentro) .deco-fondo{ opacity:.1 }
-
-/* Las áreas del plan como palabras clave. Reemplazan a las diez materias
-   desplegables: el detalle del plan se cuenta en la llamada. */
-.areas{
-  list-style:none; padding:0; margin:26px 0 0;
-  display:flex; flex-wrap:wrap; gap:10px;
-}
-.areas li{
+/* La lengüeta. Es el objeto que ya usa el expediente del registro: repetirlo
+   en cada sección es lo que ata la página entera a ese bloque. */
+.lengueta{
+  position:absolute; top:0; left:var(--gutter);
+  translate:0 -100%;
+  display:inline-flex; align-items:center; gap:9px;
+  padding:9px 18px 10px;
+  background:inherit;
+  border-radius:12px 12px 0 0;
   font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(14px,1.7vw,22px);
-  padding:10px 20px; border-radius:999px;
-  border:2px solid var(--vino); background:#fff;
+  font-size:13px; letter-spacing:.06em; line-height:1;
+  z-index:2;
+  /* Sin el filete la lengüeta desaparece cuando la hoja de abajo es casi del
+     mismo color que la de arriba (blanca sobre crema). */
+  box-shadow:inset 0 1px 0 var(--linea), inset 1px 0 0 var(--linea), inset -1px 0 0 var(--linea);
 }
-.areas li:nth-child(3n+1){ background:var(--amar-soft) }
-.areas li:nth-child(3n+2){ background:var(--rosa-soft) }
-.areas li:nth-child(3n+3){ background:var(--azul-soft) }
-.plan-invita{ margin-top:26px; max-width:46ch }
+.lengueta b{ font-weight:400; color:var(--acento); opacity:.9 }
 
-/* ------------------------------------------------- aquí también se evalúa
+/* --------------------------------------------------------------- botones */
 
-   "No queremos que termines sabiendo más. Queremos que termines sabiendo hacer
-   más" es de las frases que mejor separan al Campus de un curso grabado. Estaba
-   plegada dentro del plan de estudios, donde no la leía nadie.
-
-   Iba en vino a sangre, pero la Tesis viene justo después y ya es vino: dos
-   bloques oscuros seguidos se leen como uno solo. Va en azul claro, que la
-   separa igual del amarillo del plan que la precede. */
-
-.evaluacion-franja .ev-titulo{
-  max-width:22ch; font-size:clamp(30px,5.2vw,64px);
-}
-/* La evaluación como línea de tiempo.
-
-   Los seis momentos van en orden —de los primeros ejercicios al proyecto
-   final— y en una retícula de fichas iguales ese orden no se leía. El raíl se
-   traza de izquierda a derecha cuando la sección entra en pantalla y los nodos
-   van apareciendo detrás, escalonados: el gesto cuenta el recorrido antes de
-   que se lea una sola palabra. */
-.linea{
-  list-style:none; padding:0; margin:44px 0 34px;
-  display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:16px;
+.btn{
   position:relative;
-}
-/* El raíl apagado, siempre visible, y encima el trazo rosa que lo recorre.
-
-   Empieza y termina en el centro de los nodos extremos, no en los bordes de la
-   retícula: un raíl que sobresale del último nodo parece cortado. */
-.linea{ --nodo:44px; --rail-fin:calc(100% / 6 - var(--nodo) / 2 - 13px) }
-.linea::before,.linea::after{
-  content:""; position:absolute; top:21px; height:2px; pointer-events:none;
-  left:calc(var(--nodo) / 2); right:var(--rail-fin);
-}
-.linea::before{ background:color-mix(in srgb,var(--texto) 16%,transparent) }
-.linea::after{
-  background:var(--rosa);
-  transform-origin:0 50%;
-  transition:scale 1.7s cubic-bezier(.35,0,.15,1) .1s;
-}
-/* Igual que la lista de activos: el estado sin trazar cuelga de .rv, que la
-   pone el script. Sin script, el raíl está trazado y los seis momentos se ven. */
-.linea.rv::after{ scale:0 1 }
-.linea.rv.dentro::after{ scale:1 1 }
-
-/* Las filas fijas y la ficha ocupando el resto. Con filas automáticas, el
-   sobrante de altura de la retícula se repartía entre las dos y cada ficha
-   arrancaba a una altura distinta según lo largo de su texto. */
-.hito{
-  display:grid; grid-template-rows:var(--nodo) 1fr; align-content:start;
-  gap:16px; justify-items:start; position:relative;
-}
-.hito-nodo{
-  width:44px; height:44px; border-radius:50%; display:grid; place-items:center;
-  background:var(--superficie);
-  border:2px solid color-mix(in srgb,var(--texto) 18%,transparent);
-  font-family:var(--display); font-size:15px; color:var(--texto);
-  position:relative; z-index:1; border-color:var(--rosa);
-  transition:opacity .35s ease, scale .5s cubic-bezier(.3,1.7,.5,1),
-             border-color .35s ease, background .35s ease;
-  transition-delay:calc(.2s + var(--i) * .2s);
-}
-.linea.rv .hito-nodo{ opacity:0; scale:.4; border-color:rgba(0,0,0,.2) }
-.linea.rv.dentro .hito-nodo{ opacity:1; scale:1; border-color:var(--rosa) }
-/* El último es el destino, no un paso más. */
-.linea .hito:last-child .hito-nodo{ background:var(--rosa); color:var(--vino) }
-
-.hito-caja{
-  background:var(--superficie);
-  border:1px solid color-mix(in srgb,var(--texto) 9%,transparent);
-  box-shadow:0 14px 30px -22px rgba(80,7,17,.4);
-  border-radius:14px; padding:16px 16px 18px; width:100%;
-  transition:opacity .5s ease, translate .5s cubic-bezier(.2,.9,.3,1);
-  transition-delay:calc(.3s + var(--i) * .2s);
-}
-.linea.rv .hito-caja{ opacity:0; translate:0 16px }
-.linea.rv.dentro .hito-caja{ opacity:1; translate:0 0 }
-.hito-caja b{
-  display:block; font-family:var(--display); text-transform:uppercase;
-  font-size:16px; margin-bottom:6px;
-}
-.hito-caja span{ display:block; font-size:14.5px; line-height:1.5 }
-
-/* Seis columnas piden mucho ancho: por debajo el raíl se pone de pie y cada
-   momento va con su nodo al lado. */
-@media (max-width:1099px){
-  .linea{ grid-template-columns:1fr; gap:22px }
-  .linea::before,.linea::after{
-    left:21px; right:auto; top:22px; bottom:22px; width:2px; height:auto;
-  }
-  .linea::after{ height:100%; transform-origin:50% 0; scale:1 0 }
-  .linea.dentro::after{ scale:1 1 }
-  .hito{ grid-template-columns:44px minmax(0,1fr); grid-template-rows:auto; align-items:start; gap:16px }
-}
-
-/* Sin movimiento la línea está trazada y los seis momentos visibles: la
-   animación cuenta el orden, no lo sustituye. */
-@media (prefers-reduced-motion:reduce){
-  .linea.rv::after{ scale:1 1; transition:none }
-  .linea.rv .hito-nodo,.linea.rv .hito-caja{
-    opacity:1; scale:1; translate:0 0; transition:none;
-  }
-}
-/* La frase que cierra la evaluación va escrita a mano y subrayada a lápiz.
-
-   En Anton en mayúsculas era un titular más, y por debajo de la línea de
-   tiempo ya hay tres titulares en esa fuente. Escrita a mano se lee como lo que
-   es: una nota al margen, la conclusión de alguien que acaba de explicarte
-   cómo se evalúa. */
-/* Con `p.` de más: `.v-perfil .destacado` la pone en Anton y mayúsculas desde
-   la hoja del tema, que carga después de esta. */
-.evaluacion-franja p.destacado{
-  font-family:var(--mano); font-weight:700; text-transform:none;
-  line-height:1.34; max-width:none; white-space:nowrap;
-  /* Un solo renglón: el cuerpo sale del ancho disponible, no al revés. La
-     frase mide 31,1 ems en Caveat 700; se divide por 33 para dejar aire y que
-     no se salga si la fuente tarda y entra la sustituta, más ancha. */
-  font-size:min(calc((100vw - 72px) / 33),35px);
-}
-/* Por debajo de mil, un renglón dejaría la frase por debajo de los 29px y
-   empezaría a leerse como letra pequeña: ahí vuelve a dos líneas, partida por
-   su punto, que es donde parte sola. */
-@media (max-width:999px){
-  .evaluacion-franja p.destacado{
-    white-space:normal; font-size:clamp(25px,4.4vw,34px); max-width:20ch;
-  }
-}
-/* El subrayado es una imagen, no text-decoration: ninguna variante de
-   text-decoration tiembla como un trazo a mano. Va sobre un <span> en línea con
-   box-decoration-break:clone para que cada renglón lleve el suyo. */
-.lapiz{
-  -webkit-box-decoration-break:clone; box-decoration-break:clone;
-  padding-bottom:.16em;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 12'%3E%3Cpath d='M3 8.4c34-4.6 68-1.4 102-3.2 34-1.8 68 1.6 133 3' fill='none' stroke='%23F18BC4' stroke-width='3.4' stroke-linecap='round' opacity='.9'/%3E%3C/svg%3E");
-  background-repeat:repeat-x;
-  background-position:0 100%;
-  background-size:240px .34em;
-}
-
-/* --------------------------------------------------------- lo que te llevas
-
-   Los nueve puntos de "durante tu recorrido trabajarás en" no son una lista de
-   temas: son los activos con los que la creadora sale del Campus. Como viñetas
-   de texto se leían como un temario más.
-
-   Numerados, en fichas y con el color rotando, se leen como un inventario de lo
-   que se lleva puesto — que es lo que en realidad son. */
-
-.activos{
-  list-style:none; padding:0; margin:28px 0 0;
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:12px;
-}
-.activos li{
-  display:flex; align-items:center; gap:14px;
-  padding:16px 20px; border-radius:16px;
-  border:2px solid var(--vino);
-  transition:transform .3s cubic-bezier(.2,.8,.3,1),
-             opacity .45s ease, translate .5s cubic-bezier(.2,.9,.3,1);
-  transition-delay:0s,calc(var(--n) * .07s),calc(var(--n) * .07s);
-}
-/* El estado oculto cuelga de .rv, que la pone el script: si el script falla o
-   no llega, la lista está entera y visible. Esconder por CSS y revelar por JS
-   es apostar el contenido a que un archivo cargue. */
-.activos.rv li{ opacity:0; translate:0 14px }
-.activos.rv.dentro li{ opacity:1; translate:0 0 }
-
-/* Un check en cada uno: son cosas que sales sabiendo hacer, no un índice
-   numerado. La lista se va marcando de arriba abajo al entrar en pantalla,
-   como una checklist que alguien va tachando: nueve cosas que ya sabes hacer
-   pesan más vistas cayendo una a una que las nueve de golpe.
-
-   Va en <i> y no en <b>: el check es un icono, no una palabra importante, y
-   como <b> se contaba nueve veces como texto en negrita repetido. */
-.activos li .tic{
-  font-style:normal;
-}
-.activos li .tic{
-  width:26px; height:26px; flex:none; border-radius:50%;
-  display:grid; place-items:center; font-size:14px; font-weight:800;
-  background:var(--vino); color:var(--crema);
-  box-shadow:inset 0 0 0 2px var(--vino);
-  transition:background .3s ease, color .3s ease, box-shadow .3s ease,
-             scale .45s cubic-bezier(.3,1.8,.5,1);
-  transition-delay:calc(.24s + var(--n) * .07s);
-}
-/* Sin marcar solo mientras espera su turno, y solo si hay script. */
-.activos.rv li .tic{
-  background:transparent; color:transparent;
-  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--vino) 35%,transparent);
-}
-.activos.rv.dentro li .tic{
-  background:var(--vino); color:var(--crema);
-  box-shadow:inset 0 0 0 2px var(--vino); scale:1;
-  animation:marcar .45s cubic-bezier(.3,1.7,.5,1) calc(.24s + var(--n) * .07s) both;
-}
-@keyframes marcar{ 0%{ scale:.6 } 60%{ scale:1.18 } 100%{ scale:1 } }
-.activos li span{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  padding:16px 26px;
+  border:0; border-radius:999px;
   font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(14px,1.5vw,18px); line-height:1.06;
+  font-size:clamp(14px,3.6vw,16px); letter-spacing:.03em; line-height:1;
+  text-decoration:none; cursor:pointer;
+  transition:transform .28s var(--curva), box-shadow .28s var(--curva), background .2s;
+  -webkit-tap-highlight-color:transparent;
 }
-.activos li:nth-child(3n+1){ background:var(--amar-soft) }
-.activos li:nth-child(3n+2){ background:var(--rosa-soft) }
-.activos li:nth-child(3n+3){ background:var(--azul-soft) }
+/* Sin pespunte punteado: el cliente lo quiere fuera. Los botones se sostienen
+   con el color y la sombra, que es lo que les da el relieve. */
+.btn-pri{ background:var(--vino); color:var(--amar); box-shadow:0 12px 26px -14px rgba(80,7,17,.8) }
+.btn-sec{ background:transparent; color:inherit; box-shadow:inset 0 0 0 2px currentColor }
+.hoja--vino .btn-pri{ background:var(--amar); color:var(--vino) }
+.btn:active{ transform:scale(.97) }
 @media (hover:hover){
-  .activos li:hover{ transform:translateY(-4px) rotate(-1deg) }
-}
-/* Sin movimiento la lista está entera y marcada: la animación cuenta el gesto
-   de tachar, no lo sustituye. */
-@media (prefers-reduced-motion:reduce){
-  .activos.rv li{ opacity:1; translate:0 0; transition:none }
-  .activos.rv li .tic{ background:var(--vino); color:var(--crema); animation:none; transition:none }
+  .btn-pri:hover{ transform:translateY(-3px); box-shadow:0 20px 34px -16px rgba(80,7,17,.7) }
+  .btn-sec:hover{ background:var(--vino); color:var(--amar) }
+  .hoja--vino .btn-sec:hover{ background:var(--crema); color:var(--vino) }
 }
 
-/* El banco de oportunidades, como matriz de fichas.
+.ctas{ display:flex; flex-direction:column; gap:12px; margin-top:28px }
+.ctas .btn{ width:100% }
+@media (min-width:640px){
+  .ctas{ flex-direction:row; flex-wrap:wrap; align-items:center }
+  .ctas .btn{ width:auto }
+}
 
-   Eran seis píldoras en fila, del tamaño de una etiqueta, y el banco es de lo
-   más concreto que ofrece el Campus: lo que más se parece a una puerta abierta
-   al mercado. En fichas grandes, con el icono a tamaño de señal y flotando, se
-   lee como un escaparate y no como un pie de sección. */
-.recursos{
-  list-style:none; padding:0; margin:28px 0 0;
-  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px;
+.enlace-sub{
+  /* `inline-flex` con alto mínimo, no `inline-block`: con 23px de alto era la
+     zona de toque más pequeña de la página y está justo debajo de un botón
+     grande, que es donde peor se falla el dedo. Crece la caja, no la letra. */
+  display:inline-flex; align-items:center; min-height:44px;
+  margin-top:10px;
+  font-weight:700; font-size:14px; letter-spacing:.04em;
+  text-underline-offset:5px; text-decoration-thickness:1.5px;
 }
-.recursos li{
-  display:grid; gap:16px; justify-items:center; align-content:start;
-  text-align:center; padding:clamp(24px,3vw,36px) 16px clamp(20px,2.4vw,30px);
-  border-radius:22px; border:2px solid var(--vino); background:#fff;
-  transition:transform .35s cubic-bezier(.2,.8,.3,1), box-shadow .35s ease;
-}
-.recursos li i{
-  font-style:normal; line-height:1;
-  width:clamp(74px,7.6vw,104px); aspect-ratio:1; border-radius:50%;
-  display:grid; place-items:center;
-  font-size:clamp(34px,3.6vw,50px);
-  background:rgba(255,255,255,.72);
-  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--vino) 12%,transparent);
-  /* Cada icono con su propio desfase: flotan, no laten a la vez. */
-  animation:flotar-icono 5.2s ease-in-out infinite;
-  animation-delay:calc(var(--n) * -.62s);
-}
-.recursos li span{
-  font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(14px,1.5vw,19px); line-height:1.06;
-}
-@keyframes flotar-icono{ 0%,100%{ translate:0 0 } 50%{ translate:0 -7px } }
-@media (hover:hover){
-  .recursos li:hover{ transform:translateY(-6px); box-shadow:var(--shadow) }
-}
-@media (prefers-reduced-motion:reduce){
-  .recursos li i{ animation:none }
-}
-@media (max-width:900px){ .recursos{ grid-template-columns:repeat(2,minmax(0,1fr)) } }
-@media (max-width:460px){ .recursos{ grid-template-columns:1fr } }
-.recursos li:nth-child(3n+1){ background:var(--amar-soft) }
-.recursos li:nth-child(3n+2){ background:var(--rosa-soft) }
-.recursos li:nth-child(3n+3){ background:var(--azul-soft) }
 
-/* Las viñetas de "aquí no vienes a ver clases" son la estrella amarilla del
-   juego de la marca, no un punto de color. */
-.necesidades li{ padding-left:34px }
-.necesidades li::before{
-  content:""; width:20px; height:19px; top:.35em; border-radius:0;
+/* --------------------------------------------------------------- listas */
+
+.lista{ list-style:none; margin:0; padding:0; display:grid; gap:11px }
+/* La viñeta es la estrella del juego de la marca, no un punto de color: es la
+   pieza que más se repite en la papelería del Campus. El color rota de tres en
+   tres para que una lista de diez puntos no sea diez veces lo mismo. */
+.lista li{ position:relative; padding-left:32px }
+.lista li::before{
+  content:""; position:absolute; left:0; top:.34em;
+  width:19px; height:18px;
   background:url("../assets/stickers/estrella-amar.webp") center/contain no-repeat;
 }
-
-/* ============================================================ el expediente */
-
-/* El registro prioritario deja de ser una pila de once campos y pasa a ser un
-   documento de la oficina de admisiones: carpeta, cabecera y tres pasos
-   numerados. Las preguntas son exactamente las mismas; lo que cambia es que se
-   ve dónde empiezas y cuánto falta. */
-
-.reg{ text-align:center }
-.reg .lista.chips{ justify-content:center; gap:12px; margin-bottom:8px }
-/* Con color y con cuerpo. Como píldoras de contorno fino eran una lista de
-   condiciones; con el color rotando y cada una ligeramente torcida se leen
-   como lo que son: todo lo que te llega por entrar al registro. */
-.reg .chips li{
-  padding:12px 22px; border:2px solid var(--vino); border-radius:999px;
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(13px,1.4vw,17px); letter-spacing:.01em;
-  transition:transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s ease;
+.lista li:nth-child(3n+2)::before{ background-image:url("../assets/stickers/estrella-rosa.webp") }
+.lista li:nth-child(3n+3)::before{ background-image:url("../assets/stickers/estrella-azul.webp") }
+.lista.check li::before{
+  content:"✓"; width:auto; height:auto; background:none; rotate:none;
+  top:0; font-weight:800; color:var(--acento);
 }
-.reg .chips li:nth-child(3n+1){ background:var(--amar-soft) }
-.reg .chips li:nth-child(3n+2){ background:var(--rosa-soft) }
-.reg .chips li:nth-child(3n+3){ background:var(--azul-soft) }
-.reg .chips li:nth-child(odd){ rotate:-1.4deg }
-.reg .chips li:nth-child(even){ rotate:1.4deg }
-@media (hover:hover){
-  .reg .chips li:hover{ transform:translateY(-3px); box-shadow:0 10px 20px -12px rgba(80,7,17,.55) }
+.lista.cruz li::before{
+  content:"×"; width:auto; height:auto; background:none; rotate:none;
+  top:-.08em; font-size:1.3em; font-weight:800; opacity:.45;
 }
-.reg-baja{ font-size:clamp(15px,1.5vw,19px); opacity:.8; margin-bottom:22px }
 
-.expediente{ position:relative; margin-top:clamp(28px,4vw,48px) }
+.chips{ display:flex; flex-wrap:wrap; gap:9px; list-style:none; margin:0; padding:0 }
+.chips li{
+  padding:9px 16px; border:1.5px solid var(--linea-fuerte); border-radius:999px;
+  font-weight:600; font-size:14px;
+}
 
-.carpeta{
+/* --------------------------------------------------------------- tarjetas */
+
+.tarjeta{
   position:relative;
-  background:color-mix(in srgb,var(--amar) 46%,#fff);
-  border-radius:0 var(--r) var(--r) var(--r);
-  box-shadow:var(--shadow);
-  text-align:left;
-}
-/* La lengüeta es lo que convierte un rectángulo en una carpeta. */
-.carpeta-lengueta{
-  position:absolute; left:0; top:-26px; width:min(210px,44%); height:28px;
-  background:inherit; border-radius:14px 14px 0 0;
-}
-.carpeta-hoja{ padding:clamp(20px,3vw,34px) }
-
-.exp-cab{
-  display:flex; flex-wrap:wrap; gap:18px 32px;
-  align-items:center; justify-content:space-between;
-  padding-bottom:clamp(16px,2vw,24px);
-}
-.exp-of,.exp-sub{
-  font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
-  opacity:.62;
-}
-.exp-t{
-  font-family:var(--display); text-transform:uppercase; line-height:1;
-  font-size:clamp(28px,4.4vw,54px); margin:6px 0 8px;
-}
-.exp-lema{ display:flex; align-items:center; gap:16px; padding-left:18px;
-           border-left:1px solid rgba(80,7,17,.22) }
-.exp-lema b{
-  font-size:11px; font-weight:800; letter-spacing:.2em; text-transform:uppercase;
-  max-width:9ch; line-height:1.5;
-}
-.exp-lema i{ font-family:var(--mano); font-size:22px; line-height:1.15; max-width:16ch }
-
-/* --- los tres pasos --- */
-.grupo-f{
-  display:grid; grid-template-columns:minmax(180px,230px) 1fr; gap:clamp(16px,2.4vw,32px);
-  background:var(--superficie); border-radius:var(--r-s);
-  padding:clamp(16px,2.2vw,26px); margin-bottom:14px;
-  border:1px solid rgba(80,7,17,.06);
-}
-.grupo-cab{ display:flex; align-items:flex-start; gap:14px }
-.grupo-n{
-  flex:none; width:56px; height:56px; border-radius:50%;
-  display:grid; place-items:center;
-  font-family:var(--display); font-size:26px; line-height:1; color:var(--vino);
-}
-.g1 .grupo-n{ background:var(--rosa) }
-.g2 .grupo-n{ background:var(--azul) }
-.g3 .grupo-n{ background:var(--amar) }
-.grupo-txt b{
-  display:block; font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(17px,1.9vw,23px); line-height:1.05;
-}
-.grupo-txt i{
-  display:block; margin-top:7px; font-style:normal;
-  font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
-  opacity:.55; line-height:1.6;
-}
-.grupo-campos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px }
-.grupo-campos .campo-f{ margin-bottom:0 }
-.grupo-campos .campo-f.ancho{ grid-column:1/-1 }
-.grupo-campos .campo-f>span{ font-weight:600; opacity:.85 }
-
-/* .form nace con 760px de ancho máximo; dentro de la carpeta el formulario ES
-   el documento y ocupa la hoja entera. */
-.expediente .form{ max-width:none; margin-top:0 }
-.exp-pie{ text-align:center; padding-top:6px }
-.exp-pie .btn{ padding-inline:clamp(28px,4vw,54px) }
-.exp-nota{ margin-top:14px; font-size:13px; font-style:italic; opacity:.62 }
-
-@media (max-width:760px){
-  .grupo-f{ grid-template-columns:1fr }
-  .exp-lema{ border-left:0; padding-left:0 }
-}
-
-/* ================================================= el carnet y el sello */
-
-/* Entrar al Campus es recibir un carnet: el objeto dice en un vistazo lo que
-   el texto tarda un párrafo en decir. */
-.carnet{
-  position:absolute; z-index:2; width:186px; pointer-events:none;
-  transform-origin:50% -60px;
-  animation:colgar 7s ease-in-out infinite;
-}
-.carnet-cinta{
-  position:absolute; left:50%; bottom:100%; translate:-50% 0;
-  width:22px; height:86px; background:var(--rosa);
-  border-radius:4px 4px 0 0;
-  background-image:linear-gradient(90deg,rgba(255,255,255,.35) 0 30%,transparent 30%);
-}
-.carnet-clip{
-  position:absolute; left:50%; top:-16px; translate:-50% 0;
-  width:26px; height:26px; border-radius:50%;
-  border:4px solid #c9c9cf; background:transparent;
-}
-.carnet-tarjeta{
-  background:var(--rosa-soft); color:var(--vino);
-  border-radius:14px; padding:20px 18px 22px;
-  box-shadow:0 22px 44px -20px rgba(80,7,17,.55);
-  rotate:-3deg;
-}
-.carnet-iso{ width:34px; height:34px; display:block; fill:var(--vino) }
-.carnet-marca{
-  margin-top:12px; font-size:11px; font-weight:800;
-  letter-spacing:.14em; text-transform:uppercase; line-height:1.5;
-}
-.carnet-marca b{ display:block; font-weight:500; letter-spacing:.3em }
-.carnet-rol{
-  margin-top:14px; padding-top:12px; border-top:1px solid rgba(80,7,17,.28);
-  font-family:var(--display); text-transform:uppercase; line-height:1.05;
-  font-size:19px;
-}
-.carnet-pals{ list-style:none; margin-top:12px; display:grid; gap:5px }
-.carnet-pals li{
-  font-size:10px; font-weight:600; letter-spacing:.22em; text-transform:uppercase;
-  opacity:.72;
-}
-@keyframes colgar{ 0%,100%{ rotate:-1.6deg } 50%{ rotate:1.6deg } }
-
-/* El sello: el texto gira alrededor del isotipo, como el escudo de una
-   secretaría académica. */
-.sello-aro{ position:absolute; z-index:2; width:150px; aspect-ratio:1; pointer-events:none }
-.sello-aro>svg:first-child{ width:100%; height:100%; animation:girar-aro 30s linear infinite }
-.aro-txt{
-  font-family:var(--texto-f); font-size:12px; font-weight:800;
-  letter-spacing:.16em; text-transform:uppercase; fill:currentColor; opacity:.7;
-}
-.aro-iso{
-  position:absolute; inset:0; margin:auto; width:32%; height:32%;
-  fill:currentColor; opacity:.9;
-}
-@keyframes girar-aro{ to{ rotate:360deg } }
-
-/* Los adornos solo aparecen cuando hay banda libre a los lados: nunca encima
-   del texto. Medido contra --wrap, igual que las pegatinas del hero. */
-@media (max-width:1279px){
-  .expediente .carnet,.expediente .sello-aro,
-  .cierre-final .carnet,.cierre-final .sello-aro{ display:none }
-}
-.expediente .carnet{ right:-66px; top:-74px }
-.expediente .sello-aro{ right:-118px; bottom:60px; color:var(--vino) }
-@media (min-width:1280px){ .exp-cab{ padding-right:170px } }
-
-/* En su panel, no contra el ancho de la página: el cierre ya no es una
-   columna centrada. */
-/* En las bandas laterales, fuera de la columna de texto: el carnet cuelga a la
-   izquierda y el sello con su nota va a la derecha. */
-/* Dentro del bloque: colgando por encima del borde superior lo tapaba el nav,
-   que va fijo. */
-.cierre-final .carnet{ left:clamp(12px,3.5vw,70px); top:96px }
-/* Relativo y no estático: el isotipo va dentro en posición absoluta y con
-   `static` se colgaba del pie entero, que es lo que lo dejaba enorme y
-   descentrado dentro del aro. */
-.cierre-lado .sello-aro{ position:relative; width:clamp(120px,10vw,168px); margin-inline:auto }
-/* A la misma altura que el carnet del otro lado: descolgado, el sello se leía
-   como una pieza suelta. */
-.cierre-lado{
-  right:clamp(12px,3vw,64px); top:96px; height:auto;
-  display:grid; justify-items:center; gap:26px; width:clamp(150px,15vw,230px);
-}
-@media (max-width:1279px){
-  .cierre-final .carnet,.cierre-lado{ display:none }
-}
-
-.cierre-mano{
-  font-family:var(--mano); font-size:clamp(22px,2.6vw,32px); line-height:1.15;
-  margin-top:34px; rotate:-2.5deg; color:var(--texto); opacity:.85;
-}
-.cierre-mano span{ display:block }
-
-@media (prefers-reduced-motion:reduce){
-  .carnet,.sello-aro>svg:first-child{ animation:none }
-}
-
-/* ================================================== la carta de la rectora */
-
-/* La carta llega dentro de su sobre. Al pulsar, la solapa se abre hacia atrás
-   —rotación real en 3D, con su reverso más oscuro— y la hoja blanca sale de
-   dentro del sobre amarillo. Antes eran seis párrafos seguidos que había que
-   atravesar para llegar al resto de la página.
-
-   Todo el color vive en el sobre y la hoja es blanca, como una carta de
-   verdad: el papel se lee, el sobre decora. */
-
-.sobre{
-  position:relative;
-  /* Sitio para que la solapa abierta quede por encima sin pisar el titular:
-     abierta se levanta su altura completa. */
-  margin:clamp(84px,10vw,146px) 0 0;
-  padding:clamp(74px,9vw,132px) clamp(20px,2.6vw,34px) clamp(22px,2.6vw,32px);
-  background:color-mix(in srgb,var(--amar) 34%,#fff);
-  border:1px solid rgba(80,7,17,.12); border-radius:var(--r);
-  perspective:1400px;
-}
-
-/* La solapa: el triángulo del reverso de un sobre. clip-path en vez de un
-   degradado cónico, que dejaba el corte a un solo lado. */
-.sobre-solapa{
-  position:absolute; left:-1px; right:-1px; top:-1px; height:clamp(74px,9vw,132px);
-  background:linear-gradient(180deg,
-    color-mix(in srgb,var(--amar) 70%,#fff),
-    color-mix(in srgb,var(--amar) 44%,#fff));
-  clip-path:polygon(0 0,100% 0,50% 100%);
-  border-radius:var(--r) var(--r) 0 0;
-  transform-origin:50% 0; transform:rotateX(0deg);
-  transition:transform .8s cubic-bezier(.6,-.15,.3,1.2), z-index 0s .4s;
-  z-index:3;
-  /* Sin trucos de cara trasera: clip-path aplana el elemento y un ::after
-     rotado 180° nunca llega a dibujarse. Al abrirse se ve la misma cara del
-     revés, que es exactamente lo que hace una solapa de papel. */
-}
-.sobre-sello{
-  position:absolute; left:50%; top:calc(clamp(74px,9vw,132px) - clamp(20px,2.4vw,29px));
-  translate:-50% 0; z-index:4;
-  width:clamp(40px,4.8vw,58px); height:auto; fill:var(--vino);
-  filter:drop-shadow(0 5px 12px rgba(80,7,17,.3));
-  transition:opacity .35s ease, scale .45s cubic-bezier(.3,1.6,.5,1), rotate .5s ease;
-}
-
-.sobre-btn{
-  position:relative; z-index:2; display:block; width:100%; text-align:left;
-  cursor:pointer; background:none; border:0; padding:0; color:inherit; font:inherit;
-}
-.sobre-btn:focus-visible{ outline:2px solid var(--acento); outline-offset:6px; border-radius:12px }
-.sobre-de b{
-  display:block; font-size:11px; font-weight:800;
-  letter-spacing:.2em; text-transform:uppercase; opacity:.6;
-}
-.sobre-de i{
-  display:block; font-family:var(--display); font-style:normal;
-  text-transform:uppercase; font-size:clamp(22px,3vw,36px); line-height:1.05; margin-top:6px;
-}
-.sobre-para{ display:block; margin-top:10px; font-size:14px; opacity:.72 }
-.sobre-cta{
-  display:inline-flex; align-items:center; gap:9px; margin-top:20px;
-  font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--vino); background:var(--rosa);
-  padding:11px 20px; border-radius:999px;
-  transition:transform .3s cubic-bezier(.2,.9,.3,1);
-}
-.sobre-btn:hover .sobre-cta{ transform:translateY(-2px) }
-.sobre-cta::after{ content:"↑"; transition:rotate .3s }
-
-/* --- abierto: la solapa se echa hacia atrás y el lacre se retira --- */
-.sobre:not(.cerrada) .sobre-solapa{
-  transform:rotateX(-166deg);
-  filter:drop-shadow(0 -3px 4px rgba(80,7,17,.16));
-  z-index:0;
-}
-.sobre:not(.cerrada) .sobre-sello{ opacity:0; scale:.55; rotate:-24deg }
-
-/* --- cerrado --- */
-.sobre.cerrada .sobre-cta::after{ rotate:180deg }
-
-/* El truco de 0fr↔1fr necesita una sola fila y un solo hijo: por eso la hoja
-   lleva dentro un envoltorio con todo el contenido. Con varios hijos solo se
-   colapsaba el primero. */
-.carta-hoja{
-  display:grid; grid-template-rows:1fr; opacity:1;
-  transition:grid-template-rows .65s cubic-bezier(.2,.9,.3,1), opacity .5s .15s;
-}
-/* La hoja sale de dentro del sobre: papel blanco, y al abrirse asoma
-   deslizándose hacia abajo. */
-.hoja-interior{
-  min-height:0; margin-top:clamp(16px,2.2vw,26px);
-  background:#fff; border-radius:var(--r-s);
-  box-shadow:0 18px 40px -22px rgba(80,7,17,.5);
-  padding:clamp(24px,3.4vw,44px);
-  translate:0 0; transition:translate .65s cubic-bezier(.2,.9,.3,1);
-}
-.sobre.cerrada .carta-hoja{
-  grid-template-rows:0fr; opacity:0;
-  transition:grid-template-rows .55s cubic-bezier(.2,.9,.3,1), opacity .3s;
-}
-.sobre.cerrada .hoja-interior{
-  overflow:hidden; padding:0; margin-top:0; translate:0 -40px;
-}
-.sobre.sin-anim .carta-hoja,.sobre.sin-anim .hoja-interior,
-.sobre.sin-anim .sobre-solapa,.sobre.sin-anim .sobre-sello{ transition:none }
-
-/* --- la hoja: texto a la izquierda, ella a la derecha --- */
-.carta-con-foto{
-  display:grid; gap:clamp(20px,3vw,44px);
-  grid-template-columns:minmax(0,1fr) minmax(220px,320px);
-  align-items:end;
-}
-.carta-con-foto .carta-cuerpo{ max-width:60ch }
-.carta-foto{
-  width:100%; height:auto; display:block; align-self:end;
-  filter:drop-shadow(0 24px 44px rgba(80,7,17,.32));
-  /* Entra deslizándose desde la derecha, como hacía en el hero. */
-  animation:carta-entra .9s cubic-bezier(.2,.9,.3,1) both;
-}
-@keyframes carta-entra{
-  from{ opacity:0; translate:44px 0 }
-  to{ opacity:1; translate:0 0 }
-}
-@media (max-width:860px){
-  .carta-con-foto{ grid-template-columns:1fr }
-  .carta-foto{ max-width:280px; margin-inline:auto }
-}
-
-/* Sin movimiento el sobre se abre igual, de golpe: el gesto es un adorno. */
-@media (prefers-reduced-motion:reduce){
-  .sobre-solapa,.sobre-sello,.carta-hoja,.hoja-interior,.carta-foto{
-    transition:none; animation:none;
-  }
-}
-
-/* --- quién firma --- */
-.trayectoria{
-  margin-top:clamp(28px,4vw,52px); padding-top:clamp(24px,3vw,36px);
-  border-top:1px solid var(--linea);
-}
-.trayectoria h3{
-  font-family:var(--display); text-transform:uppercase;
-  font-size:clamp(20px,2.6vw,32px); margin-bottom:20px;
-}
-.tray-cifras{ margin-bottom:clamp(22px,3vw,34px) }
-/* Las cifras que aún no tenemos se ven a medio tono: nadie debe leerlas como
-   un dato real mientras Pierina no las confirme. */
-.pendiente-min b{ opacity:.4 }
-.pendiente-min span{ opacity:.55 }
-
-.tray-marcas-t{
-  font-size:11px; font-weight:800; letter-spacing:.2em; text-transform:uppercase;
-  opacity:.6; margin-bottom:14px;
-}
-/* La etiqueta de lo que falta, encima de la fila y no sobre el último hueco. */
-.marcas.pendiente{ padding-top:44px }
-.marcas.pendiente::after{ top:10px; right:10px }
-/* Cuatro por fila: con auto-fit entraban siete y la octava se quedaba sola en
-   la fila de abajo. Ocho marcas piden dos filas de cuatro.
-
-   Sin ficha ni fondo bajo cada logotipo: ocho cajas blancas alineadas competían
-   con las tarjetas del resto de la página y convertían una firma discreta en un
-   bloque. Los logotipos se sostienen solos sobre el papel. */
-.marcas{
-  list-style:none; display:grid; gap:clamp(22px,3.4vw,44px) clamp(18px,3vw,40px);
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  padding:clamp(20px,2.6vw,30px) 0 0;
-  align-items:center;
-}
-.marcas li{
-  display:grid; place-items:center; min-height:46px;
-  font-family:var(--display); text-transform:uppercase;
-}
-/* La marca escrita, al peso de las que sí traen logotipo: a cuerpo de texto
-   corriente parecía de segunda entre las demás. */
-.marcas li span{ font-size:clamp(19px,2vw,26px); line-height:1; letter-spacing:.01em }
-/* Cada logotipo dentro de la misma caja, no a la misma altura.
-
-   Igualados por altura, un icono cuadrado se ve diminuto al lado de un
-   logotipo con nombre: el ancho ocupa cinco veces más superficie. Con una caja
-   común y `contain`, el ancho la llena a lo largo y el cuadrado a lo alto, y
-   los dos acaban pesando lo mismo. Vale para cualquier logotipo que se añada
-   después, sin medir nada a mano. */
-.marcas li img{
-  width:100%; max-width:clamp(120px,13vw,168px);
-  height:clamp(52px,5.4vw,68px);
-  display:block; object-fit:contain; object-position:center;
-}
-/* Los que llegan con su forma casi cuadrada pueden estirarse algo más: en una
-   caja apaisada les sobra sitio a los lados. */
-.marcas li img[data-forma="cuadrado"]{ max-width:clamp(64px,7vw,86px) }
-/* Los huecos sí necesitan caja: es lo único que los hace visibles. */
-.marcas .marca-hueca{
-  min-height:62px; border-radius:10px;
-  background:color-mix(in srgb,var(--texto) 5%,transparent);
-  border:1px dashed color-mix(in srgb,var(--texto) 22%,transparent);
-}
-@media (max-width:760px){ .marcas{ grid-template-columns:repeat(2,minmax(0,1fr)) } }
-
-/* ================================================ el cortometraje del hero */
-
-/* Vertical y con tope de altura: a 9/16 sin límite, el video solo mide más que
-   la pantalla y empuja el resto del hero fuera de la primera vista. */
-.hero-video{
-  position:relative; margin:0 auto; display:grid; justify-items:center;
-  --alto:min(62vh,560px);
-}
-.hero-video video{
-  height:var(--alto); width:auto; max-width:100%; aspect-ratio:9/16;
-  object-fit:cover; display:block;
-  border-radius:var(--r); box-shadow:var(--shadow-alta); background:var(--vino);
-}
-.hero-video-txt{
-  margin-top:18px; text-align:center; max-width:30ch;
-}
-/* En Anton competía con el titular de al lado, que ya es Anton y va tres veces
-   más grande: dos carteles peleando. La frase es Pierina hablando en primera
-   persona, así que va en su letra, la misma de la nota de la carta. */
-.hero-video-txt b{
-  display:block; font-family:var(--mano); font-weight:700;
-  font-size:clamp(28px,3.4vw,44px); line-height:1.05;
-}
-.hero-video-txt span{
-  display:block; margin-top:6px; font-size:clamp(14px,1.5vw,17px); opacity:.75;
-}
-/* Mientras el archivo no llegue, el marco vacío en su proporción: así ya se
-   ve la composición definitiva del hero. */
-.hero-hueco{
-  position:relative; height:var(--alto); width:auto; aspect-ratio:9/16;
+  background:var(--superficie);
+  border:1px solid var(--linea);
   border-radius:var(--r);
-  border:2px dashed color-mix(in srgb,var(--texto) 26%,transparent);
-  background:
-    repeating-linear-gradient(-45deg,
-      color-mix(in srgb,var(--texto) 4%,transparent) 0 14px,
-      transparent 14px 28px);
+  padding:24px 22px;
+  box-shadow:var(--sombra);
+}
+.tarjeta h3{ margin-bottom:.45em }
+.tarjeta p{ font-size:15.5px; opacity:.86; margin:0 }
+
+.rejilla{ display:grid; gap:14px; margin-top:28px }
+@media (min-width:700px){
+  .rejilla-2{ grid-template-columns:repeat(2,1fr) }
+  .rejilla-3{ grid-template-columns:repeat(3,1fr) }
+  .rejilla-4{ grid-template-columns:repeat(2,1fr) }
+}
+@media (min-width:1000px){
+  .rejilla-4{ grid-template-columns:repeat(4,1fr) }
 }
 
-/* ------------------------------------------- el sonido del cortometraje */
+/* ------------------------------------------------------ carril horizontal */
 
-/* El video arranca mudo porque el navegador no deja otra cosa. El botón va
-   encima, en la esquina del video, y desaparece si el archivo no trae audio. */
-.hero-video{ position:relative }
-.sonido{
-  position:absolute; right:12px; top:12px; z-index:2;
-  width:42px; height:42px; border-radius:50%; cursor:pointer;
-  border:1px solid rgba(255,255,255,.35);
-  background:rgba(80,7,17,.55); backdrop-filter:blur(8px);
-  display:grid; place-items:center; padding:0;
-  transition:background .25s ease, transform .25s cubic-bezier(.2,.9,.3,1);
+/* En móvil, seis tarjetas apiladas son seis pantallas de scroll. En carril se
+   recorren con el pulgar y se ve de un vistazo que hay más a la derecha. */
+@media (max-width:699px){
+  .carril{
+    display:grid; grid-auto-flow:column;
+    /* Una tarjeta entera por pantalla, con un dedo de la siguiente asomando. A
+       78% la de al lado entraba partida por la mitad y se leía como un fallo de
+       maquetación, no como «hay más a la derecha». */
+    grid-auto-columns:calc(100% - var(--gutter) - 14px);
+    gap:12px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    scroll-padding-inline:var(--gutter);
+    padding-inline:var(--gutter);
+    margin-inline:calc(var(--gutter) * -1);
+    /* Un contenedor con overflow recorta por los cuatro lados, no solo por los
+       costados: los parches cosidos a las esquinas y las sombras de las
+       tarjetas se cortaban arriba y abajo. El aire de dentro les deja sitio y
+       el margen negativo se lo devuelve al flujo de la página. */
+    padding-block:34px 18px;
+    margin-block:-34px -18px;
+    /* Sin esto el carril rebota contra sus topes y, al llegar al final, le pasa
+       el gesto a la página o al historial del navegador. Con `contain` el
+       deslizamiento se queda dentro del carril y termina donde termina. */
+    overscroll-behavior-x:contain;
+    overscroll-behavior-y:auto;
+    scrollbar-width:none;
+  }
+  .carril::-webkit-scrollbar{ display:none }
+  .carril > *{ scroll-snap-align:start }
+  .carril-pista{
+    display:flex; gap:6px; justify-content:center; margin-top:16px;
+  }
+  .carril-pista i{
+    width:6px; height:6px; border-radius:50%;
+    background:currentColor; opacity:.22;
+    transition:opacity .25s, width .25s;
+  }
+  .carril-pista i.on{ opacity:.9; width:20px; border-radius:3px }
 }
-.sonido:hover{ background:rgba(80,7,17,.78); transform:scale(1.06) }
-.sonido:focus-visible{ outline:2px solid var(--acento); outline-offset:3px }
-.hero-video.sin-sonido .sonido{ display:none }
+@media (min-width:700px){ .carril-pista{ display:none } }
 
-/* El altavoz, dibujado con dos cajas: sin iconos de fuera y sin un SVG más. */
-.sonido-icono{
-  position:relative; width:18px; height:18px; display:block;
-  background:var(--crema);
-  clip-path:polygon(0 32%,32% 32%,62% 6%,62% 94%,32% 68%,0 68%);
-}
-/* La raya del mute, que se retira al encender el sonido. */
-.sonido-icono::after{
-  content:""; position:absolute; right:-7px; top:50%; width:22px; height:2px;
-  translate:0 -50%; rotate:-45deg; background:var(--crema);
-  transition:opacity .2s ease, scale .25s ease;
-  transform-origin:50% 50%;
-}
-.con-sonido .sonido-icono::after{ opacity:0; scale:0 1 }
-/* Y las ondas, que solo salen cuando suena. */
-.sonido-icono::before{
-  content:""; position:absolute; right:-6px; top:50%; translate:0 -50%;
-  width:9px; height:9px; border-radius:50%;
-  border:2px solid var(--crema); border-left-color:transparent;
-  border-bottom-color:transparent; border-top-color:transparent;
-  opacity:0; transition:opacity .2s ease;
-}
-.con-sonido .sonido-icono::before{ opacity:1 }
+/* --------------------------------------------------------------- parches */
 
-/* En conexión lenta el video no se descarga solo: queda su primera imagen y el
-   botón, que ahí significa reproducir y no silenciar. */
-.hero-video.en-espera .sonido{
-  width:58px; height:58px; right:50%; top:50%; translate:50% -50%;
-  background:rgba(80,7,17,.72);
+/* Anclados, nunca flotando: un parche va cosido al borde de una hoja o a la
+   esquina de una tarjeta, con su sombra corta de objeto pegado. */
+.parche{
+  position:absolute; pointer-events:none; z-index:3;
+  filter:drop-shadow(0 8px 14px rgba(80,7,17,.28));
 }
-.hero-video.en-espera .sonido-icono{
-  clip-path:polygon(14% 4%,14% 96%,94% 50%);
-  width:20px; height:20px;
+.parche img{ width:100%; height:auto }
+
+/* ------------------------------------------------------------ animaciones */
+
+.entra{
+  opacity:0;
+  transform:translateY(22px);
+  transition:opacity .7s var(--curva), transform .7s var(--curva);
+  transition-delay:var(--d,0ms);
 }
-.hero-video.en-espera .sonido-icono::after,
-.hero-video.en-espera .sonido-icono::before{ display:none }
+.entra.visible{ opacity:1; transform:none }
+
+/* Un solo escalonado para toda la página: cinco peldaños de 70ms. Los pone el
+   script sobre los hijos de cada retícula, así nada entra a destiempo ni hace
+   falta escribir el retardo a mano en el HTML. */
+.entra-d1{ --d:70ms } .entra-d2{ --d:140ms } .entra-d3{ --d:210ms }
+.entra-d4{ --d:280ms } .entra-d5{ --d:350ms }
+
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto }
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+  .entra{ opacity:1; transform:none }
+}
+
+/* ------------------------------------------------------------ accesibilidad */
+
+.saltar{
+  position:absolute; left:-9999px; top:0; z-index:200;
+  background:var(--vino); color:var(--amar); padding:14px 20px; border-radius:0 0 12px 0;
+  font-weight:700;
+}
+.saltar:focus{ left:0 }
+
+:focus-visible{ outline:3px solid var(--acento); outline-offset:3px; border-radius:4px }
+
+.solo-lectores{
+  position:absolute; width:1px; height:1px; overflow:hidden;
+  clip:rect(0 0 0 0); white-space:nowrap;
+}

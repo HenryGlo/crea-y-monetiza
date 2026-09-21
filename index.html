@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Crea y Monetiza Campus — Admisiones</title>
 <meta name="description" content="Formación integral de 6 meses para creadoras de contenido: marca personal, UGC profesional, negocio, inteligencia artificial y monetización.">
-<!-- La página llevaba noindex desde que era una propuesta a puerta cerrada.
-     Ya es la web pública, así que se indexa. -->
+<!-- Llevaba noindex mientras era una propuesta a puerta cerrada. Ya es la
+     web pública, así que se indexa. -->
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://web-crea-y-monetiza.perfectflow.cloud/">
 <meta property="og:title" content="Crea y Monetiza Campus — Admisiones">
@@ -24,15 +24,38 @@
 <meta name="twitter:image" content="https://web-crea-y-monetiza.perfectflow.cloud/assets/compartir.png">
 <meta name="theme-color" content="#500711">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- El .ico es el respaldo: el navegador pide /favicon.ico por su cuenta
+     aunque haya un SVG declarado, y sin él dejaba un 404 en cada visita. -->
+<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/icono-apple.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"EducationalOrganization","@id":"https://web-crea-y-monetiza.perfectflow.cloud/#campus","name":"Crea y Monetiza Campus","description":"Formación integral de 6 meses para creadoras de contenido: marca personal, UGC profesional, negocio, inteligencia artificial y monetización.","url":"https://web-crea-y-monetiza.perfectflow.cloud/","logo":"https://web-crea-y-monetiza.perfectflow.cloud/assets/icono-apple.png","image":"https://web-crea-y-monetiza.perfectflow.cloud/assets/compartir.png","inLanguage":"es"},{"@type":"WebSite","@id":"https://web-crea-y-monetiza.perfectflow.cloud/#sitio","url":"https://web-crea-y-monetiza.perfectflow.cloud/","name":"Crea y Monetiza Campus","publisher":{"@id":"https://web-crea-y-monetiza.perfectflow.cloud/#campus"},"inLanguage":"es"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Necesito experiencia previa?","acceptedAnswer":{"@type":"Answer","text":"No necesitas tener una carrera consolidada como creadora para aplicar. Dentro del proceso de admisión evaluaremos tu punto de partida para entender si el Campus encaja contigo."}},{"@type":"Question","name":"¿Necesito tener muchos seguidores?","acceptedAnswer":{"@type":"Answer","text":"No. La formación trabaja tus habilidades, posicionamiento, estrategia y profesionalización. Tu número de seguidores no determina por sí solo tu capacidad para construir oportunidades."}},{"@type":"Question","name":"¿Puedo formar parte si vivo fuera de España?","acceptedAnswer":{"@type":"Answer","text":"Sí. El Campus está diseñado para recibir creadoras desde diferentes países."}},{"@type":"Question","name":"¿El Campus es online?","acceptedAnswer":{"@type":"Answer","text":"La formación y el acompañamiento principal se desarrollan online para que puedas avanzar desde donde estés. Además, pueden existir experiencias y encuentros presenciales vinculados al Campus."}},{"@type":"Question","name":"¿Cuánto dura?","acceptedAnswer":{"@type":"Answer","text":"Tu recorrido principal dentro del Campus tiene una duración de 6 meses."}},{"@type":"Question","name":"¿Tengo que hacer entregables?","acceptedAnswer":{"@type":"Answer","text":"Sí. Queremos que apliques lo aprendido durante el proceso, por eso diferentes materias incluyen ejercicios, implementación y entregables."}},{"@type":"Question","name":"¿Tengo que presentar un proyecto final?","acceptedAnswer":{"@type":"Answer","text":"Sí. Al finalizar tu recorrido desarrollarás tu Proyecto de Graduación, donde integrarás diferentes elementos que has construido durante tu formación."}},{"@type":"Question","name":"¿Hay acompañamiento?","acceptedAnswer":{"@type":"Answer","text":"Sí. El acompañamiento y seguimiento forman parte de la experiencia del Campus."}},{"@type":"Question","name":"¿Recibiré un certificado?","acceptedAnswer":{"@type":"Answer","text":"Al completar los requisitos del recorrido recibirás tu título como Creadora Profesional."}},{"@type":"Question","name":"¿Qué es el Banco de Oportunidades?","acceptedAnswer":{"@type":"Answer","text":"Es un espacio de recursos relacionados con marcas, agencias, plataformas y oportunidades que pueden ayudarte durante tu etapa de profesionalización."}},{"@type":"Question","name":"¿Cómo puedo entrar?","acceptedAnswer":{"@type":"Answer","text":"El primer paso es completar tu proceso de admisión y agendar una entrevista con nuestro equipo."}},{"@type":"Question","name":"¿Dónde puedo conocer las condiciones de acceso?","acceptedAnswer":{"@type":"Answer","text":"Todas las condiciones de incorporación se explican durante la entrevista de admisión una vez que conocemos tu situación y confirmamos que el Campus puede encajar contigo."}},{"@type":"Question","name":"¿Qué pasa si las admisiones están cerradas?","acceptedAnswer":{"@type":"Answer","text":"Puedes entrar al registro prioritario para recibir directamente las próximas fechas, convocatorias y novedades."}}]}]}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@400;600;700;800&family=Caveat:wght@700&display=swap">
-<link rel="stylesheet" href="css/base.css?v=c1cea7ad">
-<link rel="stylesheet" href="css/perfil.css?v=e955a679">
+<!-- Las tipografías se sirven desde este mismo dominio (ver
+     herramientas/traer-fuentes.py). Pedírselas a Google metía dos dominios
+     ajenos —resolver DNS y abrir TLS en los dos— antes de poder pintar el
+     primer titular.
+
+     Se precargan solo Anton y Outfit: son las dos que se leen en la primera
+     pantalla. Caveat pesa 74 KB y no aparece hasta el remate del hero, así que
+     precargarla solo le quitaría ancho de banda a lo que sí se ve antes. -->
+<link rel="preload" href="assets/fuentes/anton.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fuentes/outfit.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/fuentes.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/cuaderno.css">
+<link rel="stylesheet" href="css/registro.css">
+<script>
+/* Antes de pintar nada: si el navegador no ejecuta JS el telón no aparece —si
+   apareciera, cubriría la página para siempre—, y si se entra por un ancla o
+   con la página ya desplazada tampoco: quien viene a #registro no quiere una
+   portada delante. */
+(function(){
+  var d = document.documentElement;
+  d.classList.add("js");
+  if (!location.hash && !window.scrollY) d.classList.add("telon-activo");
+})();
+</script>
 </head>
-<body class="v-perfil">
+<body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
  <symbol id="iso" viewBox="0 0 265.42 268.17">
   <path fill="currentColor" d="M265.42,53.98c0,31.14-22.83,53.98-53.98,53.98s-56.39-22.83-56.39-53.98S180.3,0,211.44,0s53.98,22.83,53.98,53.98Z"/>
@@ -63,201 +86,737 @@
  </symbol>
 </svg>
 <a class="saltar" href="#inicio">Saltar al contenido</a>
-<nav class="nav"><div class="nav-in">
-  <svg class="iso" aria-hidden="true"><use href="#iso"/></svg>
-  <span class="brand">Campus</span>
-  <div class="nav-links"><a href="#inicio" class="active">Inicio</a><a href="#campus">El Campus</a><a href="#recorrido">Tu recorrido</a><a href="#plan">Plan de estudios</a><a href="#tesis">La Tesis</a><a href="#experiencia">Experiencia</a><a href="#admisiones">Admisiones</a></div>
-  <a class="nav-cta" href="#admisiones">Iniciar admisión</a>
-</div></nav>
-<main>
-<header id="inicio" class="hero">
-  <img class="sticker s1" src="assets/stickers/estrella-azul.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="sticker s2" src="assets/stickers/rayo-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="sticker s3" src="assets/stickers/rayo-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="sticker s4" src="assets/stickers/estrella-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
-  <div class="wrap">
-    <svg class="logo" viewBox="0 0 863.98 253.56" role="img" aria-label="Crea y Monetiza Campus"><use href="#logo-full"/></svg>
-    <p class="pill">Admisiones · Crea y Monetiza Campus</p>
-    <h1>Tu talento puede convertirse en una carrera profesional.</h1>
-    <figure class="hero-media hero-video">
-  <video data-src="assets/hero-cortometraje.mp4" poster="assets/hero-cortometraje.webp"
-         muted loop playsinline preload="none"
-         aria-label="Cortometraje de Pierina Alves sobre sus inicios como creadora"></video>
-  <button class="sonido" type="button" aria-pressed="false"
-          data-on="Activar el sonido" data-off="Silenciar"
-          aria-label="Activar el sonido">
-    <span class="sonido-icono" aria-hidden="true"></span>
-  </button>
-  <figcaption class="hero-video-txt"><b>Yo también estuve allí.</b><span>Te aseguro que vale la pena creer en ti.</span></figcaption>
-</figure>
-    <p class="entrada">Bienvenida a Crea y Monetiza Campus, una formación integral para creadoras de contenido que quieren profesionalizar su talento, construir una marca con dirección y aprender a generar oportunidades reales dentro del mundo digital.</p>
-    <ul class="materias-hero"><li>Marca personal.</li><li>Creación de contenido.</li><li>UGC profesional.</li><li>Negocio.</li><li>Organización y productividad.</li><li>Monetización.</li></ul>
-    <p class="remate">Todo dentro de una misma ruta formativa.</p>
-    <div class="ctas">
-      <a class="btn btn-pri" href="#admisiones">Iniciar mi proceso de admisión <span aria-hidden="true">→</span></a>
-      <a class="btn btn-sec" href="#campus">Conocer el Campus <span aria-hidden="true">↓</span></a>
+
+<!-- ======================================================== 00 · EL TELÓN ==
+     La primera pantalla es una sola frase sobre fondo sólido. Al primer gesto
+     de scroll se levanta y se difumina como una hoja que se despega, y debajo
+     aparece la web. Se puede retirar también con el teclado o con el botón.
+
+     aria-hidden: el telón es un gesto visual. Quien navega con lector de
+     pantalla no tiene por qué atravesarlo —el titular de la página vive en el
+     <h1> del hero, y la primera pulsación de Tab lo retira. -->
+<div class="telon" id="telon" aria-hidden="true">
+  <div class="telon-in">
+    <svg class="telon-iso" viewBox="0 0 265.42 268.17" aria-hidden="true"><use href="#iso"/></svg>
+    <p class="telon-titulo">
+      <span class="pal"><span style="--i:0">Tu</span></span>
+      <span class="pal"><span style="--i:1">talento</span></span>
+      <span class="pal"><span style="--i:2">puede</span></span>
+      <span class="pal"><span style="--i:3">convertirse</span></span>
+      <span class="pal"><span style="--i:4">en</span></span>
+      <span class="pal"><span style="--i:5">una</span></span>
+      <em><span class="pal"><span style="--i:6">carrera</span></span>
+      <span class="pal"><span style="--i:7">profesional.</span></span></em>
+    </p>
+    <div class="telon-pie">
+      <p class="telon-gesto">Desliza para entrar</p>
+      <span class="telon-flecha" aria-hidden="true"></span>
+      <!-- tabindex="-1": el telón es aria-hidden, y un botón enfocable dentro de
+           un bloque oculto al lector de pantalla es justo lo que no debe pasar.
+           Con teclado el telón se retira con la primera pulsación, no con este
+           botón, que es para el dedo y el ratón. -->
+      <button class="telon-saltar" type="button" id="telon-saltar" tabindex="-1">Entrar al Campus</button>
     </div>
-    <div class="cifras"><div class="cifra"><b>+270</b><span>creadoras formadas</span></div><div class="cifra"><b>6</b><span>meses de recorrido</span></div><div class="cifra"><b>+10</b><span>materias</span></div><div class="cifra"><b>1:1</b><span>acompañamiento cercano</span></div></div>
   </div>
-</header>
-<div class="cinta" aria-hidden="true"><div class="cinta-pista"><span>Marca personal.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Creación de contenido.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>UGC profesional.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Negocio.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Organización y productividad.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Monetización.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Marca personal.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Creación de contenido.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>UGC profesional.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Negocio.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Organización y productividad.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Monetización.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Marca personal.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Creación de contenido.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>UGC profesional.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Negocio.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Organización y productividad.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Monetización.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Marca personal.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Creación de contenido.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>UGC profesional.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Negocio.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Organización y productividad.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Monetización.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Marca personal.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Creación de contenido.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>UGC profesional.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Negocio.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Organización y productividad.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Monetización.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Marca personal.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Creación de contenido.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>UGC profesional.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Negocio.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Organización y productividad.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Monetización.</span><span class="cinta-sep" aria-hidden="true">✳</span></div></div>
-<section id="carta" class="sec carta tono tono-rosa" data-num="02"><img class="deco deco-fondo" style="right:11%;top:11%;width:clamp(200px,35vw,643px);--giro:0deg;animation-delay:-2.3s;animation-duration:17s" src="assets/stickers/rayo-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="left:-5%;top:55%;width:clamp(200px,28vw,408px);--giro:0deg;animation-delay:-12.2s;animation-duration:15s" src="assets/stickers/estrella-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="wrap">
-    <p class="eyebrow"><span class="dot"></span>Carta de bienvenida · Pierina Alves</p>
-    <h2>Antes de entrar, quiero contarte por qué existe este Campus.</h2>
+</div>
 
-    <div class="sobre">
-      <span class="sobre-solapa" aria-hidden="true"></span>
-      <svg class="sobre-sello" viewBox="0 0 265.42 268.17" aria-hidden="true"><use href="#iso"/></svg>
+<!-- ======================================================== NAVEGACIÓN == -->
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <svg class="nav-logo" viewBox="0 0 863.98 253.56" role="img" aria-label="Crea y Monetiza Campus"><use href="#logo-full"/></svg>
+    <div class="nav-links">
+      <a href="#inicio">Inicio</a>
+      <a href="#campus">El Campus</a>
+      <a href="#recorrido">Tu recorrido</a>
+      <a href="#alumnas">Alumnas</a>
+      <a href="#admisiones">Admisiones</a>
+    </div>
+    <a class="nav-cta" href="#admisiones">Iniciar admisión</a>
+  </div>
+  <span class="nav-avance" id="avance" aria-hidden="true"></span>
+</nav>
 
-      <button class="sobre-btn" type="button" aria-expanded="true" aria-controls="carta-hoja">
-        <span class="sobre-de"><b>De la rectora</b><i>Pierina Alves</i></span>
-        <span class="sobre-para">Para la próxima creadora del Campus</span>
-        <span class="sobre-cta" data-abrir="Abrir la carta"
-              data-cerrar="Cerrar la carta">Cerrar la carta</span>
-      </button>
+<main>
 
-      <div class="carta-hoja" id="carta-hoja">
-        <div class="hoja-interior">
-          <div class="carta-con-foto">
-            <div class="carta-cuerpo"><p>Durante años he creado contenido, trabajado con marcas, probado estrategias, cometido errores y acompañado a cientos de creadoras en su proceso.</p><p>Y había algo que seguía viendo una y otra vez: mujeres con muchísimo talento intentando construir una carrera con información suelta.</p><p>Un curso para aprender edición. Otro para entender redes. Tutoriales sobre UGC. Videos sobre cómo contactar marcas. Plantillas, prompts, consejos… pero ninguna ruta que conectara todo.</p><p>Por eso nació Crea y Monetiza Campus.</p><p>Quería construir un lugar donde una creadora pudiera formarse de manera integral y entender cómo pasar de tener talento y muchas ideas a tener estructura, criterio, herramientas y una dirección profesional.</p><p>En este video quiero contarte de dónde viene el Campus, qué significa para mí y por qué hemos decidido construirlo de esta manera.</p></div>
-            <img class="carta-foto" src="assets/pierina.webp" alt="Pierina Alves, directora de Crea y Monetiza Campus" loading="lazy" decoding="async">
-          </div>
-          <blockquote class="cita nota"><span>Quería crear el lugar que yo habría necesitado cuando empecé.</span><cite>— Pierina Alves</cite></blockquote>
+<!-- ============================================================ 01 · HERO == -->
+<header id="inicio" class="hero">
+  <div class="wrap">
+    <div class="hero-cuerpo">
+      <div class="hero-media entra">
+        <figure class="video-marco" id="cortometraje">
+          <video data-src="assets/hero-cortometraje.mp4" poster="assets/hero-cortometraje.webp"
+                 muted loop playsinline preload="none"
+                 aria-label="Cortometraje de Pierina Alves sobre sus inicios como creadora"></video>
+          <button class="sonido" type="button" aria-pressed="false" aria-label="Activar el sonido">
+            <span class="sonido-icono" aria-hidden="true"></span>
+          </button>
+          <span class="parche hero-parche" aria-hidden="true"><img src="assets/parches/logo-1.webp" alt="" loading="lazy" decoding="async" width="210" height="211"></span>
+          <!-- La frase sale de encima del video y pasa a tarjeta sólida solapada a
+               su esquina: encima del video competía con la imagen y se leía como un
+               subtítulo; como tarjeta se lee como lo que es, Pierina hablando.
+               Va dentro del <figure>, que es el único sitio donde <figcaption> es
+               válido, y sobresale porque el marco ya no recorta. -->
+          <figcaption class="video-nota">
+            <b>Yo también estuve allí.</b>
+            <span>Te aseguro que vale la pena creer en ti.</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="hero-texto">
+        <h1 class="hero-titulo"><span class="tl">Tu talento puede convertirse</span> <span class="tl">en una <em>carrera profesional</em>.</span></h1>
+        <p class="hero-pill entra"><i aria-hidden="true"></i>Admisiones · Crea y Monetiza Campus</p>
+        <p class="hero-entrada entra" style="--d:60ms">Bienvenida a Crea y Monetiza Campus, una formación integral para creadoras de contenido que quieren <em class="marca marca-amar">profesionalizar</em> su talento, <em class="marca marca-rosa">construir</em> una marca con dirección y aprender a generar <em class="marca marca-azul">oportunidades reales</em> dentro del mundo digital.</p>
+        <p class="hero-remate entra" style="--d:120ms">Todo dentro de una misma ruta formativa.</p>
+        <div class="ctas entra" style="--d:180ms">
+          <a class="btn btn-pri" href="#admisiones">Iniciar mi proceso de admisión <span aria-hidden="true">→</span></a>
+          <a class="btn btn-sec" href="#campus">Conocer el Campus <span aria-hidden="true">↓</span></a>
         </div>
       </div>
     </div>
 
-    <div class="trayectoria">
-      <div class="cifras tray-cifras"><div class="cifra"><b>+6</b><span>años creando contenido</span></div><div class="cifra"><b>+30</b><span>marcas nacionales e internacionales de tecnología, belleza, inteligencia artificial y bienestar.</span></div></div>
-      <p class="tray-marcas-t">Entre ellas se encuentran</p>
-      <ul class="marcas"><li><img src="assets/marcas/dji.svg" alt="DJI" data-forma="cuadrado" loading="lazy" decoding="async"></li><li><img src="assets/marcas/capcut.svg" alt="CapCut" data-forma="cuadrado" loading="lazy" decoding="async"></li><li><img src="assets/marcas/flexispot.png" alt="FlexiSpot" data-forma="ancho" loading="lazy" decoding="async"></li><li><img src="assets/marcas/higgsfield.png" alt="Higgsfield" data-forma="cuadrado" loading="lazy" decoding="async"></li><li><img src="assets/marcas/lovart-ai.png" alt="Lovart.ai" data-forma="cuadrado" loading="lazy" decoding="async"></li><li><img src="assets/marcas/pollo-ai.png" alt="Pollo AI" data-forma="cuadrado" loading="lazy" decoding="async"></li><li><span>Musso</span></li><li><img src="assets/marcas/pantene.svg" alt="Pantene" data-forma="ancho" loading="lazy" decoding="async"></li></ul>
+    <ul class="cifras entra" style="--d:240ms">
+      <li class="cifra"><b data-cuenta="270" data-pre="+">+270</b><span>creadoras formadas</span></li>
+      <li class="cifra"><b data-cuenta="6">6</b><span>meses de recorrido</span></li>
+      <li class="cifra"><b data-cuenta="10" data-pre="+">+10</b><span>materias</span></li>
+      <li class="cifra"><b>1:1</b><span>acompañamiento cercano</span></li>
+    </ul>
+  </div>
+</header>
+
+<!-- La cinta lleva las seis materias. Por eso ya no van también como etiquetas
+     dentro del hero: era la misma lista dos veces en la misma pantalla. -->
+<div class="cinta" aria-label="Materias del Campus">
+  <div class="cinta-pista" id="cinta-pista"></div>
+</div>
+
+<!-- =========================================================== 02 · CARTA == -->
+<section class="hoja hoja--blanca" id="carta">
+  <span class="lengueta"><b>02</b> La carta</span>
+  <div class="wrap">
+    <div class="cabecera">
+      <h2 class="entra">Antes de entrar, quiero contarte por qué existe este Campus.</h2>
     </div>
 
-    <div class="ctas"><a class="btn btn-sec" href="#campus">Continuar mi recorrido <span aria-hidden="true">↓</span></a></div></div></section>
-<section id="campus" class="sec campus tono tono-amar" data-num="03"><img class="deco deco-fondo" style="left:-3%;top:9%;width:clamp(200px,38vw,424px);--giro:0deg;animation-delay:-4.0s;animation-duration:20s" src="assets/stickers/estrella-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="right:10%;top:66%;width:clamp(200px,35vw,404px);--giro:0deg;animation-delay:-7.4s;animation-duration:20s" src="assets/stickers/rayo-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="wrap">
-    <p class="eyebrow"><span class="dot"></span>¿Qué es Crea y Monetiza Campus?</p>
-    <h2>Aquí no vienes a ver clases, vienes a formarte.</h2>
-    <p class="lead">Crear contenido puede convertirse en una profesión.</p><p class="lead">Pero para construir una carrera necesitas mucho más que saber grabar un buen video.</p>
-    <ul class="lista necesidades"><li>Entender quién eres como creadora.</li><li>Qué quieres comunicar.</li><li>Cómo desarrollar una marca reconocible.</li><li>Cómo crear contenido con intención.</li><li>Cómo utilizar herramientas que hagan tu trabajo más eficiente.</li><li>Cómo presentar tu talento profesionalmente.</li><li>Cómo trabajar con marcas.</li><li>Cómo negociar.</li><li>Cómo monetizar.</li><li>Y cómo construir oportunidades alrededor de todo eso.</li></ul>
-    <p class="cierre">Eso es lo que conecta Crea y Monetiza Campus.</p><p class="cierre">Una formación integral donde aprendes, implementas, recibes acompañamiento y construyes los activos que necesitarás para desarrollar tu carrera como creadora.</p>
+    <div class="carta-grid">
+      <!-- El sobre de la primera versión, recuperado entero: llega cerrado, la
+           solapa se abre hacia atrás en 3D y la hoja blanca sale de dentro. -->
+      <div class="sobre cerrada sin-anim entra" id="sobre">
+        <span class="sobre-solapa" aria-hidden="true"></span>
+        <svg class="sobre-sello" viewBox="0 0 265.42 268.17" aria-hidden="true"><use href="#iso"/></svg>
+
+        <button class="sobre-btn" type="button" aria-expanded="false" aria-controls="carta-hoja">
+          <span class="sobre-de"><b>De la rectora</b><i>Pierina Alves</i></span>
+          <span class="sobre-para">Para la próxima creadora del Campus</span>
+          <span class="sobre-cta" data-abrir="Abrir la carta" data-cerrar="Cerrar la carta">Abrir la carta</span>
+        </button>
+
+        <div class="carta-hoja" id="carta-hoja">
+          <div class="hoja-interior">
+            <div class="carta-cuerpo">
+              <p>Durante años he creado contenido, trabajado con marcas, probado estrategias, cometido errores y acompañado a cientos de creadoras en su proceso.</p>
+              <p>Y había algo que seguía viendo una y otra vez: mujeres con muchísimo talento intentando construir una carrera con información suelta.</p>
+              <p>Un curso para aprender edición. Otro para entender redes. Tutoriales sobre UGC. Videos sobre cómo contactar marcas. Plantillas, prompts, consejos… pero ninguna ruta que conectara todo.</p>
+              <p>Por eso nació Crea y Monetiza Campus.</p>
+              <p>Quería construir un lugar donde una creadora pudiera formarse de manera integral y entender cómo pasar de tener talento y muchas ideas a tener estructura, criterio, herramientas y una dirección profesional.</p>
+              <p>En este video quiero contarte de dónde viene el Campus, qué significa para mí y por qué hemos decidido construirlo de esta manera.</p>
+              <p class="carta-cta"><a class="btn btn-pri" href="https://www.youtube.com/watch?v=P2U3sFLbljE" target="_blank" rel="noopener">Ver el video <span aria-hidden="true">↗</span></a></p>
+            </div>
+            <blockquote class="carta-cita">
+              <span>Quería crear el lugar que yo habría necesitado cuando empecé.</span>
+              <cite>Pierina Alves</cite>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+
+      <figure class="retrato entra" style="--d:120ms">
+        <img src="assets/fotos/pierina-color.webp" alt="Pierina Alves, directora de Crea y Monetiza Campus" loading="lazy" decoding="async" width="1000" height="1500">
+        <figcaption class="retrato-pie">Pierina Alves, dirección del Campus</figcaption>
+      </figure>
+    </div>
+
+    <div class="trayectoria entra">
+      <ul class="tray-cifras">
+        <li><b>+6</b><span>años creando contenido</span></li>
+        <li><b>+30</b><span>marcas nacionales e internacionales de tecnología, belleza, inteligencia artificial y bienestar.</span></li>
+      </ul>
+      <p class="marcas-t">Entre ellas se encuentran</p>
+      <ul class="marcas">
+        <li><img src="assets/marcas/dji.svg" alt="DJI" loading="lazy" decoding="async" width="24" height="24"></li>
+        <li><img src="assets/marcas/capcut.svg" alt="CapCut" loading="lazy" decoding="async" width="512" height="510"></li>
+        <li><img src="assets/marcas/flexispot.png" alt="FlexiSpot" data-forma="ancho" loading="lazy" decoding="async" width="240" height="56"></li>
+        <li><img src="assets/marcas/higgsfield.png" alt="Higgsfield" data-forma="ancho" loading="lazy" decoding="async" width="192" height="192"></li>
+        <li><img src="assets/marcas/lovart-ai.png" alt="Lovart.ai" data-forma="ancho" loading="lazy" decoding="async" width="48" height="48"></li>
+        <li><img src="assets/marcas/pollo-ai.png" alt="Pollo AI" data-forma="ancho" loading="lazy" decoding="async" width="180" height="180"></li>
+        <li class="texto">Musso</li>
+        <li><img src="assets/marcas/pantene.svg" alt="Pantene" loading="lazy" decoding="async" width="191" height="35"></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================== 03 · CAMPUS == -->
+<section class="hoja hoja--degradado deg-amar" id="campus">
+  <span class="lengueta"><b>03</b> El Campus</span>
+  <div class="wrap">
+    <div class="cabecera">
+      <h2 class="entra">Aquí no vienes a ver clases, vienes a formarte.</h2>
+      <p class="lead entra" style="--d:60ms">Crear contenido puede convertirse en una profesión. Pero para construir una carrera necesitas mucho más que saber grabar un buen video.</p>
+    </div>
+
+    <ul class="lista necesidades entra">
+      <li>Entender quién eres como creadora.</li>
+      <li>Qué quieres comunicar.</li>
+      <li>Cómo desarrollar una marca reconocible.</li>
+      <li>Cómo crear contenido con intención.</li>
+      <li>Cómo utilizar herramientas que hagan tu trabajo más eficiente.</li>
+      <li>Cómo presentar tu talento profesionalmente.</li>
+      <li>Cómo trabajar con marcas.</li>
+      <li>Cómo negociar.</li>
+      <li>Cómo monetizar.</li>
+      <li>Y cómo construir oportunidades alrededor de todo eso.</li>
+    </ul>
+
+    <p class="cierre entra" style="margin-top:28px">Eso es lo que conecta Crea y Monetiza Campus. Una formación integral donde aprendes, implementas, recibes acompañamiento y construyes los activos que necesitarás para desarrollar tu carrera como creadora.</p>
+
     <div class="comparar">
-      <article class="comp comp-antes">
+      <article class="comp comp-antes entra">
         <p class="kicker">Lo habitual</p>
         <h3>Un curso grabado</h3>
-        <ul><li>Compras el acceso y avanzas sola.</li><li>Videos sueltos sin orden ni criterio de avance.</li><li>Nadie revisa lo que haces ni te corrige.</li><li>Terminas con apuntes, no con activos.</li><li>El día que se acaba, se acaba todo.</li></ul>
+        <ul>
+          <li>Compras el acceso y avanzas sola.</li>
+          <li>Videos sueltos sin orden ni criterio de avance.</li>
+          <li>Nadie revisa lo que haces ni te corrige.</li>
+          <li>Terminas con apuntes, no con activos.</li>
+          <li>El día que se acaba, se acaba todo.</li>
+        </ul>
       </article>
-      <article class="comp comp-campus">
+      <article class="comp comp-campus entra" style="--d:120ms">
         <p class="kicker">El Campus</p>
         <h3>Una formación universitaria</h3>
-        <ul><li>Un plan de estudios de 10 materias con orden, ejercicios y entregables.</li><li>Dos etapas: primero te formas, después sales al mercado.</li><li>Mentoras que revisan tu trabajo y te corrigen de verdad.</li><li>Sales con portafolio, pitch, tarifas y sistema de contenido.</li><li>Te gradúas y recibes tu certificado de creadora profesional.</li></ul>
+        <ul>
+          <li>Un plan de estudios de 10 materias con orden, ejercicios y entregables.</li>
+          <li>Dos etapas: primero te formas, después sales al mercado.</li>
+          <li>Mentoras que revisan tu trabajo y te corrigen de verdad.</li>
+          <li>Sales con portafolio, pitch, tarifas y sistema de contenido.</li>
+          <li>Te gradúas y recibes tu certificado de creadora profesional.</li>
+        </ul>
       </article>
-    </div></div></section>
-<section id="perfil" class="sec perfil tono tono-rosa" data-num="04"><img class="deco deco-fondo" style="right:11%;top:-1%;width:clamp(200px,35vw,394px);--giro:0deg;animation-delay:-5.5s;animation-duration:23s" src="assets/stickers/estrella-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="left:-4%;top:62%;width:clamp(200px,30vw,659px);--giro:0deg;animation-delay:-12.4s;animation-duration:21s" src="assets/stickers/rayo-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="wrap">
-    <p class="eyebrow"><span class="dot"></span>En qué te estás formando</p>
-    <h2>No estás aquí para convertirte en «una chica que hace videos». Estás aquí para convertirte en una creadora profesional.</h2>
-    <div class="grid grid-3"><article class="card eje"><span class="tecla" aria-hidden="true"><img src="assets/stickers/tecla-vino.webp" alt="" loading="lazy" decoding="async"><i>★</i></span><h3>Identidad</h3><p>Construyes una marca personal con una identidad clara, coherente y reconocible.</p></article><article class="card eje"><span class="tecla" aria-hidden="true"><img src="assets/stickers/tecla-rosa.webp" alt="" loading="lazy" decoding="async"><i>⚡</i></span><h3>Estrategia</h3><p>Aprendes a tomar decisiones detrás de tu contenido y dejar de publicar sin dirección.</p></article><article class="card eje"><span class="tecla" aria-hidden="true"><img src="assets/stickers/tecla-azul.webp" alt="" loading="lazy" decoding="async"><i>★</i></span><h3>Creación</h3><p>Desarrollas criterio para conceptualizar, grabar, comunicar y producir piezas de contenido profesionales.</p></article><article class="card eje"><span class="tecla" aria-hidden="true"><img src="assets/stickers/tecla-amar.webp" alt="" loading="lazy" decoding="async"><i>⚡</i></span><h3>Posicionamiento</h3><p>Trabajas una presencia digital capaz de comunicar quién eres, qué haces y qué valor puedes aportar.</p></article><article class="card eje"><span class="tecla" aria-hidden="true"><img src="assets/stickers/tecla-vino.webp" alt="" loading="lazy" decoding="async"><i>★</i></span><h3>Negocio</h3><p>Aprendes a presentar tus servicios, estructurar propuestas, negociar y relacionarte profesionalmente con marcas.</p></article><article class="card eje"><span class="tecla" aria-hidden="true"><img src="assets/stickers/tecla-rosa.webp" alt="" loading="lazy" decoding="async"><i>⚡</i></span><h3>Monetización</h3><p>Exploras diferentes caminos para transformar tus habilidades creativas y digitales en oportunidades.</p></article></div></div></section>
-<div class="franja">
-  <svg class="onda onda-arriba" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true" fill="#FBF7F4">
-    <path d="M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 155-32 265-40v62z"/>
-  </svg>
-  <div class="wrap">
-    <p>Aquí no trabajamos únicamente tu contenido. Trabajamos la creadora profesional que hay detrás de él.</p>
-    <img class="franja-sticker" src="assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy">
+    </div>
   </div>
-  <svg class="onda onda-abajo" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true" fill="#FBF7F4">
-    <path d="M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 155-32 265-40v62z"/>
-  </svg>
-</div>
-<section id="recorrido" class="sec recorrido tono tono-azul" data-num="05"><img class="deco deco-fondo" style="right:-7%;top:15%;width:clamp(200px,31vw,568px);--giro:0deg;animation-delay:-12.0s;animation-duration:22s" src="assets/stickers/estrella-azul.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="left:4%;top:71%;width:clamp(200px,40vw,414px);--giro:0deg;animation-delay:-2.3s;animation-duration:19s" src="assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="wrap">
-    <p class="eyebrow"><span class="dot"></span>Tu plan académico</p>
-    <h2>6 meses · 2 etapas</h2>
-    <p class="lead">Tres meses para construir tus bases.</p><p class="lead">Tres meses para llevarlas al mercado con acompañamiento.</p>
-    <div class="grid grid-2"><article class="card etapa" data-x="01">
-      <p class="etapa-n">Etapa 01</p>
-      <p class="etapa-meses">Meses 1–3 · Formación</p>
-      <h3>Construyes tus bases</h3>
-      <p>Comienzas con una ruta clara para entender qué necesitas trabajar, qué debes priorizar y cómo avanzar dentro del Campus.</p>
-      <p class="cierre">Una marca personal que trasciende construye una base sólida.</p>
-    </article><article class="card etapa" data-x="02">
-      <p class="etapa-n">Etapa 02</p>
-      <p class="etapa-meses">Meses 4–6 · Implementación profesional</p>
-      <h3>Sales al mercado</h3>
-      <p>En esta etapa empiezas a moverte como creadora profesional: mostrar tu trabajo, conectar con marcas, detectar oportunidades y comenzar a posicionarte dentro del mercado.</p>
-      <p class="cierre">Y durante todo este proceso seguirás contando con acompañamiento para revisar, corregir y optimizar lo que estás implementando.</p>
-    </article></div></div></section>
-<section id="plan" class="sec plan tono tono-amar" data-num="06"><img class="deco deco-fondo" style="right:-3%;top:17%;width:clamp(200px,40vw,470px);--giro:0deg;animation-delay:-8.9s;animation-duration:21s" src="assets/stickers/rayo-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="left:4%;top:59%;width:clamp(200px,41vw,417px);--giro:0deg;animation-delay:-4.1s;animation-duration:18s" src="assets/stickers/estrella-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="wrap">
-    <p class="eyebrow"><span class="dot"></span>Dentro del Campus</p>
-    <h2>Tu plan de estudios.</h2>
-    <p class="lead">Cada alumna accede a una formación estructurada por materias, clases, recursos y ejercicios diseñados para profesionalizar cada área de su carrera como creadora.</p>
-    <p class="plan-exclusivo">El plan de estudios es exclusivo para alumnas matriculadas en Crea y Monetiza Campus.</p>
-    <div class="grid grid-4"><article class="card mini"><h3>Formación estructurada</h3><p>Materias organizadas para que sepas qué trabajar y en qué orden.</p></article><article class="card mini"><h3>Clases + recursos</h3><p>Contenido formativo acompañado de herramientas, ejemplos y materiales de aplicación.</p></article><article class="card mini"><h3>Ejercicios y entregables</h3><p>Cada bloque incluye trabajo práctico para llevar lo aprendido a tu propia realidad.</p></article><article class="card mini"><h3>Contenido exclusivo del Campus</h3><p>El pensum completo se desbloquea una vez formalizas tu matrícula.</p></article></div>
-    <p class="lead-min plan-invita">Conoce el proceso de admisión y da el primer paso para acceder a tu formación completa dentro del Campus.</p>
-    <div class="ctas"><a class="btn btn-pri" href="https://calendly.com/encuentronl/45min" target="_blank" rel="noopener">Desbloquear mi plan académico <span aria-hidden="true">→</span></a></div>
-    </div></section>
-<section class="sec evaluacion-franja tono tono-azul" data-num="07"><div class="wrap">
-      <p class="eyebrow"><span class="dot"></span>Aquí también se evalúa</p>
-      <h2 class="ev-titulo">No queremos que termines el Campus sabiendo más. Queremos que termines sabiendo hacer más.</h2>
-      <p class="lead">Por eso tu progreso no se mide únicamente por las clases que has visto.</p><p class="lead">Durante tu recorrido tendrás diferentes formas de poner en práctica lo aprendido.</p>
-      <ol class="linea"><li class="hito" style="--i:1"><span class="hito-nodo" aria-hidden="true">01</span><div class="hito-caja"><b>Ejercicios</b><span>Actividades diseñadas para aterrizar cada concepto a tu realidad.</span></div></li><li class="hito" style="--i:2"><span class="hito-nodo" aria-hidden="true">02</span><div class="hito-caja"><b>Entregables</b><span>Piezas concretas que tendrás que desarrollar durante tu formación.</span></div></li><li class="hito" style="--i:3"><span class="hito-nodo" aria-hidden="true">03</span><div class="hito-caja"><b>Revisiones</b><span>Espacios para recibir feedback y detectar qué necesitas mejorar.</span></div></li><li class="hito" style="--i:4"><span class="hito-nodo" aria-hidden="true">04</span><div class="hito-caja"><b>Checkpoints</b><span>Momentos específicos para revisar tu progreso y ajustar tu ruta.</span></div></li><li class="hito" style="--i:5"><span class="hito-nodo" aria-hidden="true">05</span><div class="hito-caja"><b>Implementación</b><span>Lo aprendido se aplica directamente a tu contenido, tu marca y tus activos profesionales.</span></div></li><li class="hito" style="--i:6"><span class="hito-nodo" aria-hidden="true">06</span><div class="hito-caja"><b>Proyecto final</b><span>El cierre de tu recorrido dentro del Campus.</span></div></li></ol>
-      <p class="cierre destacado"><span class="lapiz">Aquí no vienes a coleccionar clases terminadas. Vienes a construir evidencia de tu evolución.</span></p></div></section>
-<section id="tesis" class="sec tesis" data-num="08"><img class="deco deco-fondo" style="right:2%;top:11%;width:clamp(200px,41vw,406px);--giro:0deg;animation-delay:-4.9s;animation-duration:18s" src="assets/stickers/rayo-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="left:11%;top:52%;width:clamp(200px,37vw,367px);--giro:0deg;animation-delay:-8.1s;animation-duration:15s" src="assets/stickers/estrella-azul.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><svg class="onda onda-arriba" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 155-32 265-40v62z"/></svg><div class="wrap">
-    <div class="sello" aria-hidden="true">
-      <svg viewBox="0 0 200 200">
-        <defs><path id="aro" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
-        <text class="sello-txt"><textPath href="#aro" startOffset="0%">
-          Proyecto final · La Tesis Creativa · Proyecto final · La Tesis Creativa ·
-        </textPath></text>
-      </svg>
-      <img class="sello-estrella" src="assets/stickers/estrella-amar.webp" alt="">
-    </div>
-    <p class="eyebrow"><span class="dot"></span>Proyecto final</p>
-    <h2>Toda creadora del Campus termina con un proyecto final.</h2>
-    <p class="lead-min">Lo llamamos:</p>
-    <p class="tesis-nombre" data-texto="La Tesis Creativa">La Tesis Creativa</p>
-    <div class="tesis-cuerpo"><p>Durante tus meses dentro del Campus irás construyendo diferentes partes de tu carrera profesional.</p><p>Al finalizar tendrás que conectarlas dentro de un proyecto que represente lo que has desarrollado.</p></div>
-    <p class="lead-min tesis-lead">Tu proyecto podrá integrar:</p>
-    <ul class="tesis-piezas"><li style="--n:1"><span>01</span>Tu identidad de marca</li><li style="--n:2"><span>02</span>Tu posicionamiento</li><li style="--n:3"><span>03</span>Tu estrategia de contenido</li><li style="--n:4"><span>04</span>Tus piezas creativas</li><li style="--n:5"><span>05</span>Tu portafolio</li><li style="--n:6"><span>06</span>Tu propuesta profesional</li><li style="--n:7"><span>07</span>Tu estrategia de monetización</li><li style="--n:8"><span>08</span>Tu plan de crecimiento</li></ul>
-    <p class="cierre">No puedes completar tu recorrido únicamente viendo clases.</p><p class="cierre">Queremos que cuando llegues al final puedas mirar todo lo que construiste durante estos meses y ver, de forma tangible, tu evolución como creadora.</p></div><svg class="onda onda-abajo" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 90V44c110-30 210 14 320 22s205-36 315-38 190 42 300 40 155-32 265-40v62z"/></svg></section>
-<section id="experiencia" class="sec vivo tono tono-rosa" data-num="09"><img class="deco deco-fondo" style="right:-3%;top:11%;width:clamp(200px,44vw,434px);--giro:0deg;animation-delay:-9.6s;animation-duration:18s" src="assets/stickers/estrella-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="left:3%;top:58%;width:clamp(200px,35vw,648px);--giro:0deg;animation-delay:-0.5s;animation-duration:18s" src="assets/stickers/rayo-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="wrap">
-    <p class="eyebrow"><span class="dot"></span>El Campus también pasa en directo</p>
-    <h2>Hay cosas que necesitan conversación, no otra clase grabada.</h2>
-    <p class="lead">Durante tu recorrido tendrás acceso a diferentes espacios en vivo.</p>
-    <div class="grid grid-4"><article class="card mini"><h3>Masterclasses</h3><p>Sesiones especiales sobre temas estratégicos, herramientas, tendencias y oportunidades para creadoras.</p></article><article class="card mini"><h3>Q&amp;A</h3><p>Espacios para llevar preguntas concretas y resolverlas junto al equipo.</p></article><article class="card mini"><h3>Revisiones</h3><p>Sesiones destinadas a analizar casos, procesos y aplicaciones reales.</p></article><article class="card mini"><h3>Encuentros de comunidad</h3><p>Momentos para conectar con otras alumnas y vivir el Campus más allá de la plataforma.</p></article></div></div></section>
-<section id="mercado" class="sec mercado tono tono-amar" data-num="12"><img class="deco deco-fondo" style="right:6%;top:5%;width:clamp(200px,42vw,638px);--giro:0deg;animation-delay:-13.0s;animation-duration:18s" src="assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="left:9%;top:60%;width:clamp(200px,32vw,588px);--giro:0deg;animation-delay:-6.2s;animation-duration:16s" src="assets/stickers/estrella-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="wrap">
-    <p class="eyebrow"><span class="dot"></span>Experiencia profesional</p>
-    <p class="lead">Aprender a crear contenido es solo una parte.</p><p class="lead">También necesitas aprender qué hacer con esas habilidades cuando llega el momento de presentarte profesionalmente.</p>
-    <p class="lead-min">Durante tu recorrido trabajarás en:</p>
-    <ul class="activos"><li style="--n:1"><i class="tic" aria-hidden="true">✓</i><span>Tu portafolio</span></li><li style="--n:2"><i class="tic" aria-hidden="true">✓</i><span>Tu propuesta</span></li><li style="--n:3"><i class="tic" aria-hidden="true">✓</i><span>Tu pitch</span></li><li style="--n:4"><i class="tic" aria-hidden="true">✓</i><span>Tu comunicación con marcas</span></li><li style="--n:5"><i class="tic" aria-hidden="true">✓</i><span>Tu estructura de precios</span></li><li style="--n:6"><i class="tic" aria-hidden="true">✓</i><span>Tu negociación</span></li><li style="--n:7"><i class="tic" aria-hidden="true">✓</i><span>Tu seguimiento</span></li><li style="--n:8"><i class="tic" aria-hidden="true">✓</i><span>Tu presencia profesional</span></li><li style="--n:9"><i class="tic" aria-hidden="true">✓</i><span>Tu estrategia para encontrar oportunidades</span></li></ul>
+</section>
 
-    <div class="sub">
-      <h3>Saber crear es importante. Saber dónde buscar también.</h3>
-      <p class="lead">Dentro del Campus tendrás acceso a recursos diseñados para acercarte al mercado profesional.</p>
-      <ul class="recursos"><li style="--n:1"><i aria-hidden="true">🏷️</i><span>Marcas</span></li><li style="--n:2"><i aria-hidden="true">🏢</i><span>Agencias</span></li><li style="--n:3"><i aria-hidden="true">📱</i><span>Plataformas UGC</span></li><li style="--n:4"><i aria-hidden="true">💸</i><span>Oportunidades</span></li><li style="--n:5"><i aria-hidden="true">🤝</i><span>Referencias</span></li><li style="--n:6"><i aria-hidden="true">🔎</i><span>Recursos de prospección</span></li></ul>
-      <p class="cierre">Información que te ayude a entender dónde buscar y cómo presentarte.</p><p class="cierre">Porque una formación para creadoras no estaría completa si después de aprender no supieras cómo empezar a moverte profesionalmente.</p>
-    </div></div></section>
-<section id="graduacion" class="sec graduacion tono tono-azul" data-num="16"><img class="deco deco-fondo" style="right:4%;top:8%;width:clamp(200px,41vw,616px);--giro:0deg;animation-delay:-10.8s;animation-duration:15s" src="assets/stickers/estrella-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="left:-7%;top:64%;width:clamp(200px,39vw,562px);--giro:0deg;animation-delay:-8.6s;animation-duration:19s" src="assets/stickers/rayo-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="wrap">
+<!-- ================================== 04 · ALUMNAS · TESTIMONIOS EN VIDEO ==
+     PENDIENTE DE CONTENIDO. Es el primero de los cuatro bloques de alumnas:
+     llega justo después de la comparación, que es donde alguien se pregunta
+     por primera vez si esto funciona de verdad. Formato vertical 9:16, el
+     mismo del cortometraje del hero, para que los videos que ya graban las
+     alumnas entren sin recortar. -->
+<section class="hoja hoja--vino voces" id="alumnas">
+  <span class="lengueta"><b>04</b> En video</span>
+  <div class="wrap">
+    <div class="cabecera">
+      <h2 class="entra">Las alumnas lo cuentan mejor.</h2>
+          </div>
+    <div class="videos-alumnas" id="videos">
+      <!-- Andrea y el tercero llegan con un clip casi cuadrado incrustado en un
+           lienzo 9:16 y franjas negras cocidas: se recorta el negro al convertir
+           y aquí se muestran enteros sobre su propio cartel difuminado, que es
+           lo que rellena el marco sin quitarles un píxel. -->
+      <figure class="video-alumna entra">
+        <img class="video-fondo" src="assets/alumnas/andrea-lara.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="720" height="614">
+        <video src="assets/alumnas/andrea-lara.mp4" poster="assets/alumnas/andrea-lara.webp"
+               controls playsinline preload="none" width="720" height="614"
+               aria-label="Andrea Lara cuenta su paso por el Campus"></video>
+      </figure>
+      <figure class="video-alumna entra">
+        <img class="video-fondo" src="assets/alumnas/tercero.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="720" height="814">
+        <video src="assets/alumnas/tercero.mp4" poster="assets/alumnas/tercero.webp"
+               controls playsinline preload="none" width="720" height="814"
+               aria-label="Una alumna cuenta su paso por el Campus"></video>
+      </figure>
+      <figure class="video-alumna entra">
+        <img class="video-fondo" src="assets/alumnas/la-senal.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="720" height="1280">
+        <video src="assets/alumnas/la-senal.mp4" poster="assets/alumnas/la-senal.webp"
+               controls playsinline preload="none" width="720" height="1280"
+               aria-label="La señal que me hizo entenderlo todo"></video>
+      </figure>
+    </div>
+    <div class="carril-pista carril-pista--siempre" data-para="videos" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ====================================================== 05 · TU PERFIL == -->
+<section class="hoja hoja--degradado deg-rosa" id="formacion">
+  <span class="lengueta"><b>05</b> Tu perfil</span>
+  <div class="wrap">
+    <div class="cabecera">
+      <h2 class="entra h2-largo">No estás aquí para convertirte en <em class="tachado">una chica que hace videos</em>. Estás aquí para convertirte en una creadora profesional.</h2>
+    </div>
+
+    <div class="rejilla rejilla-3 carril" id="ejes">
+      <article class="eje entra"><span class="tecla" aria-hidden="true"><img src="assets/parches/tecla-2.webp" alt="" loading="lazy" decoding="async" width="120" height="103"><i>★</i></span><h3>Identidad</h3><p>Construyes una marca personal con una identidad clara, coherente y reconocible.</p></article>
+      <article class="eje entra"><span class="tecla" aria-hidden="true"><img src="assets/parches/tecla-3.webp" alt="" loading="lazy" decoding="async" width="120" height="103"><i>⚡</i></span><h3>Estrategia</h3><p>Aprendes a tomar decisiones detrás de tu contenido y dejar de publicar sin dirección.</p></article>
+      <article class="eje entra"><span class="tecla" aria-hidden="true"><img src="assets/parches/tecla-1.webp" alt="" loading="lazy" decoding="async" width="120" height="103"><i>★</i></span><h3>Creación</h3><p>Desarrollas criterio para conceptualizar, grabar, comunicar y producir piezas de contenido profesionales.</p></article>
+      <article class="eje entra"><span class="tecla" aria-hidden="true"><img src="assets/parches/tecla-4.webp" alt="" loading="lazy" decoding="async" width="120" height="103"><i>⚡</i></span><h3>Posicionamiento</h3><p>Trabajas una presencia digital capaz de comunicar quién eres, qué haces y qué valor puedes aportar.</p></article>
+      <article class="eje entra"><span class="tecla" aria-hidden="true"><img src="assets/parches/tecla-2.webp" alt="" loading="lazy" decoding="async" width="120" height="103"><i>★</i></span><h3>Negocio</h3><p>Aprendes a presentar tus servicios, estructurar propuestas, negociar y relacionarte profesionalmente con marcas.</p></article>
+      <article class="eje entra"><span class="tecla" aria-hidden="true"><img src="assets/parches/tecla-3.webp" alt="" loading="lazy" decoding="async" width="120" height="103"><i>⚡</i></span><h3>Monetización</h3><p>Exploras diferentes caminos para transformar tus habilidades creativas y digitales en oportunidades.</p></article>
+    </div>
+    <div class="carril-pista" data-para="ejes" aria-hidden="true"></div>
+
+    <!-- A lo ancho de las tres tarjetas: es el remate de la sección, no una
+         cuarta tarjeta. -->
+    <p class="franja-cierre entra">
+      Aquí no trabajamos únicamente tu contenido. Trabajamos la creadora profesional que hay detrás de él.
+      <span class="parche franja-parche" aria-hidden="true"><img src="assets/parches/estrella-2.webp" alt="" loading="lazy" decoding="async" width="180" height="171"></span>
+    </p>
+  </div>
+</section>
+
+<!-- ======================================================== 06 · RECORRIDO == -->
+<section class="hoja hoja--blanca" id="recorrido">
+  <span class="lengueta"><b>06</b> Tu recorrido</span>
+  <div class="wrap">
+    <div class="cabecera">
+      <h2 class="entra">6 meses · 2 etapas</h2>
+      <p class="lead entra" style="--d:60ms">Tres meses para construir tus bases. Tres meses para llevarlas al mercado con acompañamiento.</p>
+    </div>
+
+    <div class="etapas">
+      <!-- El detalle de cada etapa llega plegado: en la primera lectura pesaban
+           diecisiete viñetas entre las dos y tapaban lo único que hay que
+           entender de un vistazo, que son dos momentos distintos. -->
+      <article class="etapa etapa--1 entra">
+        <p class="etapa-n">Etapa 01</p>
+        <p class="etapa-meses">Meses 1–3 · Formación</p>
+        <h3>Construyes tus bases</h3>
+        <p>Comienzas con una ruta clara para entender qué necesitas trabajar, qué debes priorizar y cómo avanzar dentro del Campus.</p>
+        <details class="etapa-detalle">
+          <summary>Ver el detalle de la etapa</summary>
+          <p class="etapa-lead">Durante esta etapa:</p>
+          <ol class="etapa-pasos">
+            <li>Realizas tu onboarding y diagnóstico inicial.</li>
+            <li>Defines tus objetivos y tu ruta de trabajo.</li>
+            <li>Comienzas tu formación a través del plan de estudios.</li>
+            <li>Desarrollas ejercicios y entregables.</li>
+            <li>Implementas lo aprendido en tu propio proyecto.</li>
+            <li>Recibes acompañamiento y feedback.</li>
+            <li>Evalúas tu progreso antes de pasar a la siguiente etapa.</li>
+          </ol>
+        </details>
+        <p class="etapa-cierre">Una marca personal que trasciende construye una base sólida.</p>
+      </article>
+
+      <article class="etapa etapa--2 entra">
+        <p class="etapa-n">Etapa 02</p>
+        <p class="etapa-meses">Meses 4–6 · Implementación profesional</p>
+        <h3>Sales al mercado</h3>
+        <p>En esta etapa empiezas a moverte como creadora profesional: mostrar tu trabajo, conectar con marcas, detectar oportunidades y comenzar a posicionarte dentro del mercado.</p>
+        <details class="etapa-detalle">
+          <summary>Ver el detalle de la etapa</summary>
+          <p class="etapa-lead">Trabajarás sobre:</p>
+          <ul class="lista">
+            <li>Tu posicionamiento.</li><li>Tu contenido.</li><li>Tu portafolio.</li>
+            <li>Tu propuesta profesional.</li><li>Tu pitch.</li><li>Tus conversaciones con marcas.</li>
+            <li>Tus oportunidades.</li><li>Tus negociaciones.</li>
+            <li>Tu estrategia de monetización.</li><li>Tu crecimiento.</li>
+          </ul>
+        </details>
+        <p class="etapa-cierre">Y durante todo este proceso seguirás contando con acompañamiento para revisar, corregir y optimizar lo que estás implementando.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 07 · PLAN DE ESTUDIOS + ENTREGABLES ==
+     Eran dos secciones seguidas contando lo mismo —qué estudias y cómo se
+     comprueba que lo aplicas—. Aquí van como un solo asunto en dos tiempos. -->
+<section class="hoja hoja--degradado deg-azul" id="plan">
+  <span class="lengueta"><b>07</b> Plan de estudios</span>
+  <div class="wrap">
+    <div class="cabecera">
+      <h2 class="entra">Tu plan de estudios.</h2>
+      <p class="lead entra" style="--d:60ms">Cada alumna accede a una formación estructurada por materias, clases, recursos y ejercicios diseñados para profesionalizar cada área de su carrera como creadora.</p>
+      <p class="plan-sello entra" style="--d:120ms">El plan de estudios es exclusivo para alumnas matriculadas</p>
+    </div>
+
+    <div class="rejilla rejilla-4 carril" id="plan-bloques">
+      <article class="tarjeta entra"><img class="tarjeta-rayo" src="assets/stickers/rayo-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="140" height="239"><h3>Formación estructurada</h3><p>Materias organizadas para que sepas qué trabajar y en qué orden.</p></article>
+      <article class="tarjeta entra"><img class="tarjeta-rayo" src="assets/stickers/rayo-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="140" height="239"><h3>Clases + recursos</h3><p>Contenido formativo acompañado de herramientas, ejemplos y materiales de aplicación.</p></article>
+      <article class="tarjeta entra"><img class="tarjeta-rayo" src="assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="140" height="239"><h3>Ejercicios y entregables</h3><p>Cada bloque incluye trabajo práctico para llevar lo aprendido a tu propia realidad.</p></article>
+      <article class="tarjeta entra"><img class="tarjeta-rayo" src="assets/stickers/rayo-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="140" height="239"><h3>Contenido exclusivo del Campus</h3><p>El pensum completo se desbloquea una vez formalizas tu matrícula.</p></article>
+    </div>
+    <div class="carril-pista" data-para="plan-bloques" aria-hidden="true"></div>
+
+    <p class="lead-min entra" style="margin-top:32px">Conoce el proceso de admisión y da el primer paso para acceder a tu formación completa dentro del Campus.</p>
+    <div class="ctas entra">
+      <a class="btn btn-pri" href="https://calendly.com/encuentronl/45min" target="_blank" rel="noopener">Desbloquear mi plan académico <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="evaluacion">
+      <div class="cabecera">
+        <h2 class="entra h2-largo">No queremos que termines el Campus sabiendo más. Queremos que termines sabiendo hacer más.</h2>
+        <p class="lead entra" style="--d:60ms">Por eso tu progreso no se mide únicamente por las clases que has visto. Durante tu recorrido tendrás diferentes formas de poner en práctica lo aprendido.</p>
+      </div>
+
+      <!-- El raíl se traza de izquierda a derecha al entrar la sección y los
+           nodos aparecen detrás, escalonados: el gesto cuenta el orden antes de
+           que se lea una sola palabra. En móvil, carril horizontal. -->
+      <ol class="linea carril" id="entregables">
+        <li class="hito entra" style="--i:1"><span class="hito-nodo" aria-hidden="true">01</span><div class="hito-caja"><b>Ejercicios</b><span>Actividades diseñadas para aterrizar cada concepto a tu realidad.</span></div></li>
+        <li class="hito entra" style="--i:2"><span class="hito-nodo" aria-hidden="true">02</span><div class="hito-caja"><b>Entregables</b><span>Piezas concretas que tendrás que desarrollar durante tu formación.</span></div></li>
+        <li class="hito entra" style="--i:3"><span class="hito-nodo" aria-hidden="true">03</span><div class="hito-caja"><b>Revisiones</b><span>Espacios para recibir feedback y detectar qué necesitas mejorar.</span></div></li>
+        <li class="hito entra" style="--i:4"><span class="hito-nodo" aria-hidden="true">04</span><div class="hito-caja"><b>Checkpoints</b><span>Momentos específicos para revisar tu progreso y ajustar tu ruta.</span></div></li>
+        <li class="hito entra" style="--i:5"><span class="hito-nodo" aria-hidden="true">05</span><div class="hito-caja"><b>Implementación</b><span>Lo aprendido se aplica directamente a tu contenido, tu marca y tus activos profesionales.</span></div></li>
+        <li class="hito entra" style="--i:6"><span class="hito-nodo" aria-hidden="true">06</span><div class="hito-caja"><b>Proyecto final</b><span>El cierre de tu recorrido dentro del Campus.</span></div></li>
+      </ol>
+      <div class="carril-pista" data-para="entregables" aria-hidden="true"></div>
+
+      <p class="destacado entra"><span class="lapiz">Aquí no vienes a coleccionar clases terminadas. Vienes a construir evidencia de tu evolución.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 08 · TESIS == -->
+<section class="hoja hoja--vino" id="tesis">
+  <span class="lengueta"><b>08</b> La Tesis</span>
+  <div class="wrap">
+    <span class="parche tesis-parche" aria-hidden="true"><img src="assets/parches/estrella-1.webp" alt="" loading="lazy" decoding="async" width="210" height="200"></span>
+    <div class="cabecera">
+      <h2 class="entra">Toda creadora del Campus termina con un proyecto final.</h2>
+      <p class="lead-min entra">Lo llamamos:</p>
+      <p class="tesis-nombre entra" data-texto="La Tesis Creativa">La Tesis Creativa</p>
+      <p class="lead entra">Durante tus meses dentro del Campus irás construyendo diferentes partes de tu carrera profesional. Al finalizar tendrás que conectarlas dentro de un proyecto que represente lo que has desarrollado.</p>
+    </div>
+
+    <p class="lead-min entra" style="text-align:center">Tu proyecto podrá integrar:</p>
+    <ul class="tesis-piezas">
+      <li class="entra" style="--n:1"><span>01</span>Tu identidad de marca</li>
+      <li class="entra" style="--n:2"><span>02</span>Tu posicionamiento</li>
+      <li class="entra" style="--n:3"><span>03</span>Tu estrategia de contenido</li>
+      <li class="entra" style="--n:4"><span>04</span>Tus piezas creativas</li>
+      <li class="entra" style="--n:5"><span>05</span>Tu portafolio</li>
+      <li class="entra" style="--n:6"><span>06</span>Tu propuesta profesional</li>
+      <li class="entra" style="--n:7"><span>07</span>Tu estrategia de monetización</li>
+      <li class="entra" style="--n:8"><span>08</span>Tu plan de crecimiento</li>
+    </ul>
+
+    <p class="cierre entra tesis-cierre">No puedes completar tu recorrido únicamente viendo clases. Queremos que cuando llegues al final puedas mirar todo lo que construiste durante estos meses y ver, de forma tangible, tu evolución como creadora.</p>
+  </div>
+</section>
+
+<!-- ====================================== 09 · ALUMNAS · CASOS REALES ==
+     Una ficha por alumna, con su historia, sus capturas y su frase. Todo junto
+     en una sola sección: con cuatro alumnas, repartir sus mensajes en secciones
+     distintas repetiría a las mismas personas tres veces.
+
+     CAPTURAS · lo que se tapa y por qué está en herramientas/capturas.py. Regla
+     del cliente: ninguna cifra económica en la página, tampoco dentro de una
+     imagen. Fuera van también teléfonos, correos y perfiles de terceros. -->
+<section class="hoja hoja--amar voces" id="casos">
+  <span class="lengueta"><b>09</b> Casos</span>
+  <div class="wrap">
+    <div class="cabecera">
+      <h2 class="entra">Antes de ser un resultado, todas fueron una creadora intentándolo.</h2>
+      <p class="lead">Aquí queremos que conozcas algunos de los procesos que han formado parte de Crea y Monetiza.</p>
+    </div>
+    <div class="fichas">
+      <article class="ficha entra" id="caso-alfrelina">
+        <div class="ficha-cab">
+          <div class="ficha-foto"><img src="assets/fotos/alfrelina.webp" alt="Alfrelina Deluna" loading="lazy" decoding="async" width="560" height="560"></div>
+          <div class="ficha-quien">
+            <h3>Alfrelina Deluna</h3>
+            <p class="ficha-lugar">Nueva York, EE. UU.</p>
+          </div>
+        </div>
+        <div class="ficha-cuerpo">
+          <dl>
+            <div><dt>Su punto de partida</dt><dd>Fotógrafa con años de experiencia y buen ojo, pero <b>creaba por inspiración, sin sistema</b> y sin saber negociar con una marca.</dd></div>
+            <div><dt>Qué trabajó</dt><dd>Organizó su proceso completo, de la idea al guion, la grabación, la edición y la publicación, y aprendió a <b>construir piezas con gancho, desarrollo y llamada a la acción</b>.</dd></div>
+            <div><dt>Su resultado</dt><dd>Negoció con Tymo hasta <b>cerrar un contrato de tres videos por más del triple de la oferta inicial</b>, más colaboraciones con Petlabco y Fiera, esta última documentada como una lección real sobre negociar derechos de uso.</dd></div>
+          </dl>
+          <div class="ficha-pruebas">
+            <div class="ficha-capturas carril" id="cap-alfrelina">
+              <figure class="captura"><button class="captura-abrir" type="button"><img src="assets/capturas/alfrelina-1.webp" alt="Tymo Beauty la busca para una colaboración" loading="lazy" decoding="async" width="650" height="1128"><span class="prueba-lupa" aria-hidden="true"></span></button><figcaption>Tymo Beauty la busca</figcaption></figure>
+              <figure class="captura"><button class="captura-abrir" type="button"><img src="assets/capturas/alfrelina-2.webp" alt="Alfrelina, al terminar el programa" loading="lazy" decoding="async" width="650" height="1197"><span class="prueba-lupa" aria-hidden="true"></span></button><figcaption>Al terminar el programa</figcaption></figure>
+            </div>
+            <div class="carril-pista" data-para="cap-alfrelina" aria-hidden="true"></div>
+          </div>
+        </div>
+        <blockquote class="ficha-frase"><p>Me hicieron una primera oferta por video. Pedí más, y cerré un contrato por más del triple, defendiendo mi valor hasta el final.</p></blockquote>
+      </article>
+      <article class="ficha entra" id="caso-carolina">
+        <div class="ficha-cab">
+          <div class="ficha-foto"><img src="assets/fotos/carolina.webp" alt="Carolina Campos" loading="lazy" decoding="async" width="560" height="560"></div>
+          <div class="ficha-quien">
+            <h3>Carolina Campos</h3>
+            <p class="ficha-lugar">España</p>
+          </div>
+        </div>
+        <div class="ficha-cuerpo">
+          <dl>
+            <div><dt>Su punto de partida</dt><dd>15 años como higienista bucal y buen ojo estético, pero publicaba sin intención ni estrategia. <b>«Me saboteo», «no me veo bien»</b>, se repetía entonces.</dd></div>
+            <div><dt>Qué trabajó</dt><dd>Corrigió iluminación, encuadre y ritmo de edición, y aprendió a <b>presentarse ante una marca con seguridad</b>, repitiendo cada toma las veces que hiciera falta.</dd></div>
+            <div><dt>Su resultado</dt><dd><b>3.er lugar en el Reto UGC del Campus</b> y colaboraciones cerradas con Mes Que Grans, Suvi Spa y Decathlon, además de un evento con Nespresso y el interés de marcas como Colgate y NYX.</dd></div>
+          </dl>
+          <div class="ficha-pruebas">
+            <div class="ficha-capturas carril" id="cap-carolina">
+              <figure class="captura"><button class="captura-abrir" type="button"><img src="assets/capturas/carolina-1.webp" alt="Su primera colaboración pagada" loading="lazy" decoding="async" width="650" height="293"><span class="prueba-lupa" aria-hidden="true"></span></button><figcaption>Su primera colaboración pagada</figcaption></figure>
+              <figure class="captura"><button class="captura-abrir" type="button"><img src="assets/capturas/carolina-2.webp" alt="La marca, después de recibir su video" loading="lazy" decoding="async" width="650" height="325"><span class="prueba-lupa" aria-hidden="true"></span></button><figcaption>La marca, después de recibir su video</figcaption></figure>
+            </div>
+            <div class="carril-pista" data-para="cap-carolina" aria-hidden="true"></div>
+          </div>
+        </div>
+        <blockquote class="ficha-frase"><p>Gracias por inspirarme a dar lo mejor de mí. Por tu tiempo y dedicación, cada día siento que doy un pasito más.</p></blockquote>
+      </article>
+      <article class="ficha entra" id="caso-adriana">
+        <div class="ficha-cab">
+          <div class="ficha-foto"><img src="assets/fotos/adriana.webp" alt="Adriana Ulloa" loading="lazy" decoding="async" width="560" height="560"></div>
+          <div class="ficha-quien">
+            <h3>Adriana Ulloa</h3>
+            <p class="ficha-lugar">Estados Unidos</p>
+          </div>
+        </div>
+        <div class="ficha-cuerpo">
+          <dl>
+            <div><dt>Su punto de partida</dt><dd>Fundadora de Bloomy Cakes: talento y buen ojo estético, pero un <b>negocio informal, sin menú, sin procesos</b> ni identidad de marca definida.</dd></div>
+            <div><dt>Qué trabajó</dt><dd>Construyó una <b>identidad de marca completa</b> y un menú con procesos claros, y pasó de grabar sin guion a crear con estrategia, apoyándose en IA para idear y organizar su contenido.</dd></div>
+            <div><dt>Su resultado</dt><dd><b>Más de 45 pedidos para el Día de las Madres</b> y la agenda de mayo completa: Bloomy Cakes opera hoy como una marca profesional, no como un emprendimiento informal.</dd></div>
+          </dl>
+          <div class="ficha-pruebas">
+            <div class="ficha-capturas carril" id="cap-adriana">
+              <figure class="captura"><button class="captura-abrir" type="button"><img src="assets/capturas/adriana-1.webp" alt="Una de sus piezas, 3,4 M de reproducciones" loading="lazy" decoding="async" width="650" height="1006"><span class="prueba-lupa" aria-hidden="true"></span></button><figcaption>3,4 M de reproducciones</figcaption></figure>
+              <figure class="captura"><button class="captura-abrir" type="button"><img src="assets/capturas/adriana-2.webp" alt="Bloomy Cakes, contado con criterio" loading="lazy" decoding="async" width="650" height="1015"><span class="prueba-lupa" aria-hidden="true"></span></button><figcaption>Bloomy Cakes, contado con criterio</figcaption></figure>
+            </div>
+            <div class="carril-pista" data-para="cap-adriana" aria-hidden="true"></div>
+          </div>
+        </div>
+        <blockquote class="ficha-frase"><p>Pasamos de un negocio informal, sin menú ni procesos, a tener la agenda completa y una marca que funciona.</p></blockquote>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== 10 · EXPERIENCIA ==
+     Tres secciones de la primera versión —el directo, el mercado y las
+     oportunidades— contaban el mismo asunto: qué pasa fuera de las clases.
+     Van juntas, en tres tiempos, dentro de una sola. -->
+<section class="hoja hoja--degradado deg-rosa" id="experiencia">
+  <span class="lengueta"><b>10</b> La experiencia</span>
+  <div class="wrap">
+    <div class="exp-bloque">
+      <div class="cabecera">
+        <h2 class="entra">Hay cosas que necesitan conversación, no otra clase grabada.</h2>
+        <p class="lead entra" style="--d:60ms">Durante tu recorrido tendrás acceso a diferentes espacios en vivo.</p>
+      </div>
+
+      <div class="rejilla rejilla-4 carril vivo-rejilla" id="vivo">
+        <article class="tarjeta vivo entra"><h3>Masterclasses</h3><p>Sesiones especiales sobre temas estratégicos, herramientas, tendencias y oportunidades para creadoras.</p></article>
+        <article class="tarjeta vivo entra"><h3>Q&amp;A</h3><p>Espacios para llevar preguntas concretas y resolverlas junto al equipo.</p></article>
+        <article class="tarjeta vivo entra"><h3>Revisiones</h3><p>Sesiones destinadas a analizar casos, procesos y aplicaciones reales.</p></article>
+        <article class="tarjeta vivo entra"><h3>Encuentros de comunidad</h3><p>Momentos para conectar con otras alumnas y vivir el Campus más allá de la plataforma.</p></article>
+      </div>
+      <!-- El mismo raíl que traza la línea de entregables, reutilizado bajo las
+           cuatro tarjetas: dice que esto es algo que ocurre a lo largo del
+           recorrido y no cuatro cosas sueltas. -->
+      <span class="vivo-rail" aria-hidden="true"></span>
+      <div class="carril-pista" data-para="vivo" aria-hidden="true"></div>
+    </div>
+
+    <div class="exp-bloque">
+      <div class="cabecera">
+        <h2 class="entra">Aprender a crear contenido es solo una parte.</h2>
+        <p class="lead entra" style="--d:60ms">También necesitas aprender qué hacer con esas habilidades cuando llega el momento de presentarte profesionalmente.</p>
+        <p class="lead-min entra">Durante tu recorrido trabajarás en:</p>
+      </div>
+      <ul class="activos">
+        <li class="entra" style="--n:1"><i class="tic" aria-hidden="true">✓</i><span>Tu portafolio</span></li>
+        <li class="entra" style="--n:2"><i class="tic" aria-hidden="true">✓</i><span>Tu propuesta</span></li>
+        <li class="entra" style="--n:3"><i class="tic" aria-hidden="true">✓</i><span>Tu pitch</span></li>
+        <li class="entra" style="--n:4"><i class="tic" aria-hidden="true">✓</i><span>Tu comunicación con marcas</span></li>
+        <li class="entra" style="--n:5"><i class="tic" aria-hidden="true">✓</i><span>Tu estructura de precios</span></li>
+        <li class="entra" style="--n:6"><i class="tic" aria-hidden="true">✓</i><span>Tu negociación</span></li>
+        <li class="entra" style="--n:7"><i class="tic" aria-hidden="true">✓</i><span>Tu seguimiento</span></li>
+        <li class="entra" style="--n:8"><i class="tic" aria-hidden="true">✓</i><span>Tu presencia profesional</span></li>
+        <li class="entra" style="--n:9"><i class="tic" aria-hidden="true">✓</i><span>Tu estrategia para encontrar oportunidades</span></li>
+      </ul>
+    </div>
+
+    <div class="exp-bloque">
+      <div class="cabecera">
+        <h2 class="entra">Saber crear es importante. Saber dónde buscar también.</h2>
+        <p class="lead entra" style="--d:60ms">Dentro del Campus tendrás acceso a recursos diseñados para acercarte al mercado profesional.</p>
+      </div>
+      <!-- Sin carril, a propósito: en móvil las seis fichas caben en dos
+           columnas y se ven todas a la vez. En carril había que arrastrar para
+           descubrir que existen seis, y no se corta nada, que es justo lo que
+           molestaba de los carriles. -->
+      <ul class="recursos" id="recursos">
+        <li class="entra" style="--n:1"><i aria-hidden="true">🏷️</i><span>Marcas</span></li>
+        <li class="entra" style="--n:2"><i aria-hidden="true">🏢</i><span>Agencias</span></li>
+        <li class="entra" style="--n:3"><i aria-hidden="true">📱</i><span>Plataformas UGC</span></li>
+        <li class="entra" style="--n:4"><i aria-hidden="true">💸</i><span>Oportunidades</span></li>
+        <li class="entra" style="--n:5"><i aria-hidden="true">🤝</i><span>Referencias</span></li>
+        <li class="entra" style="--n:6"><i aria-hidden="true">🔎</i><span>Recursos de prospección</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= 11 · GRADUACIÓN == -->
+<section class="hoja hoja--degradado deg-azul" id="graduacion">
+  <span class="lengueta"><b>11</b> Graduación</span>
+  <div class="wrap">
     <div class="birretes" aria-hidden="true"><span class="birrete" style="left:27%;--deriva:-24px;--giro-b:-573deg;--alto:358px;animation-delay:1.83s"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="b-tabla" d="M32 2 62 15 32 28 2 15z"/><path class="b-copa" d="M16 21v11c0 4 7 7 16 7s16-3 16-7V21l-16 7z"/><path class="b-borla" d="M56 19v13" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle class="b-nudo" cx="56" cy="34" r="4"/></svg></span><span class="birrete" style="left:54%;--deriva:-110px;--giro-b:-578deg;--alto:414px;animation-delay:1.96s"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="b-tabla" d="M32 2 62 15 32 28 2 15z"/><path class="b-copa" d="M16 21v11c0 4 7 7 16 7s16-3 16-7V21l-16 7z"/><path class="b-borla" d="M56 19v13" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle class="b-nudo" cx="56" cy="34" r="4"/></svg></span><span class="birrete" style="left:91%;--deriva:-59px;--giro-b:644deg;--alto:372px;animation-delay:1.9s"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="b-tabla" d="M32 2 62 15 32 28 2 15z"/><path class="b-copa" d="M16 21v11c0 4 7 7 16 7s16-3 16-7V21l-16 7z"/><path class="b-borla" d="M56 19v13" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle class="b-nudo" cx="56" cy="34" r="4"/></svg></span><span class="birrete" style="left:64%;--deriva:-66px;--giro-b:-409deg;--alto:342px;animation-delay:0.79s"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="b-tabla" d="M32 2 62 15 32 28 2 15z"/><path class="b-copa" d="M16 21v11c0 4 7 7 16 7s16-3 16-7V21l-16 7z"/><path class="b-borla" d="M56 19v13" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle class="b-nudo" cx="56" cy="34" r="4"/></svg></span><span class="birrete" style="left:68%;--deriva:139px;--giro-b:-358deg;--alto:363px;animation-delay:0.28s"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="b-tabla" d="M32 2 62 15 32 28 2 15z"/><path class="b-copa" d="M16 21v11c0 4 7 7 16 7s16-3 16-7V21l-16 7z"/><path class="b-borla" d="M56 19v13" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle class="b-nudo" cx="56" cy="34" r="4"/></svg></span><span class="birrete" style="left:22%;--deriva:82px;--giro-b:557deg;--alto:429px;animation-delay:0.8s"><svg viewBox="0 0 64 48" aria-hidden="true"><path class="b-tabla" d="M32 2 62 15 32 28 2 15z"/><path class="b-copa" d="M16 21v11c0 4 7 7 16 7s16-3 16-7V21l-16 7z"/><path class="b-borla" d="M56 19v13" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle class="b-nudo" cx="56" cy="34" r="4"/></svg></span></div>
-    <p class="eyebrow"><span class="dot"></span>El final de tu recorrido</p>
-    <h2>Y sí. También te gradúas.</h2>
-    <p class="lead">Completar tu recorrido significa haber avanzado por tu plan de estudios, desarrollado tus entregables y presentado tu Proyecto Final.</p><p class="lead">Y queremos celebrar ese momento como corresponde.</p>
-    <div class="grid grid-3"><article class="card mini"><h3>Graduación presencial</h3><p>Encuentros especiales en España para celebrar juntas el cierre del recorrido.</p><p class="fecha">[Fechas según calendario de cada cohorte]</p></article><article class="card mini"><h3>Graduación online</h3><p>Si formas parte del Campus desde otro país y no puedes asistir presencialmente, podrás vivir también tu cierre de manera online.</p></article><article class="card mini"><h3>Certificado de finalización</h3><p>Al completar los requisitos del Campus recibirás tu certificado de finalización de Crea y Monetiza Campus.</p></article></div>
-    </div></section>
-<section id="admisiones" class="sec admisiones tono tono-amar" data-num="17"><img class="deco deco-fondo" style="right:14%;top:1%;width:clamp(200px,46vw,494px);--giro:0deg;animation-delay:-6.5s;animation-duration:26s" src="assets/stickers/estrella-azul.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="left:3%;top:48%;width:clamp(200px,35vw,522px);--giro:0deg;animation-delay:-0.6s;animation-duration:17s" src="assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="wrap">
-    <p class="eyebrow"><span class="dot"></span>Antes de aplicar</p>
-    <h2>Tu entrada al Campus empieza aquí.</h2>
-
-    <div class="grid grid-2">
-      <article class="card si"><h3>El Campus puede ser para ti si…</h3><ul class="lista check"><li>Te encanta crear y quieres empezar a verlo como una carrera.</li><li>Ya creas contenido, pero sientes que necesitas estructura.</li><li>Quieres desarrollar una marca personal profesional.</li><li>Te interesa aprender UGC.</li><li>Quieres trabajar con marcas.</li><li>Necesitas mejorar la forma en la que presentas tu trabajo.</li><li>Quieres aprender a monetizar tus habilidades.</li><li>Buscas acompañamiento durante tu implementación.</li><li>Quieres formar parte de una comunidad que también se toma esto en serio.</li><li>Estás dispuesta a aprender, aplicar y recibir feedback.</li></ul></article>
-      <article class="card no"><h3>Probablemente no es para ti si…</h3><ul class="lista cruz"><li>Buscas resultados sin ejecutar.</li><li>Quieres comprar otra formación para dejarla guardada.</li><li>No estás dispuesta a aplicar lo aprendido.</li><li>No quieres recibir feedback.</li><li>Buscas una fórmula rápida que haga el trabajo por ti.</li></ul></article>
-    </div>
-    <p class="cierre">Nos importa mucho quién entra al Campus porque queremos construir una comunidad de creadoras que realmente quieran profesionalizarse.</p>
-
-    <div class="sub">
-      <h3>Proceso de admisión</h3>
-      <p class="lead">Antes de incorporarte queremos conocerte.</p>
-      <ul class="lista"><li>Entender dónde estás.</li><li>Qué quieres conseguir.</li><li>Qué has intentado hasta ahora.</li><li>Y confirmar que Crea y Monetiza Campus tiene sentido para el momento profesional en el que te encuentras.</li></ul>
-      <ol class="pasos-grid"><li class="paso"><span class="paso-n">01</span><h3>Envía tu solicitud</h3><p>Completa tu información y cuéntanos brevemente sobre ti y tus objetivos.</p></li><li class="paso"><span class="paso-n">02</span><h3>Agenda tu entrevista</h3><p>Tendrás una conversación con nuestro equipo para conocer tu situación actual y hacia dónde quieres avanzar.</p></li><li class="paso"><span class="paso-n">03</span><h3>Evaluamos tu perfil</h3><p>Revisamos si el Campus encaja con tus objetivos y si podemos acompañarte en el punto en el que te encuentras.</p></li><li class="paso"><span class="paso-n">04</span><h3>Recibes los siguientes pasos</h3><p>Si tu perfil encaja con la formación y hay disponibilidad para incorporarte, durante la llamada conocerás todos los detalles de acceso.</p></li></ol>
-      <p class="nota">Completar el proceso de admisión no garantiza automáticamente una plaza.</p>
+    <div class="cabecera">
+      <h2 class="entra">Y sí. También te gradúas.</h2>
+      <p class="lead entra" style="--d:60ms">Completar tu recorrido significa haber avanzado por tu plan de estudios, desarrollado tus entregables y presentado tu Proyecto Final. Y queremos celebrar ese momento como corresponde.</p>
     </div>
 
-    <div class="sub reg" id="registro">
+    <div class="grad carril" id="grad">
+      <article class="grad-item entra">
+        <span class="parche grad-parche" aria-hidden="true"><img src="assets/parches/medalla-1.webp" alt="" loading="lazy" decoding="async" width="200" height="200"></span>
+        <h3>Graduación presencial</h3>
+        <p>Encuentros especiales en España para celebrar juntas el cierre del recorrido.</p>
+        <span class="fecha">[Fechas según calendario de cada cohorte]</span>
+      </article>
+      <article class="grad-item entra">
+        <h3>Graduación online</h3>
+        <p>Si formas parte del Campus desde otro país y no puedes asistir presencialmente, podrás vivir también tu cierre de manera online.</p>
+      </article>
+      <article class="grad-item entra">
+        <h3>Certificado de finalización</h3>
+        <p>Al completar los requisitos del Campus recibirás tu certificado de finalización de Crea y Monetiza Campus.</p>
+      </article>
+    </div>
+    <div class="carril-pista" data-para="grad" aria-hidden="true"></div>
+
+  </div>
+</section>
+
+
+<!-- ======================================================= 12 · RESULTADOS ==
+     Capturas reales de la comunidad, puestas justo antes de admisiones: es la
+     última prueba que se lee antes de decidir. Son anchas y con letra pequeña,
+     así que cada una se puede ampliar en un visor a pantalla completa —sin él,
+     en un teléfono no se leería ni una cifra—. -->
+<section class="hoja hoja--blanca voces" id="resultados">
+  <span class="lengueta"><b>12</b> Resultados</span>
+  <div class="wrap">
+    <div class="cabecera">
+      <h2 class="entra">Logros de nuestras alumnas</h2>
+      <p class="lead entra" style="--d:60ms">Capturas de la comunidad del Campus.</p>
+    </div>
+
+    <div class="galeria carril" id="pruebas">
+      <figure class="prueba entra">
+        <button class="prueba-abrir" type="button" data-prueba="0">
+          <img src="assets/resultados/marce-tarjeta.webp" data-grande="assets/resultados/marce.webp" width="720" height="464" loading="lazy" decoding="async"
+               alt="Publicación de Marce en la comunidad, titulada «Estadísticas de Reel». Cuenta que su video sobre cómo habla de forma natural a cámara llegó a 199 guardados y 58 envíos, con 6.604 reproducciones y 5.084 espectadores.">
+          <span class="prueba-lupa" aria-hidden="true"></span>
+        </button>
+        <figcaption>La primera vez que enseña desde su propia experiencia: <b>199 guardados y 58 envíos</b>.</figcaption>
+      </figure>
+
+      <figure class="prueba entra">
+        <button class="prueba-abrir" type="button" data-prueba="1">
+          <img src="assets/resultados/angela-tarjeta.webp" data-grande="assets/resultados/angela.webp" width="720" height="464" loading="lazy" decoding="async"
+               alt="Publicación de Angela en la comunidad, titulada «Mis logros». Comparte las estadísticas de un reel y un carrusel, y observa que el reel le llega sobre todo a quien no la sigue —un 87,4%— mientras que el carrusel llega a sus seguidoras de siempre.">
+          <span class="prueba-lupa" aria-hidden="true"></span>
+        </button>
+        <figcaption>Dos publicaciones seguidas rompiendo sus números, y <b>la lectura de por qué</b>.</figcaption>
+      </figure>
+
+      <figure class="prueba entra">
+        <button class="prueba-abrir" type="button" data-prueba="2">
+          <img src="assets/resultados/stephany-tarjeta.webp" data-grande="assets/resultados/stephany.webp" width="720" height="496" loading="lazy" decoding="async"
+               alt="Publicación de Stephany en la comunidad, titulada «Evolución». Muestra su perfil antes, con 470 seguidores, y después, con 1.079, tras aplicar lo aprendido en las clases.">
+          <span class="prueba-lupa" aria-hidden="true"></span>
+        </button>
+        <figcaption>De <b>470 seguidores a más de mil</b> aplicando lo aprendido en clase.</figcaption>
+      </figure>
+    </div>
+    <div class="carril-pista" data-para="pruebas" aria-hidden="true"></div>
+
+  </div>
+</section>
+
+<!-- ======================================================= 13 · ADMISIONES ==
+     El degradado recorre la sección entera, de «Tu entrada al Campus empieza
+     aquí» hasta el proceso: es un solo momento —el de decidir— y partirlo en
+     dos fondos lo rompía por la mitad. -->
+<section class="hoja hoja--degradado deg-amar admisiones-hoja" id="admisiones">
+  <span class="lengueta"><b>13</b> Admisiones</span>
+  <div class="wrap">
+    <div class="cabecera">
+      <h2 class="entra">Tu entrada al Campus empieza aquí.</h2>
+    </div>
+
+    <div class="si-no">
+      <article class="panel panel-si entra">
+        <h3>El Campus puede ser para ti si…</h3>
+        <ul class="lista check">
+          <li>Te encanta crear y quieres empezar a verlo como una carrera.</li>
+          <li>Ya creas contenido, pero sientes que necesitas estructura.</li>
+          <li>Quieres desarrollar una marca personal profesional.</li>
+          <li>Te interesa aprender UGC.</li>
+          <li>Quieres trabajar con marcas.</li>
+          <li>Necesitas mejorar la forma en la que presentas tu trabajo.</li>
+          <li>Quieres aprender a monetizar tus habilidades.</li>
+          <li>Buscas acompañamiento durante tu implementación.</li>
+          <li>Quieres formar parte de una comunidad que también se toma esto en serio.</li>
+          <li>Estás dispuesta a aprender, aplicar y recibir feedback.</li>
+        </ul>
+      </article>
+      <article class="panel panel-no entra">
+        <h3>Probablemente no es para ti si…</h3>
+        <ul class="lista cruz">
+          <li>Buscas resultados sin ejecutar.</li>
+          <li>Quieres comprar otra formación para dejarla guardada.</li>
+          <li>No estás dispuesta a aplicar lo aprendido.</li>
+          <li>No quieres recibir feedback.</li>
+          <li>Buscas una fórmula rápida que haga el trabajo por ti.</li>
+        </ul>
+      </article>
+    </div>
+    <p class="cierre entra" style="margin-top:26px">Nos importa mucho quién entra al Campus porque queremos construir una comunidad de creadoras que realmente quieran profesionalizarse.</p>
+
+    <div class="evaluacion sin-filete">
+      <div class="cabecera">
+        <h2 class="entra">Antes de incorporarte queremos conocerte.</h2>
+      </div>
+      <ul class="lista entra">
+        <li>Entender dónde estás.</li>
+        <li>Qué quieres conseguir.</li>
+        <li>Qué has intentado hasta ahora.</li>
+        <li>Y confirmar que Crea y Monetiza Campus tiene sentido para el momento profesional en el que te encuentras.</li>
+      </ul>
+
+      <ol class="pasos carril" id="pasos">
+        <li class="paso entra"><h3>Envía tu solicitud</h3><p>Completa tu información y cuéntanos brevemente sobre ti y tus objetivos.</p></li>
+        <li class="paso entra"><h3>Agenda tu entrevista</h3><p>Tendrás una conversación con nuestro equipo para conocer tu situación actual y hacia dónde quieres avanzar.</p></li>
+        <li class="paso entra"><h3>Evaluamos tu perfil</h3><p>Revisamos si el Campus encaja con tus objetivos y si podemos acompañarte en el punto en el que te encuentras.</p></li>
+        <li class="paso entra"><h3>Recibes los siguientes pasos</h3><p>Si tu perfil encaja con la formación y hay disponibilidad para incorporarte, durante la llamada conocerás todos los detalles de acceso.</p></li>
+      </ol>
+      <div class="carril-pista" data-para="pasos" aria-hidden="true"></div>
+
+      <div class="ctas entra" style="justify-content:center">
+        <a class="btn btn-pri" href="https://calendly.com/encuentronl/45min" target="_blank" rel="noopener">Iniciar mi proceso de admisión <span aria-hidden="true">→</span></a>
+      </div>
+      <p class="nota" style="margin-top:16px;text-align:center">Completar el proceso de admisión no garantiza automáticamente una plaza.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 14 · REGISTRO PRIORITARIO ==
+     SECCIÓN INTACTA. El bloque que va debajo está copiado carácter a carácter
+     de la primera versión, y sus estilos viven aparte en css/registro.css.
+     No tocar. -->
+<section class="hoja hoja--azul registro-hoja">
+  <span class="lengueta"><b>14</b> Registro</span>
+  <div class="wrap">
+<div class="sub reg" id="registro">
       <h3 class="reg-t">Acceso prioritario al Campus.</h3>
       <p class="reg-baja">Sé de las primeras en enterarte de todo lo que pasa en el Campus.</p>
       <ul class="lista chips"><li>Nuevas convocatorias.</li><li>Fechas de admisión.</li><li>Masterclasses.</li><li>Novedades.</li><li>Eventos.</li><li>Recursos.</li><li>Actualizaciones del Campus.</li></ul>
@@ -349,99 +908,91 @@
           </div>
         </div>
       </div>
-    </div></div></section>
-<section id="faq" class="sec faq tono tono-azul" data-num="21"><img class="deco deco-fondo" style="left:0%;top:11%;width:clamp(200px,41vw,471px);--giro:0deg;animation-delay:-5.1s;animation-duration:23s" src="assets/stickers/estrella-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="deco deco-fondo" style="right:3%;top:56%;width:clamp(200px,44vw,578px);--giro:0deg;animation-delay:-4.1s;animation-duration:24s" src="assets/stickers/rayo-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="wrap">
-    <p class="eyebrow"><span class="dot"></span>Preguntas frecuentes</p>
-    <h2>Secretaría académica</h2>
-    <div class="faq-lista"><details class="faq-item">
-      <summary>¿Necesito experiencia previa?</summary>
-      <div class="faq-cuerpo"><p>No necesitas tener una carrera consolidada como creadora para aplicar.</p><p>Dentro del proceso de admisión evaluaremos tu punto de partida para entender si el Campus encaja contigo.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Necesito tener muchos seguidores?</summary>
-      <div class="faq-cuerpo"><p>No.</p><p>La formación trabaja tus habilidades, posicionamiento, estrategia y profesionalización. Tu número de seguidores no determina por sí solo tu capacidad para construir oportunidades.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Puedo formar parte si vivo fuera de España?</summary>
-      <div class="faq-cuerpo"><p>Sí.</p><p>El Campus está diseñado para recibir creadoras desde diferentes países.</p></div>
-    </details><details class="faq-item">
-      <summary>¿El Campus es online?</summary>
-      <div class="faq-cuerpo"><p>La formación y el acompañamiento principal se desarrollan online para que puedas avanzar desde donde estés.</p><p>Además, pueden existir experiencias y encuentros presenciales vinculados al Campus.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Cuánto dura?</summary>
-      <div class="faq-cuerpo"><p>Tu recorrido principal dentro del Campus tiene una duración de 6 meses.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Tengo que hacer entregables?</summary>
-      <div class="faq-cuerpo"><p>Sí.</p><p>Queremos que apliques lo aprendido durante el proceso, por eso diferentes materias incluyen ejercicios, implementación y entregables.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Tengo que presentar un proyecto final?</summary>
-      <div class="faq-cuerpo"><p>Sí.</p><p>Al finalizar tu recorrido desarrollarás tu Proyecto de Graduación, donde integrarás diferentes elementos que has construido durante tu formación.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Hay acompañamiento?</summary>
-      <div class="faq-cuerpo"><p>Sí.</p><p>El acompañamiento y seguimiento forman parte de la experiencia del Campus.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Recibiré un certificado?</summary>
-      <div class="faq-cuerpo"><p>Al completar los requisitos del recorrido recibirás tu título como Creadora Profesional.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Qué es el Banco de Oportunidades?</summary>
-      <div class="faq-cuerpo"><p>Es un espacio de recursos relacionados con marcas, agencias, plataformas y oportunidades que pueden ayudarte durante tu etapa de profesionalización.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Cómo puedo entrar?</summary>
-      <div class="faq-cuerpo"><p>El primer paso es completar tu proceso de admisión y agendar una entrevista con nuestro equipo.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Dónde puedo conocer las condiciones de acceso?</summary>
-      <div class="faq-cuerpo"><p>Todas las condiciones de incorporación se explican durante la entrevista de admisión una vez que conocemos tu situación y confirmamos que el Campus puede encajar contigo.</p></div>
-    </details><details class="faq-item">
-      <summary>¿Qué pasa si las admisiones están cerradas?</summary>
-      <div class="faq-cuerpo"><p>Puedes entrar al registro prioritario para recibir directamente las próximas fechas, convocatorias y novedades.</p></div>
-    </details></div></div></section>
-<div class="cinta" aria-hidden="true"><div class="cinta-pista"><span>Con estructura.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con formación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con implementación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con acompañamiento.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con estructura.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con formación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con implementación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con acompañamiento.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con estructura.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con formación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con implementación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con acompañamiento.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con estructura.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con formación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con implementación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con acompañamiento.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con estructura.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con formación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con implementación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con acompañamiento.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con estructura.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con formación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con implementación.</span><span class="cinta-sep" aria-hidden="true">✳</span><span>Con acompañamiento.</span><span class="cinta-sep" aria-hidden="true">✳</span></div></div>
-<footer id="cierre" class="cierre-final">
-  <div class="carnet" aria-hidden="true">
-      <span class="carnet-cinta"></span>
-      <span class="carnet-clip"></span>
-      <div class="carnet-tarjeta">
-        <svg class="carnet-iso" viewBox="0 0 265.42 268.17"><use href="#iso"/></svg>
-        <p class="carnet-marca">Crea y Monetiza<b>Campus</b></p>
-        <p class="carnet-rol">Creadora en progreso</p>
-        <ul class="carnet-pals"><li>Ideas</li><li>Formación</li><li>Acción</li><li>Libertad</li></ul>
-      </div>
     </div>
-  <div class="cierre-lado">
-    <div class="sello-aro" aria-hidden="true">
-      <svg viewBox="0 0 200 200">
-        <defs><path id="aro-fin" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/></defs>
-        <text class="aro-txt" textLength="478" lengthAdjust="spacing">
-          <textPath href="#aro-fin" startOffset="0%">Admisiones abiertas · Creadoras de un futuro real ·</textPath>
-        </text>
-      </svg>
-      <svg class="aro-iso" viewBox="0 0 265.42 268.17"><use href="#iso"/></svg>
-    </div>
-    <p class="cierre-mano" aria-hidden="true"><span>Misma pasión.</span><span>Nuevas posibilidades.</span></p>
   </div>
+</section>
 
-  <div class="wrap cierre-centro">
-    <div class="arco" aria-hidden="true">
-      <svg viewBox="0 0 600 90" preserveAspectRatio="none">
-        <path d="M2 88C90 26 240 4 300 4s210 22 298 84" fill="none"
-              stroke="currentColor" stroke-width="1.5"/>
-      </svg>
-      <svg class="arco-iso" viewBox="0 0 265.42 268.17"><use href="#iso"/></svg>
+<!-- ============================================================== 15 · FAQ == -->
+<section class="hoja hoja--blanca" id="faq">
+  <span class="lengueta"><b>15</b> Secretaría</span>
+  <div class="wrap">
+    <div class="cabecera">
+      <h2 class="entra">Secretaría académica</h2>
     </div>
-    <p class="eyebrow"><span class="dot"></span>Tu próximo capítulo</p>
-    <h2>Tu carrera como creadora no empieza cuando una marca te descubre. Empieza cuando decides tomártela en serio.</h2>
-    <p>Puedes seguir aprendiendo cada parte por separado.</p><p>O puedes construirlas dentro de una ruta.</p>
-    <div class="ctas"><a class="btn btn-pri" href="#admisiones">Iniciar mi proceso de admisión <span aria-hidden="true">→</span></a></div>
+    <div class="faq-lista">
+      <details class="faq-item"><summary>¿Necesito experiencia previa?</summary><div class="faq-cuerpo"><p>No necesitas tener una carrera consolidada como creadora para aplicar.</p><p>Dentro del proceso de admisión evaluaremos tu punto de partida para entender si el Campus encaja contigo.</p></div></details>
+      <details class="faq-item"><summary>¿Necesito tener muchos seguidores?</summary><div class="faq-cuerpo"><p>No.</p><p>La formación trabaja tus habilidades, posicionamiento, estrategia y profesionalización. Tu número de seguidores no determina por sí solo tu capacidad para construir oportunidades.</p></div></details>
+      <details class="faq-item"><summary>¿Puedo formar parte si vivo fuera de España?</summary><div class="faq-cuerpo"><p>Sí.</p><p>El Campus está diseñado para recibir creadoras desde diferentes países.</p></div></details>
+      <details class="faq-item"><summary>¿El Campus es online?</summary><div class="faq-cuerpo"><p>La formación y el acompañamiento principal se desarrollan online para que puedas avanzar desde donde estés.</p><p>Además, pueden existir experiencias y encuentros presenciales vinculados al Campus.</p></div></details>
+      <details class="faq-item"><summary>¿Cuánto dura?</summary><div class="faq-cuerpo"><p>Tu recorrido principal dentro del Campus tiene una duración de 6 meses.</p></div></details>
+      <details class="faq-item"><summary>¿Tengo que hacer entregables?</summary><div class="faq-cuerpo"><p>Sí.</p><p>Queremos que apliques lo aprendido durante el proceso, por eso diferentes materias incluyen ejercicios, implementación y entregables.</p></div></details>
+      <details class="faq-item"><summary>¿Tengo que presentar un proyecto final?</summary><div class="faq-cuerpo"><p>Sí.</p><p>Al finalizar tu recorrido desarrollarás tu Proyecto de Graduación, donde integrarás diferentes elementos que has construido durante tu formación.</p></div></details>
+      <details class="faq-item"><summary>¿Hay acompañamiento?</summary><div class="faq-cuerpo"><p>Sí.</p><p>El acompañamiento y seguimiento forman parte de la experiencia del Campus.</p></div></details>
+      <details class="faq-item"><summary>¿Recibiré un certificado?</summary><div class="faq-cuerpo"><p>Al completar los requisitos del recorrido recibirás tu título como Creadora Profesional.</p></div></details>
+      <details class="faq-item"><summary>¿Qué es el Banco de Oportunidades?</summary><div class="faq-cuerpo"><p>Es un espacio de recursos relacionados con marcas, agencias, plataformas y oportunidades que pueden ayudarte durante tu etapa de profesionalización.</p></div></details>
+      <details class="faq-item"><summary>¿Cómo puedo entrar?</summary><div class="faq-cuerpo"><p>El primer paso es completar tu proceso de admisión y agendar una entrevista con nuestro equipo.</p></div></details>
+      <details class="faq-item"><summary>¿Dónde puedo conocer las condiciones de acceso?</summary><div class="faq-cuerpo"><p>Todas las condiciones de incorporación se explican durante la entrevista de admisión una vez que conocemos tu situación y confirmamos que el Campus puede encajar contigo.</p></div></details>
+      <details class="faq-item"><summary>¿Qué pasa si las admisiones están cerradas?</summary><div class="faq-cuerpo"><p>Puedes entrar al registro prioritario para recibir directamente las próximas fechas, convocatorias y novedades.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================== 16 · CIERRE == -->
+<footer class="cierre-final" id="cierre">
+  <div class="wrap">
+    <svg class="cierre-iso" viewBox="0 0 265.42 268.17" aria-hidden="true"><use href="#iso"/></svg>
+    <div class="cabecera">
+      <h2 class="entra h2-largo">Tu carrera como creadora no empieza cuando una marca te descubre. Empieza cuando decides tomártela en serio.</h2>
+      <p class="entra" style="--d:60ms">Puedes seguir aprendiendo cada parte por separado.<br>O puedes construirlas dentro de una ruta.</p>
+    </div>
+
+    <div class="ctas entra" style="--d:120ms">
+      <a class="btn btn-pri" href="https://calendly.com/encuentronl/45min" target="_blank" rel="noopener">Iniciar mi proceso de admisión <span aria-hidden="true">→</span></a>
+    </div>
     <a class="enlace-sub" href="#registro">Entrar al registro prioritario</a>
 
-    <ul class="con-lista"><li style="--n:1"><span class="con-punto"><img src="assets/stickers/estrella-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><b><i>Con</i>estructura</b></li><li style="--n:2"><span class="con-punto"><img src="assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><b><i>Con</i>formación</b></li><li style="--n:3"><span class="con-punto"><img src="assets/stickers/estrella-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><b><i>Con</i>implementación</b></li><li style="--n:4"><span class="con-punto"><img src="assets/stickers/rayo-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><b><i>Con</i>acompañamiento</b></li></ul>
+    <ul class="con-lista">
+      <li class="entra"><span class="con-punto"><img src="assets/stickers/estrella-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="90" height="86"></span><b><i>Con</i>estructura</b></li>
+      <li class="entra"><span class="con-punto"><img src="assets/stickers/rayo-azul.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="140" height="239"></span><b><i>Con</i>formación</b></li>
+      <li class="entra"><span class="con-punto"><img src="assets/stickers/estrella-rosa.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="90" height="86"></span><b><i>Con</i>implementación</b></li>
+      <li class="entra"><span class="con-punto"><img src="assets/stickers/rayo-amar.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="140" height="239"></span><b><i>Con</i>acompañamiento</b></li>
+    </ul>
 
-    <p class="firma">Tu contenido puede ser el comienzo de algo mucho más grande.</p>
+    <p class="cierre-mano" aria-hidden="true"><span>Misma pasión.</span><span>Nuevas posibilidades.</span></p>
+
+    <p class="firma entra">Tu contenido puede ser el comienzo de algo mucho más grande.</p>
     <p class="con-remate claim"><span>Formación integral para la nueva generación de creadoras.</span></p>
-    <svg class="logo-foot" viewBox="0 0 863.98 253.56" role="img" aria-label="Crea y Monetiza Campus"><use href="#logo-full"/></svg>
+    <svg class="logo-pie" viewBox="0 0 863.98 253.56" role="img" aria-label="Crea y Monetiza Campus"><use href="#logo-full"/></svg>
+    <p class="pie-legal">Crea y Monetiza Campus · Admisiones</p>
   </div>
 </footer>
-</main>
-<a class="cta-fijo" href="#admisiones">Iniciar admisión <span aria-hidden="true">→</span></a>
 
-<script src="js/campus.js?v=98d340c4"></script>
+</main>
+
+<a class="cta-movil" id="cta-movil" href="#admisiones">Iniciar admisión <span aria-hidden="true">→</span></a>
+
+<!-- El visor de las capturas de resultados. Va al final del <body>, fuera de
+     toda sección, porque un <dialog> a pantalla completa no debe heredar el
+     recorte ni el apilado de la hoja que lo abre. -->
+<dialog class="visor" id="visor" aria-label="Capturas de la comunidad">
+  <div class="visor-caja">
+    <div class="visor-barra">
+      <span class="visor-cuenta" id="visor-cuenta"></span>
+      <button class="visor-btn" type="button" data-visor="cerrar" aria-label="Cerrar el visor">&times;</button>
+    </div>
+    <div class="visor-lienzo" id="visor-lienzo">
+      <img class="visor-img" id="visor-img" alt="">
+    </div>
+    <div>
+      <div class="visor-nav">
+        <button class="visor-btn" type="button" data-visor="prev" aria-label="Captura anterior">&#8249;</button>
+        <button class="visor-btn" type="button" data-visor="sig" aria-label="Captura siguiente">&#8250;</button>
+      </div>
+      <p class="visor-pie" id="visor-pie"></p>
+    </div>
+  </div>
+</dialog>
+
+<script src="js/campus.js"></script>
 </body>
 </html>
