@@ -133,6 +133,22 @@
 .exp-pie .btn{ padding-inline:clamp(28px,4vw,54px) }
 .exp-nota{ margin-top:14px; font-size:13px; font-style:italic; opacity:.62 }
 
+/* El consentimiento, antes del botón: se lee justo donde se decide enviar.
+   La casilla es `required`, así que el navegador no deja enviar sin marcarla
+   —el formulario ya valida con checkValidity()/reportValidity()—. */
+.consentimiento{
+  display:flex; gap:12px; align-items:flex-start; cursor:pointer;
+  margin:26px 0 4px; font-size:13.5px; line-height:1.6; opacity:.86;
+}
+.consentimiento input{
+  margin-top:3px; width:18px; height:18px; flex:none;
+  accent-color:var(--acento); cursor:pointer;
+}
+.consentimiento a{ color:var(--acento); text-decoration:underline; text-underline-offset:2px }
+.consentimiento input:focus-visible{ outline:3px solid var(--acento); outline-offset:3px }
+/* Sin marcar y tras intentar enviar: el navegador la marca :user-invalid. */
+.consentimiento:has(input:user-invalid){ opacity:1; color:#c0392b }
+
 @media (max-width:760px){
   .grupo-f{ grid-template-columns:1fr }
   .exp-lema{ border-left:0; padding-left:0 }

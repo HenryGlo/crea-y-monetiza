@@ -1661,9 +1661,14 @@
 .captura-abrir .prueba-lupa{ right:8px; bottom:8px; width:32px; height:32px }
 .captura-abrir .prueba-lupa::before{ width:15px; height:15px }
 
+/* Es un tope, no una altura: con `height` fija, las capturas anchas y bajas
+   —las dos de Carolina son 650×293 y 650×325, no verticales como el resto— se
+   ampliaban para rellenarla y perdían los lados. Con `max-height` solo se
+   recorta lo que sobra de las largas; las anchas entran enteras, a todo lo
+   ancho de su columna. */
 @media (min-width:900px){
   .captura-abrir img{
-    height:clamp(190px,26vh,260px);
+    max-height:clamp(190px,26vh,260px);
     object-fit:cover; object-position:50% 0;
   }
 }
