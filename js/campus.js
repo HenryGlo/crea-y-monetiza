@@ -537,9 +537,39 @@
         return;
       }
 
+      /* El campo trampa. Una persona no lo ve y no lo rellena; un bot lee el
+         HTML y lo completa. Si viene con algo, se descarta en silencio: si
+         avisáramos, el bot aprendería a dejarlo vacío. La URL del webhook está
+         en el código de esta página, así que cualquiera puede llamarla. */
+      var trampa = form.querySelector("[name=web_site]");
+      if (trampa && trampa.value.trim() !== "") {
+        form.reset();
+        msg.className = "form-msg ok";
+        msg.textContent = msg.dataset.ok;
+        return;
+      }
+
       var datos = Object.fromEntries(new FormData(form).entries());
+      delete datos.web_site;
       datos.origen = location.href;
       datos.enviado = new Date().toISOString();
+
+      /* La prueba del consentimiento: qué aceptó, cuándo y por dónde.
+         El texto se lee del propio DOM y no de una constante, para que sea
+         literalmente el que la persona tuvo delante. Si mañana se reescribe la
+         casilla, los registros viejos conservan el que aceptaron —que es lo
+         único que sirve como prueba.
+         `consentimiento_via` es una lista cerrada en el CRM: "Formulario web",
+         "Instagram DM", "WhatsApp" o "Importación histórica". Cualquier otro
+         valor devuelve 422 y el lead se pierde. */
+      var casilla = form.querySelector("[name=consentimiento]");
+      var textoConsent = form.querySelector("label.consentimiento span");
+      datos.consentimiento = casilla && casilla.checked ? "true" : "false";
+      datos.consentimiento_fecha = new Date().toISOString().slice(0, 10);
+      datos.consentimiento_via = "Formulario web";
+      datos.consentimiento_texto = textoConsent
+        ? textoConsent.textContent.replace(/\s+/g, " ").trim()
+        : "";
 
       if (!ENDPOINT_REGISTRO) {
         msg.className = "form-msg err";

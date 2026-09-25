@@ -899,6 +899,13 @@
       <textarea name="objetivo" rows="4" placeholder="Cuéntanos tu visión…"></textarea>
     </label></div>
     </div>
+              <!-- Campo trampa antispam. Oculto por CSS y no con type="hidden",
+                   que los bots reconocen. Si llega con valor, el envío se
+                   descarta. -->
+              <label class="trampa" aria-hidden="true">
+                Web
+                <input type="text" name="web_site" tabindex="-1" autocomplete="off">
+              </label>
               <label class="consentimiento" for="consentimiento">
                 <input id="consentimiento" name="consentimiento" type="checkbox" required>
                 <span>Acepto que el Campus guarde mis datos para contactarme sobre el proceso de admisión y enviarme las novedades, convocatorias y fechas. Puedo darme de baja cuando quiera. He leído la <a href="privacidad.html" target="_blank" rel="noopener">Política de Privacidad</a>.</span>

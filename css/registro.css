@@ -234,3 +234,14 @@
    primera versión anulaba .chips. */
 .chips li::before{ display:none }
 .reg{ margin-top:clamp(30px,6vw,46px) }
+
+/* El campo trampa del formulario. Fuera de la vista pero presente en el DOM:
+   un bot lo rellena, una persona nunca lo ve. No se usa display:none porque
+   algunos bots lo detectan y lo saltan. */
+.form .trampa {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
