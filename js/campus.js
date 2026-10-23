@@ -515,11 +515,12 @@
 
   /* ================================================================ formulario */
 
-  /* Copiado sin cambios de la primera versión. Sigue pendiente la URL del
-     webhook que recibe el registro prioritario: mientras esté vacía el
-     formulario valida y avisa, pero no envía nada —preferible a que un lead
-     real se pierda en silencio. */
-  var ENDPOINT_REGISTRO = "";
+  /* El webhook de Activepieces que recibe el registro prioritario: crea (o
+     actualiza, por correo) el contacto en el CRM en la etapa «Lead - Website
+     form», con la etiqueta «Website Lead», y el CRM avisa a dirección y a las
+     setters. Si se vacía, el formulario vuelve a validar y avisar sin enviar
+     nada —preferible a que un lead real se pierda en silencio. */
+  var ENDPOINT_REGISTRO = "https://automation.creaymonetiza.perfectflow.cloud/api/v1/webhooks/tZew3XqqtfdT9xwUWajXU";
 
   function formulario() {
     var form = document.getElementById("form-registro");

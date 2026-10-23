@@ -293,9 +293,10 @@ ancha que cerraba graduación) y **`assets/fotos/pierina-color-anterior.webp`**
 (el retrato que había antes en la carta). Los dos se conservan en la carpeta
 por si hay que volver atrás.
 - **Destino del formulario**: la constante `ENDPOINT_REGISTRO` en
-  `js/campus.js` está vacía. Mientras lo esté, el formulario valida y avisa en
-  pantalla pero **no envía** — preferible a que un lead real se pierda en
-  silencio.
+  `js/campus.js` apunta al webhook de Activepieces del CRM (flujo «Registro de
+  la web → Lead - Website form»). Cada registro entra como contacto en la etapa
+  **Lead - Website form**, con la etiqueta «Website Lead». Si la constante se
+  vacía, el formulario valida y avisa en pantalla pero **no envía**.
 
 ### Lo que se pierde al borrar `#equipo`
 
