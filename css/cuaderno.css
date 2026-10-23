@@ -1483,6 +1483,17 @@
   position:relative; z-index:1;
   width:100%; height:100%; object-fit:contain; display:block;
 }
+/* Debajo de cada video, quién es y su Instagram. Va fuera del marco 9:16 (que
+   recorta con overflow:hidden), por eso la tarjeta del carril es .voz y no
+   el <figure>. */
+.voz{ display:flex; flex-direction:column; gap:10px }
+.voz-ig{
+  display:flex; flex-direction:column; gap:2px;
+  padding:0 4px; color:var(--crema); text-decoration:none;
+}
+.voz-ig b{ font-weight:700; font-size:1rem; line-height:1.25 }
+.voz-ig span{ font-size:.92rem; color:var(--rosa); line-height:1.3 }
+.voz-ig:hover span, .voz-ig:focus-visible span{ text-decoration:underline }
 @media (prefers-reduced-motion:reduce){
   .video-fondo{ filter:blur(26px) brightness(.62) }
 }
