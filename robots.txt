@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://web-crea-y-monetiza.perfectflow.cloud/sitemap.xml
+Sitemap: https://campuscreaymonetiza.com/sitemap.xml

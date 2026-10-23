@@ -262,7 +262,7 @@ Comprueba dos cosas:
 2. **Que el registro prioritario sigue siendo el de la web publicada.**
 
 Aquí **no hay `CNAME`** a propósito: la primera versión sí lo lleva y apunta a
-`web-crea-y-monetiza.perfectflow.cloud`. Si esta carpeta se subiera con él,
+`campuscreaymonetiza.com`. Si esta carpeta se subiera con él,
 se llevaría el dominio de la web que está publicada ahora mismo. Se añade el día
 que esta propuesta la sustituya, no antes.
 
