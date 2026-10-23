@@ -1,0 +1,12 @@
+{
+  "name": "Crea y Monetiza Campus",
+  "short_name": "CyM Campus",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#500711",
+  "theme_color": "#500711",
+  "icons": [
+    { "src": "assets/icono-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icono-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
