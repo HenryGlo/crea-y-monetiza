@@ -2018,6 +2018,9 @@
 .pie-legal{
   margin-top:26px; font-size:12px; opacity:.45;
 }
+/* Las políticas, enlazadas desde el pie además de desde el formulario. */
+.pie-legal.pie-enlaces{ margin-top:8px; opacity:.6 }
+.pie-enlaces a{ color:inherit; text-decoration:underline; text-underline-offset:2px }
 
 /* La escala de `.h2-largo` vive en base.css, con el resto del sistema de
    cabeceras. Aquí había una copia con otro valor que la pisaba y dejaba los
