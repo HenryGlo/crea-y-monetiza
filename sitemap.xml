@@ -8,13 +8,19 @@
   </url>
   <url>
     <loc>https://campuscreaymonetiza.com/privacidad.html</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://campuscreaymonetiza.com/desistimiento.html</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://campuscreaymonetiza.com/aviso-legal.html</loc>
+    <lastmod>2026-11-24</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
