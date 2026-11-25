@@ -1589,7 +1589,7 @@ try { vistas = new Set(JSON.parse(localStorage.getItem('adviento-vistas-regalos'
 function guardar(){ try{ localStorage.setItem('adviento-vistas-regalos', JSON.stringify([...vistas])); }catch(e){} }
 
 function estaBloqueada(n){
-  if(!BLOQUEAR_POR_FECHA) return false;
+  if(n === 1 || !BLOQUEAR_POR_FECHA) return false;
   return new Date() < new Date(ANIO, 11, n);
 }
 function pintarEstados(){
@@ -1606,7 +1606,7 @@ function pintarEstados(){
 
 /* ---- cronograma del 1 al 24 ---- */
 function diaDeHoy(){
-  return AdventClock.localDay(ANIO, 25);
+  return Math.max(1, AdventClock.localDay(ANIO, 25));
 }
 
 function pintarCrono(){
@@ -2129,7 +2129,7 @@ document.body.classList.add('d4');
   /* ---- día simulado ---- */
   window.diaDeHoy = function(){
     if (ALUMNAS && modoAlumna() === 'todo') return 24;
-    if (!PREVIEW) return AdventClock.localDay(ANIO, 24);
+    if (!PREVIEW) return Math.max(ALUMNAS ? 0 : 1, AdventClock.localDay(ANIO, 24));
     const v = LS.get(K.dia) || '3';
     return isNaN(+v) ? 3 : Math.max(1, Math.min(24, +v));
   };
