@@ -89,11 +89,12 @@ async function captureEvent(inputs,event,state,request,now){
   }
   if(!contactId){
    if(e.event_type!=='registration')return response(422,{ok:false});
-   const saved=await call('POST','/records/Entity?model=contacto',{record:{email,full_name:String(e.name||email).slice(0,200),tags:['Calendario de Adviento'],custom_fields:{via_entrada:'Calendario de Adviento',canal:'Landing',campana:'Adviento2026',consentimiento:true,consentimiento_fecha:new Date(now()).toISOString().slice(0,10),consentimiento_texto:String(e.consent_text||'').slice(0,2000),consentimiento_via:'Calendario de Adviento'}}},'advent-contact-'+hash(email));
+   const saved=await call('POST','/records/Entity?model=contacto',{record:{email,full_name:String(e.name||email).slice(0,200),tags:['Calendario de Adviento'],custom_fields:{via_entrada:'Calendario de Adviento',canal:'Landing',campana:'Adviento 2026',consentimiento:true,consentimiento_fecha:new Date(now()).toISOString().slice(0,10),consentimiento_texto:String(e.consent_text||'').slice(0,2000),consentimiento_via:'Calendario de Adviento'}}},'advent-contact-'+hash(email));
    contactId=saved.id;
   }
   if(!contactId)throw new Error('Missing contact');
   await state('SET',contactKey,String(contactId),'EX',86400);
+  if(e.event_type==='registration')await call('PATCH','/records/Entity/'+contactId,{record:{tags:{add:['Calendario de Adviento']}}});
   const found=await call('GET','/records/Entity?model=campaign_engagement&event_id='+encodeURIComponent(e.event_id)+'&limit=1');
   if(!found.records.length){
    const fields={event_id:e.event_id,event_type:e.event_type,site_slug:'advent-2026',occurred_at:new Date(now()).toISOString(),day:e.day??null,count:Number.isFinite(e.count)?e.count:null,device:e.device,page:String(e.page||'').slice(0,1000),consent:e.event_type==='registration'&&e.consent===true,consent_text:String(e.consent_text||'').slice(0,2000)};
