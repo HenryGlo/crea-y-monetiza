@@ -66,3 +66,11 @@ test('existing contact registration preserves profile and opt-out, records conse
  assert.equal(writes[1].record.subject_links.campaign_engagement_contact,42);
  assert.equal(writes[0].record.email,undefined);
 });
+
+test('published artifacts must contain the tested source and reject an accidentally substituted test file',async()=>{
+ const fs=await import('node:fs');const {validateWorkflow}=await import('../automation/validate-workflow.mjs');
+ const template=JSON.parse(fs.readFileSync(new URL('../automation/advent-access.template.json',import.meta.url),'utf8'));
+ assert.equal(validateWorkflow(template),true);
+ template.trigger.nextAction.settings.sourceCode.code=fs.readFileSync(new URL('./advent-access.test.mjs',import.meta.url),'utf8');
+ assert.throws(()=>validateWorkflow(template),/differs from the tested access source/);
+});
