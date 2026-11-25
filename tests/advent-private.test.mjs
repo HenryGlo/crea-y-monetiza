@@ -38,3 +38,14 @@ test('requests from unrelated origins cannot invoke email delivery',async()=>{
  const r=await fetch(base+'/calendario/api',{method:'POST',headers:{origin:'https://unrelated.example','Content-Type':'application/json'},body:'{"action":"request"}'});
  assert.equal(r.status,403);
 });
+
+
+test('a resource bearer ticket cannot extend its own expiry or renew without the session cookie',async()=>{
+ const exp=Math.floor(Date.now()/1000)+30;
+ const token=sign({...claims,scope:'asset',exp});
+ const r=await fetch(base+'/calendario/assets/'+token+'/index.html');const html=await r.text();
+ const payload=JSON.parse(html.match(/id="experience-document" type="application\/json">([\s\S]*?)<\/script>/)[1]);
+ const next=payload.asset_root.split('/assets/')[1].split('/')[0];
+ assert.equal(JSON.parse(Buffer.from(next.split('.')[0],'base64url')).exp,exp);
+ assert.equal((await fetch(base+'/calendario/lease')).status,401);
+});

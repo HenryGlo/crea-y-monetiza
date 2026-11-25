@@ -46,7 +46,7 @@ function session(req) {
   return verify(token, 'student');
 }
 function urls(claims, asset='index.html') {
-  const token = sign({scope:'asset',aud:'cym-advent-2026',sub:claims.sub,exp:Math.floor(Date.now()/1000)+3600});
+  const token = sign({scope:'asset',aud:'cym-advent-2026',sub:claims.sub,exp:Math.min(claims.exp,Math.floor(Date.now()/1000)+3600)});
   const asset_root = `${origin}${prefix}/assets/${token}/`;
   return {asset_root, base_url:asset_root+asset};
 }
