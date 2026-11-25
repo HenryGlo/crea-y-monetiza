@@ -61,7 +61,8 @@ test('existing contact registration preserves profile and opt-out, records conse
  };
  const handler=makeHandler({state,request}),input={gatewayKey:'key',signingKey:'sign',headers:{'x-advent-gateway':'key'},payload:{action:'event',client_ip:'test',event:{event_type:'registration',event_id:'repeat-event-123',email:'student@example.com',device:'device',consent:true,consent_text:'Accepted'}}};
  assert.equal((await handler(input)).status,202);assert.equal((await handler(input)).status,202);
- assert.equal(writes.length,1);assert.equal(writes[0].record.custom_fields.consent,true);
- assert.equal(writes[0].record.subject_links.campaign_engagement_contact,42);
+ assert.equal(writes.length,2);assert.deepEqual(writes[0],{record:{tags:{add:['Calendario de Adviento']}}});
+ assert.equal(writes[1].record.custom_fields.consent,true);
+ assert.equal(writes[1].record.subject_links.campaign_engagement_contact,42);
  assert.equal(writes[0].record.email,undefined);
 });
