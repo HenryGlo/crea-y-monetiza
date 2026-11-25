@@ -5,3 +5,8 @@ __pycache__/
 # Notas internas. La raíz del repo es la raíz del sitio publicado, así que
 # cualquier archivo suelto aquí queda accesible desde el dominio.
 mensaje-nathaly.txt
+
+# Private advent deployment material
+advent-private/config.json
+advent-private/content/
+*-flow-private.json
