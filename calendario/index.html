@@ -2287,15 +2287,19 @@ document.body.classList.add('d4');
     eventQueue.enqueue({ event_id: crypto.randomUUID(), event_type: types[tipo], email: r.correo || '',
       name: r.nombre || '', device: r.id || '', occurred_at: new Date().toISOString(),
       page: location.origin + location.pathname, day: extra.dia, count: extra.veces || extra.visitas,
-      consent: tipo === 'registro' || tipo === 'reconfirmacion',
+      consent: (tipo === 'registro' || tipo === 'reconfirmacion') ? true : undefined,
       consent_text: document.getElementById('reg-acepto')?.closest('label')?.textContent.trim() || '' });
   }
   const hoyISO = () => AdventClock.localDate();
   function guardarReg(correo, nombre){
     const prev = leerReg() || {};
+    const sameEmail = prev.correo === correo;
     escribirReg({ correo, nombre, id: prev.id || (Math.random().toString(36).slice(2) + Date.now().toString(36)),
-      fecha: prev.fecha || Date.now(), confirmado: Date.now(), visitas: prev.visitas || 1, ultimaVisita: hoyISO(), aperturas: prev.aperturas || {} });
-    enviar(prev.correo === correo ? 'reconfirmacion' : 'registro');
+      fecha: sameEmail ? (prev.fecha || Date.now()) : Date.now(), confirmado: Date.now(),
+      visitas: sameEmail ? (prev.visitas || 1) : 1, ultimaVisita: hoyISO(),
+      aperturas: sameEmail ? (prev.aperturas || {}) : {} });
+    enviar(sameEmail ? 'reconfirmacion' : 'registro');
+    if (!sameEmail) enviar('visita', { visitas: 1 });
   }
   (function contarVisita(){
     const r = leerReg(); if (!r || !r.correo || r.ultimaVisita === hoyISO()) return;

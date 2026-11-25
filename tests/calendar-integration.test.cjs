@@ -39,3 +39,17 @@ test('keeps the approved campus destination and marks unfinished gift CTAs', () 
   assert.match(html, /if \(!day.enlace\) day.pendiente = true/);
   assert.doesNotMatch(html, /const PREVIEW = .*location.search/);
 });
+
+test('records the first daily visit after registration and preserves retry ordering', () => {
+  const source = fs.readFileSync('calendario/index.html', 'utf8');
+  const fn = source.slice(source.indexOf('  function guardarReg('), source.indexOf('  (function contarVisita()'));
+  const events = [];
+  let record = null;
+  const context = { leerReg: () => record, escribirReg: value => { record = value; }, hoyISO: () => '2026-12-01',
+    enviar: type => events.push(type), Date, Math };
+  vm.runInNewContext(fn, context);
+  context.guardarReg('test@example.com', 'Test');
+  assert.deepEqual(events, ['registro', 'visita']);
+  context.guardarReg('test@example.com', 'Test');
+  assert.deepEqual(events, ['registro', 'visita', 'reconfirmacion']);
+});
