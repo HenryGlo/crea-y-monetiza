@@ -54,7 +54,7 @@ test('existing contact registration preserves profile and opt-out, records conse
  };
  const writes=[];const request=async(url,options)=>{
   const u=new URL(url);let body;
-  if(options.method==='GET'&&u.searchParams.get('model')==='contacto')body={records:[{id:42,email:'student@example.com',full_name:'Existing name',marketing_opt_out_at:'2026-01-01'}]};
+  if(options.method==='GET'&&u.searchParams.get('model')==='contacto'){assert.equal(u.searchParams.get('email'),'student@example.com');assert.equal(u.searchParams.get('limit'),'1');body={records:[{id:42,email:'student@example.com',full_name:'Existing name',marketing_opt_out_at:'2026-01-01'}]};}
   else if(options.method==='GET')body={records:[]};
   else{writes.push(JSON.parse(options.body));body={id:51};}
   return{ok:true,json:async()=>body};
