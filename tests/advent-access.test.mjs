@@ -54,7 +54,7 @@ test('existing contact registration preserves profile and opt-out, records conse
  };
  const writes=[];const request=async(url,options)=>{
   const u=new URL(url);let body;
-  if(options.method==='GET'&&u.searchParams.get('model')==='contacto')body={records:[{id:42,email:'student@example.com',full_name:'Existing name',marketing_opt_out_at:'2026-01-01'}]};
+  if(options.method==='GET'&&u.searchParams.get('model')==='contacto'){assert.equal(u.searchParams.get('email'),'student@example.com');assert.equal(u.searchParams.get('limit'),'1');body={records:[{id:42,email:'student@example.com',full_name:'Existing name',marketing_opt_out_at:'2026-01-01'}]};}
   else if(options.method==='GET')body={records:[]};
   else{writes.push(JSON.parse(options.body));body={id:51};}
   return{ok:true,json:async()=>body};
@@ -65,4 +65,25 @@ test('existing contact registration preserves profile and opt-out, records conse
  assert.equal(writes[1].record.custom_fields.consent,true);
  assert.equal(writes[1].record.subject_links.campaign_engagement_contact,42);
  assert.equal(writes[0].record.email,undefined);
+});
+
+test('published artifacts must contain the tested source and reject an accidentally substituted test file',async()=>{
+ const fs=await import('node:fs');const {validateWorkflow}=await import('../automation/validate-workflow.mjs');
+ const template=JSON.parse(fs.readFileSync(new URL('../automation/advent-access.template.json',import.meta.url),'utf8'));
+ assert.equal(validateWorkflow(template),true);
+ template.trigger.nextAction.settings.sourceCode.code=fs.readFileSync(new URL('./advent-access.test.mjs',import.meta.url),'utf8');
+ assert.throws(()=>validateWorkflow(template),/differs from the tested access source/);
+});
+
+test('the publication validator also rejects bad artifacts when invoked through a symlink',async()=>{
+ const fs=await import('node:fs');const os=await import('node:os');const path=await import('node:path');
+ const {fileURLToPath}=await import('node:url');const {spawnSync}=await import('node:child_process');
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cym-validator-'));
+ try{
+  const alias=path.join(dir,'validate.mjs'),artifact=path.join(dir,'bad.json');
+  fs.symlinkSync(fileURLToPath(new URL('../automation/validate-workflow.mjs',import.meta.url)),alias);
+  fs.writeFileSync(artifact,JSON.stringify({trigger:{nextAction:{settings:{sourceCode:{code:'wrong source'}}}}}));
+  const result=spawnSync(process.execPath,[alias,artifact],{encoding:'utf8'});
+  assert.notEqual(result.status,0);assert.match(result.stderr,/differs from the tested access source/);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });

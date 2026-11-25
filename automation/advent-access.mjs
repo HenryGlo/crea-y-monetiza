@@ -79,13 +79,9 @@ async function captureEvent(inputs,event,state,request,now){
   };
   let contactId=await state('GET',contactKey),existing;
   if(!contactId){
-   let after='';
-   do{
-    const page=await call('GET','/records/Entity?model=contacto&limit=500'+after);
-    existing=page.records.find(r=>String(r.email||'').trim().toLowerCase()===email);
-    if(existing){contactId=existing.id;break;}
-    after=page.next_after_id?'&after_id='+page.next_after_id:'';
-   }while(after);
+   const page=await call('GET','/records/Entity?model=contacto&email='+encodeURIComponent(email)+'&limit=1');
+   existing=page.records[0];
+   if(existing)contactId=existing.id;
   }
   if(!contactId){
    if(e.event_type!=='registration')return response(422,{ok:false});

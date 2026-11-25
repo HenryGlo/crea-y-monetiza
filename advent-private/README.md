@@ -41,3 +41,14 @@ project and bind the existing client Gmail connection. The source of truth for
 the code step is `automation/advent-access.mjs`; update the embedded template
 source when changing it. Dynamic response property schemas are required by this
 Activepieces version; omitting them causes response-step failures.
+
+Before every workflow import, run:
+
+```
+node automation/validate-workflow.mjs automation/advent-access.template.json /path/to/private-export.json
+```
+
+After publishing, export the live workflow and run the same validation against
+that export, then perform a non-delivering email request through the public
+landing. A passing unit suite alone does not validate an assembled deployment
+artifact. Do not replace the canonical code step with a test harness.
