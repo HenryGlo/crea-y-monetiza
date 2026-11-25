@@ -7,7 +7,7 @@ export function validateWorkflow(workflow){
  if(source!==canonical)throw new Error('Workflow artifact differs from the tested access source. Do not publish it.');
  return true;
 }
-if(process.argv[1]===fileURLToPath(import.meta.url)){
+if(process.argv[1]&&fs.existsSync(process.argv[1])&&fs.realpathSync(process.argv[1])===fileURLToPath(import.meta.url)){
  for(const file of process.argv.slice(2).length?process.argv.slice(2):[fileURLToPath(new URL('./advent-access.template.json',import.meta.url))]){
   validateWorkflow(JSON.parse(fs.readFileSync(file,'utf8')));
  }

@@ -74,3 +74,16 @@ test('published artifacts must contain the tested source and reject an accidenta
  template.trigger.nextAction.settings.sourceCode.code=fs.readFileSync(new URL('./advent-access.test.mjs',import.meta.url),'utf8');
  assert.throws(()=>validateWorkflow(template),/differs from the tested access source/);
 });
+
+test('the publication validator also rejects bad artifacts when invoked through a symlink',async()=>{
+ const fs=await import('node:fs');const os=await import('node:os');const path=await import('node:path');
+ const {fileURLToPath}=await import('node:url');const {spawnSync}=await import('node:child_process');
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cym-validator-'));
+ try{
+  const alias=path.join(dir,'validate.mjs'),artifact=path.join(dir,'bad.json');
+  fs.symlinkSync(fileURLToPath(new URL('../automation/validate-workflow.mjs',import.meta.url)),alias);
+  fs.writeFileSync(artifact,JSON.stringify({trigger:{nextAction:{settings:{sourceCode:{code:'wrong source'}}}}}));
+  const result=spawnSync(process.execPath,[alias,artifact],{encoding:'utf8'});
+  assert.notEqual(result.status,0);assert.match(result.stderr,/differs from the tested access source/);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
