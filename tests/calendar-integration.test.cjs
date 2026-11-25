@@ -9,7 +9,7 @@ test('public query parameters cannot advance the release date or enable student 
   const context = { window: {}, ALUMNAS: false, PREVIEW: false, modoAlumna: () => 'todo',
     ANIO: 2026, AdventClock: { localDay: () => 0 }, location: { search: '?dia=24&vista' }, LS: { get: () => '24' }, K: { dia: 'day' } };
   vm.runInNewContext(dayFunction, context);
-  assert.equal(context.window.diaDeHoy(), 0);
+  assert.equal(context.window.diaDeHoy(), 1);
 });
 
 test('approved student version retains both daily and all-open modes', () => {
@@ -52,4 +52,22 @@ test('records the first daily visit after registration and preserves retry order
   assert.deepEqual(events, ['registro', 'visita']);
   context.guardarReg('test@example.com', 'Test');
   assert.deepEqual(events, ['registro', 'visita', 'reconfirmacion']);
+});
+
+
+test('early access opens only gift one while preserving subsequent local release dates', () => {
+  let today = 0;
+  const context = { window: {}, ALUMNAS: false, PREVIEW: false, modoAlumna: () => 'dia',
+    ANIO: 2026, AdventClock: { localDay: () => today } };
+  vm.runInNewContext(dayFunction, context);
+  assert.equal(context.window.diaDeHoy(), 1);
+  today = 1;
+  assert.equal(context.window.diaDeHoy(), 1);
+  today = 2;
+  assert.equal(context.window.diaDeHoy(), 2);
+  today = 24;
+  assert.equal(context.window.diaDeHoy(), 24);
+  context.ALUMNAS = true;
+  today = 0;
+  assert.equal(context.window.diaDeHoy(), 0);
 });
