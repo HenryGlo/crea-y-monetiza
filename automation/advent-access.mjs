@@ -30,19 +30,30 @@ const releaseScript="if redis.call('GET',KEYS[1])==ARGV[1] then return redis.cal
 export function makeHandler({state=redis,now=()=>Date.now(),random=()=>crypto.randomInt(0,1000000),request=fetch}={}){
  return async inputs=>{
   const p=parse(inputs.payload)||{},headers=parse(inputs.headers)||{};
-  if(!inputs.gatewayKey || headers['x-advent-gateway']!==inputs.gatewayKey)return response(403,{ok:false});
+  // Two doors: the landing calls this webhook directly from the browser (its
+  // Origin must be in `allowedOrigins`), and the old CRM-domain proxy, which
+  // signs with `gatewayKey`. Only the proxy may state the client IP itself.
+  const fromGateway=Boolean(inputs.gatewayKey)&&headers['x-advent-gateway']===inputs.gatewayKey;
+  const fromLanding=(parse(inputs.allowedOrigins)||[]).includes(String(headers.origin||''));
+  if(!fromGateway&&!fromLanding)return response(403,{ok:false});
   if(!inputs.signingKey)throw new Error('Signing configuration missing');
-  const action=p.action,ip=hash(String(p.client_ip||'unknown'));
+  const clientIp=fromGateway?p.client_ip:(headers['x-real-ip']||String(headers['x-forwarded-for']||'').split(',')[0].trim());
+  const action=p.action,ip=hash(String(clientIp||'unknown'));
   if(!['request','verify','event'].includes(action))return response(400,{ok:false});
   const cap=action==='request'?10:action==='verify'?30:180,ttl=action==='verify'?600:3600;
   if(await state('EVAL',countScript,1,namespace+'rate:'+action+':'+ip,ttl)>cap)return response(429,{ok:false,message:'Espera unos minutos antes de intentar de nuevo.'});
   if(action==='event')return captureEvent(inputs,p.event,state,request,now);
   const email=String(p.email||'').trim().toLowerCase(),emailHash=hash(email);
-  const approved=parse(inputs.approvedHashes)||[];
-  const allowed=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)&&email.length<=254&&approved.includes(emailHash);
+  const allowed=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)&&email.length<=254;
   const key=namespace+'otp:'+emailHash;
   if(action==='request'){
    if(!allowed)return response(200,{ok:true});
+   let member=false;
+   try{member=await isMember(inputs,email,request);}
+   catch(error){console.error('member lookup failed',error.message);return response(503,{ok:false,message:'No pudimos comprobar tu inscripción. Intenta de nuevo en unos minutos.'});}
+   // TRANSITORIO: `legacyHashes` son alumnas de la lista antigua que aún no están
+   // en PerfectFlow. Darlas de alta en el CRM y vaciar este input; no añadir aquí.
+   if(!member&&!(parse(inputs.legacyHashes)||[]).includes(emailHash))return response(200,{ok:true});
    if(!(await state('SET',key+':cooldown','1','NX','EX',60)))return response(200,{ok:true});
    const otp=String(random()).padStart(6,'0');
    await state('SET',key,hmac(inputs.signingKey,emailHash+':'+otp),'EX',600);
@@ -99,5 +110,24 @@ async function captureEvent(inputs,event,state,request,now){
   await state('SET',eventKey,'1','EX',7776000);
   return response(202,{ok:true});
  }finally{await state('EVAL',releaseScript,1,lock,owner);}
+}
+// Who is a student is decided in PerfectFlow, not here: a record of
+// `memberModel` with that email in one of `memberStates` (comma separated;
+// empty = any state). Changing the rule is changing those inputs.
+async function isMember(inputs,email,request){
+  const base=String(inputs.baseUrl||'http://fs:3000').replace(/\/$/,'');
+  const model=String(inputs.memberModel||'').trim();
+  if(!model)throw new Error('memberModel missing');
+  const states=String(inputs.memberStates||'').split(',').map(s=>s.trim()).filter(Boolean);
+  // force_ssl: without X-Forwarded-Proto, fs:3000 answers 301 to https.
+  const headers={Accept:'application/json','X-Forwarded-Proto':'https'};
+  if(inputs.apiToken)headers.Authorization='Basic '+Buffer.from('activepieces:'+inputs.apiToken).toString('base64');
+  for(const state of (states.length?states:[null])){
+    const q=new URLSearchParams({model,email,limit:'1'});if(state)q.set('state',state);
+    const r=await request(base+'/api/v1/automation/records/Entity?'+q,{headers,signal:AbortSignal.timeout(8000)});
+    if(!r.ok)throw new Error('lookup status '+r.status);
+    const j=await r.json();if(Number(j.count)>0)return true;
+  }
+  return false;
 }
 export const code=makeHandler();
