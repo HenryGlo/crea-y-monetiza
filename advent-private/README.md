@@ -14,9 +14,11 @@ transition or campaign rule lives in this server.
 Deploy `app/` (these server files), `content/` (the private supplied archive), and
 `config.json` to `/opt/cym-advent-20261125` on the Crea droplet. Config contains
 `gatewayKey`, `signingKey`, and the internal synchronous webhook URL. Keep this
-file and the private resource bundle OUT of GitHub Pages and Git. The allowlist
-is private workflow configuration in Activepieces, stored as SHA-256 email hashes.
-Never expose that workflow export or credentials in this repository.
+file and the private resource bundle OUT of GitHub Pages and Git. Who is a student
+is decided in PerfectFlow: the workflow looks up a `contacto` with that email in
+the states set by its `memberStates` input (today `inscrita,plaza_por_cobrar`).
+`legacyHashes` is a transitional list of students not yet in the CRM; add them to
+PerfectFlow and empty it. Never expose that workflow export or credentials here.
 
 `install.sh` starts an isolated Node container and validates nginx before a
 reload. It preserves the prior nginx configuration and never restarts the CRM.
@@ -36,7 +38,7 @@ with one owned test address; disable that workflow after verification.
 
 The adjacent `automation/advent-access.template.json` is a sanitized import
 manifest, with blank signing/gateway/API keys, no approved addresses and a
-placeholder Gmail connection. Set private inputs in the correct Activepieces
+placeholder Gmail connection, and no legacy hashes. Set private inputs in the correct Activepieces
 project and bind the existing client Gmail connection. The source of truth for
 the code step is `automation/advent-access.mjs`; update the embedded template
 source when changing it. Dynamic response property schemas are required by this

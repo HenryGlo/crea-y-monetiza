@@ -19,10 +19,19 @@ function harness(){
   }
   throw new Error('Unknown state operation');
  };
- const handler=makeHandler({state,now:()=>now,random:()=>123456,request:()=>{throw new Error('Unexpected CRM request');}});
+ // PerfectFlow lookup: only student@example.com is a `contacto` in `inscrita`.
+ const lookups=[];
+ const request=async url=>{
+  const u=new URL(url);lookups.push(Object.fromEntries(u.searchParams));
+  if(!u.pathname.endsWith('/api/v1/automation/records/Entity')||u.searchParams.get('model')!=='contacto')throw new Error('Unexpected CRM request');
+  const hit=u.searchParams.get('email')==='student@example.com'&&u.searchParams.get('state')==='inscrita';
+  return {ok:true,json:async()=>({count:hit?1:0,records:[]})};
+ };
+ const handler=makeHandler({state,now:()=>now,random:()=>123456,request});
  const email='student@example.com';
- const base={gatewayKey:'test-gateway',signingKey:'test-signing',approvedHashes:[crypto.createHash('sha256').update(email).digest('hex')],headers:{'x-advent-gateway':'test-gateway'}};
- return {run:p=>handler({...base,payload:{client_ip:'test-ip',email,...p}}),advance:ms=>{now+=ms;},handler,base};
+ const base={gatewayKey:'test-gateway',signingKey:'test-signing',memberModel:'contacto',memberStates:'inscrita,plaza_por_cobrar',
+  allowedOrigins:['https://campuscreaymonetiza.com'],headers:{'x-advent-gateway':'test-gateway'}};
+ return {run:p=>handler({...base,payload:{client_ip:'test-ip',email,...p}}),advance:ms=>{now+=ms;},handler,base,lookups};
 }
 test('email eligibility and wrong gateway cannot send email',async()=>{
  const h=harness();assert.equal((await h.run({action:'request',email:'outsider@example.com'})).send,false);
@@ -86,4 +95,41 @@ test('the publication validator also rejects bad artifacts when invoked through 
   const result=spawnSync(process.execPath,[alias,artifact],{encoding:'utf8'});
   assert.notEqual(result.status,0);assert.match(result.stderr,/differs from the tested access source/);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('the landing calls directly by Origin; other origins are refused',async()=>{
+ const h=harness(),landing={...h.base,headers:{origin:'https://campuscreaymonetiza.com','x-real-ip':'198.51.100.1'}};
+ const issued=await h.handler({...landing,payload:{action:'request',email:'student@example.com'}});
+ assert.equal(issued.send,true);
+ const other=await h.handler({...h.base,headers:{origin:'https://evil.example'},payload:{action:'request',email:'student@example.com'}});
+ assert.equal(other.status,403);
+});
+
+test('a browser cannot pick its own rate-limit bucket through client_ip',async()=>{
+ const h=harness(),landing={...h.base,headers:{origin:'https://campuscreaymonetiza.com','x-real-ip':'198.51.100.2'}};
+ let last;
+ for(let i=0;i<11;i++)last=await h.handler({...landing,payload:{action:'request',email:`x${i}@example.com`,client_ip:`spoof-${i}`}});
+ assert.equal(last.status,429);
+});
+
+test('access is decided by PerfectFlow: outsiders get the same neutral answer and no email',async()=>{
+ const h=harness();
+ const outsider=await h.run({action:'request',email:'outsider@example.com'});
+ assert.deepEqual([outsider.status,outsider.result,outsider.send],[200,{ok:true},false]);
+ assert.deepEqual(h.lookups.map(q=>q.state),['inscrita','plaza_por_cobrar']);
+ assert.ok(h.lookups.every(q=>q.model==='contacto'&&q.limit==='1'));
+});
+
+test('transitional legacy hashes still receive a code until they are in PerfectFlow',async()=>{
+ const h=harness(),legacy='legacy@example.com';
+ const legacyHashes=[crypto.createHash('sha256').update(legacy).digest('hex')];
+ const issued=await h.handler({...h.base,legacyHashes,payload:{client_ip:'ip',action:'request',email:legacy}});
+ assert.equal(issued.send,true);
+});
+
+test('when PerfectFlow cannot be reached the student is told, not silently refused',async()=>{
+ const h=harness();
+ const handler=makeHandler({state:async(cmd)=>cmd==='EVAL'?1:'OK',request:async()=>{throw new Error('down');}});
+ const result=await handler({...h.base,payload:{client_ip:'ip',action:'request',email:'student@example.com'}});
+ assert.equal(result.status,503);assert.equal(result.send,false);
 });
