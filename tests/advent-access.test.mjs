@@ -133,3 +133,9 @@ test('when PerfectFlow cannot be reached the student is told, not silently refus
  const result=await handler({...h.base,payload:{client_ip:'ip',action:'request',email:'student@example.com'}});
  assert.equal(result.status,503);assert.equal(result.send,false);
 });
+
+test('a spoofed X-Forwarded-For prefix does not open a new rate-limit bucket',async()=>{
+ const h=harness();let last;
+ for(let i=0;i<11;i++)last=await h.handler({...h.base,headers:{origin:'https://campuscreaymonetiza.com','x-forwarded-for':`10.0.0.${i}, 198.51.100.9`},payload:{action:'request',email:`y${i}@example.com`}});
+ assert.equal(last.status,429);
+});

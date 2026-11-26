@@ -37,7 +37,8 @@ export function makeHandler({state=redis,now=()=>Date.now(),random=()=>crypto.ra
   const fromLanding=(parse(inputs.allowedOrigins)||[]).includes(String(headers.origin||''));
   if(!fromGateway&&!fromLanding)return response(403,{ok:false});
   if(!inputs.signingKey)throw new Error('Signing configuration missing');
-  const clientIp=fromGateway?p.client_ip:(headers['x-real-ip']||String(headers['x-forwarded-for']||'').split(',')[0].trim());
+  // The last X-Forwarded-For entry is the one our proxy added; earlier ones come from the browser.
+  const clientIp=fromGateway?p.client_ip:(headers['x-real-ip']||String(headers['x-forwarded-for']||'').split(',').pop().trim());
   const action=p.action,ip=hash(String(clientIp||'unknown'));
   if(!['request','verify','event'].includes(action))return response(400,{ok:false});
   const cap=action==='request'?10:action==='verify'?30:180,ttl=action==='verify'?600:3600;
