@@ -27,3 +27,12 @@ test('restores unsent events after reloading and retries on reconnection', async
   await reconnect();
   assert.ok(sent >= 1);
 });
+
+test('wraps each stored event for the Activepieces webhook without changing what is queued', async () => {
+  const cache = storage(), bodies = [];
+  const queue = create({ url: '/hook', storage: cache, events: { addEventListener() {} },
+    wrap: event => ({ action: 'event', event }),
+    fetch: async (_url, options) => { bodies.push(JSON.parse(options.body)); return { ok: true }; } });
+  await queue.enqueue({ event_id: 'registration-9' });
+  assert.deepEqual(bodies, [{ action: 'event', event: { event_id: 'registration-9' } }]);
+});

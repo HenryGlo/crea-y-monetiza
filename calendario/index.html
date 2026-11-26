@@ -2075,7 +2075,17 @@ document.body.classList.add('d4');
    GRATIS: los 24 regalos son gratis.
    En las dos, un día que todavía no llega muestra un meme. */
 (function(){
-  const VERSION = 'gratis';
+  // Una alumna que entró por /alumnas/ trae su acceso guardado: ve el modo
+  // alumnas. Sin acceso válido, la versión gratis de siempre.
+  const VERSION = (function(){
+    try {
+      const t = localStorage.getItem('cym-alumna-acceso'); if (!t) return 'gratis';
+      const b = t.split('.')[0].replace(/-/g, '+').replace(/_/g, '/');
+      const c = JSON.parse(atob(b + '==='.slice((b.length + 3) % 4)));
+      if (c.aud === 'cym-advent-2026' && c.scope === 'student' && c.exp * 1000 > Date.now()) return 'alumnas';
+    } catch (e) {}
+    return 'gratis';
+  })();
   const VENTA = VERSION === 'venta';
   const ALUMNAS = VERSION === 'alumnas';
   const K_MODO = 'adv-alumnas-modo';   // 'dia' = un regalo al día · 'todo' = todo desbloqueado
@@ -2265,7 +2275,7 @@ document.body.classList.add('d4');
      Luego cuenta en silencio sus visitas (una por día) y qué regalos abre. */
   const REGISTRO = {
     activo: VERSION === 'gratis',
-    url: 'https://creaymonetiza.perfectflow.cloud/calendario/events', // ← URL que recibe los datos (Kit, Brevo, Google Sheets o una función de Netlify). Vacío = solo en este navegador.
+    url: 'https://automation.creaymonetiza.perfectflow.cloud/api/v1/webhooks/jcYp3yEe3GHSoyglbdaFG/sync', // ← URL que recibe los datos (Kit, Brevo, Google Sheets o una función de Netlify). Vacío = solo en este navegador.
     volverAPedirHoras: 48, // horas que pasan antes de volver a pedirle que confirme su correo (ya viene escrito: es un toque). 0 = nunca.
     formato: 'json'        // 'json' = cuerpo JSON (text/plain) · 'form' = campos de formulario (application/x-www-form-urlencoded)
   };
@@ -2278,7 +2288,7 @@ document.body.classList.add('d4');
     if (REGISTRO.volverAPedirHoras > 0 && Date.now() - (r.confirmado || 0) >= REGISTRO.volverAPedirHoras * 36e5) return false;
     return true;
   }
-  const eventQueue = AdventEvents.create({ url: REGISTRO.url });
+  const eventQueue = AdventEvents.create({ url: REGISTRO.url, wrap: event => ({ action: 'event', event }) });
   function enviar(tipo, datos){
     if (!REGISTRO.url) return;
     const r = leerReg() || {};

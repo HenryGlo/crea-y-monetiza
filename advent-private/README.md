@@ -1,4 +1,9 @@
-# Crea y Monetiza private advent landing
+# Crea y Monetiza private advent landing (RETIRED)
+
+> Retired on 2026-11-26. Student access now lives on the landing itself:
+> `/alumnas/` asks the Activepieces webhook for a code and, once verified,
+> `/calendario/` opens in student mode. Gifts were already public on the
+> landing, so no separate content server is needed. Kept only for rollback.
 
 This is client landing code, not PerfectFlow application code. The branded email
 screen and supplied calendar/resources belong to this repository/deployment.
