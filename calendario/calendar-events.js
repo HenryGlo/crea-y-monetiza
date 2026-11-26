@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  function create({ url, storage = root.localStorage, fetch = root.fetch.bind(root), events = root, key = 'advent-events-v1' }) {
+  function create({ url, wrap = event => event, storage = root.localStorage, fetch = root.fetch.bind(root), events = root, key = 'advent-events-v1' }) {
     let pending = [], sending = false;
     try { pending = JSON.parse(storage.getItem(key) || '[]'); } catch (_) {}
     if (!Array.isArray(pending)) pending = [];
@@ -11,7 +11,7 @@
       try {
         while (pending.length) {
           const response = await fetch(url, { method: 'POST', credentials: 'omit', keepalive: true,
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(pending[0]) });
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(wrap(pending[0])) });
           if (!response.ok && ![400, 413, 422].includes(response.status)) {
             events.setTimeout?.(flush, 30000); break;
           }
