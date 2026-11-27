@@ -53,8 +53,9 @@ export function makeHandler({state=redis,now=()=>Date.now(),random=()=>crypto.ra
    let member=false;
    try{member=await isMember(inputs,email,request);}
    catch(error){console.error('member lookup failed',error.message);return response(503,{ok:false,message:'No pudimos comprobar tu inscripción. Intenta de nuevo en unos minutos.'});}
-   // TRANSITORIO: `legacyHashes` son alumnas de la lista antigua que aún no están
-   // en PerfectFlow. Darlas de alta en el CRM y vaciar este input; no añadir aquí.
+   // `legacyHashes`: sha256 de los correos del CSV que compartió el cliente
+   // (equipo, setters y alumnas que no están en Ganada). Entran además de las
+   // que decide PerfectFlow; cambiar la lista es cambiar este input.
    if(!member&&!(parse(inputs.legacyHashes)||[]).includes(emailHash))return response(200,{ok:true});
    if(!(await state('SET',key+':cooldown','1','NX','EX',60)))return response(200,{ok:true});
    const otp=String(random()).padStart(6,'0');
