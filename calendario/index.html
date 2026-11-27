@@ -2139,7 +2139,7 @@ document.body.classList.add('d4');
   /* ---- día simulado ---- */
   window.diaDeHoy = function(){
     if (ALUMNAS && modoAlumna() === 'todo') return 24;
-    if (!PREVIEW) return Math.max(ALUMNAS ? 0 : 1, AdventClock.localDay(ANIO, 24));
+    if (!PREVIEW) return Math.max(1, AdventClock.localDay(ANIO, 24)); // el regalo 1 abre ya (early access), también para alumnas
     const v = LS.get(K.dia) || '3';
     return isNaN(+v) ? 3 : Math.max(1, Math.min(24, +v));
   };
