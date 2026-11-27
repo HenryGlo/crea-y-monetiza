@@ -67,7 +67,8 @@ test('early access opens only gift one while preserving subsequent local release
   assert.equal(context.window.diaDeHoy(), 2);
   today = 24;
   assert.equal(context.window.diaDeHoy(), 24);
+  // Students get the same early access: gift one is open before December too.
   context.ALUMNAS = true;
   today = 0;
-  assert.equal(context.window.diaDeHoy(), 0);
+  assert.equal(context.window.diaDeHoy(), 1);
 });
