@@ -5,7 +5,8 @@ const namespace='cym:advent:2026:';
 const hash=value=>crypto.createHash('sha256').update(value).digest('hex');
 const hmac=(key,value)=>crypto.createHmac('sha256',key).update(value).digest('hex');
 const response=(status,result,mail={})=>({status,result,send:false,...mail});
-const parse=value=>typeof value==='string'?JSON.parse(value):value;
+// A bare GET (link previews, crawlers) arrives with an empty body: treat it as no data, not a crash.
+const parse=value=>{if(typeof value!=='string')return value;try{return JSON.parse(value);}catch{return undefined;}};
 function decode(buffer,offset=0){
   const end=buffer.indexOf('\r\n',offset);if(end<0)return;
   const prefix=String.fromCharCode(buffer[offset]),line=buffer.subarray(offset+1,end).toString(),next=end+2;

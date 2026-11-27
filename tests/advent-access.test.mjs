@@ -139,3 +139,9 @@ test('a spoofed X-Forwarded-For prefix does not open a new rate-limit bucket',as
  for(let i=0;i<11;i++)last=await h.handler({...h.base,headers:{origin:'https://campuscreaymonetiza.com','x-forwarded-for':`10.0.0.${i}, 198.51.100.9`},payload:{action:'request',email:`y${i}@example.com`}});
  assert.equal(last.status,429);
 });
+
+test('a bare GET with no body (link preview) is refused without crashing',async()=>{
+ const h=harness();
+ const result=await h.handler({...h.base,headers:'',payload:''});
+ assert.equal(result.status,403);assert.equal(result.send,false);
+});
